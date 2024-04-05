@@ -12,7 +12,9 @@ struct node {
 	char profileID [MAX];
 	char type;
     struct node * nxtPtr;
-} typedef struct node Profile;
+};
+
+ typedef struct node Profile;
 
 void animate (){}
 void prntMap (){}
