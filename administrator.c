@@ -64,8 +64,6 @@ int Administrator(Profile * head){
                     strcpy(new->plateNum, plate);
                     p->nxtPtr=new;
                     new->nxtPtr=NULL;
-                    p=next;//yey-xar
-                    //Insert node alg here
                     break;
                 }
             }
@@ -74,7 +72,7 @@ int Administrator(Profile * head){
                 break;
             }
             else{ //Continue to look for the plate number
-                p = p->next
+                p = p->next;
             }
         }
     }
