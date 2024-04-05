@@ -67,12 +67,12 @@ int Administrator(Profile * head){
                     break;
                 }
             }
-            else if(plate == p.plateNum){ //If plate number found
-                printf("%s %s", p.plateNum, p.profileID);
+            else if(plate == (*p).plateNum){ //If plate number found
+                printf("%s %s", (*p).plateNum, (*p).profileID);
                 break;
             }
             else{ //Continue to look for the plate number
-                p = p->next;
+                p = p->nxtPtr;
             }
         }
     }
