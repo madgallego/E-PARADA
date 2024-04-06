@@ -13,11 +13,13 @@ typedef struct logbook{
 
 void useLog(log *head, int option);
 
+
+//FUNCTION REQUIREMENTS
 //-------------------------------------------------------------
 //please define with return int (0 or 1)
 void traverseProfile(void);
 //please define with void return and void parameters
-void register();
+void register(void);
 ///----------------------------------------------------------==
 
 
