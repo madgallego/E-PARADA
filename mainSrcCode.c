@@ -7,7 +7,7 @@
 |______|   |_|     |_|  |_| |_| \_\ |_|  |_| |___ /  |_|  |_|
 
 
- JOLOC, GABARDA, GALLEGO, TABAYAG
+ programmed by: JOLOC, GABARDA, GALLEGO, TABAYAG
 
 */
 
