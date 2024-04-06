@@ -70,6 +70,9 @@ void useLog(log *head, int option)
                 strcpy(new->plateNum, tempNo);
                 strcpy(new->profileID, tempID);
                 
+                t = time(NULL);
+                new->timeIN = localtime(&t);
+                
 
             }
         }
