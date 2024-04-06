@@ -72,8 +72,8 @@ void useLog(log *head, int option)
                 
                 t = time(NULL);
                 new->timeIN = localtime(&t);
-                
-
+                new->next = NULL;
+                p-next = new;
             }
         }
 
