@@ -21,6 +21,8 @@ void useLog(log *head, int option);
 void traverseProfile(void);
 //please define with void return and void parameters
 void registerProfile(void);
+//please define
+void dscrpncyCheck(void);
 ///----------------------------------------------------------==
 
 
@@ -43,7 +45,7 @@ void useLog(log *head, int option)
     p = head;
     q = head;
     time_t t;
-    if(option == 0)
+    if(option == 1)
     {
         printf("Log IN\nPlate No: ");
         scanf("%s", tempNo);
@@ -59,6 +61,7 @@ void useLog(log *head, int option)
             else if(option == 2)
                 registerProfile();
         }
+        dscrpncyCheck();
         //adding log details
         while(p->next != NULL)
         {
@@ -73,11 +76,14 @@ void useLog(log *head, int option)
                 t = time(NULL);
                 new->timeIN = localtime(&t);
                 new->next = NULL;
-                p-next = new;
+                p->next = new;
+                return;
             }
         }
 
 
     }
+    else if(option == 2)
+
 
 }
