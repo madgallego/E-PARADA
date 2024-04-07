@@ -6,6 +6,7 @@
 | |____    | |     | |  | | | |\ \  | |  | | | |_/ / | |  | |
 |______|   |_|     |_|  |_| |_| \_\ |_|  |_| |___ /  |_|  |_|
 
+Electronic Parking and Documentation Algorithm
 
  programmed by: JOLOC, GABARDA, GALLEGO, TABAYAG
 
