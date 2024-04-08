@@ -6,13 +6,14 @@
 | |____    | |     | |  | | | |\ \  | |  | | | |_/ / | |  | |
 |______|   |_|     |_|  |_| |_| \_\ |_|  |_| |___ /  |_|  |_|
 
+Electronic Parking and Documentation Algorithm
 
  programmed by: JOLOC, GABARDA, GALLEGO, TABAYAG
 
+ ACADEMIC YEAR 2023-2024
+ CS103 MS ARLENE SATUITO
+
 */
-
-
-
 
 #include <stdio.h>
 
