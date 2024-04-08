@@ -68,7 +68,7 @@ void useLog(log *head, int option)
             printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
             scanf("%d", &choice);
             if(option == 1)
-                return;
+                return 0;
             else if(option == 2)
                 registerProfile(/*parameters here*/);
         }
@@ -78,7 +78,7 @@ void useLog(log *head, int option)
             printf("1. End Transaction. \n2. Archive\n");
             scanf("%d", &choice);
             if(choice == 1)
-                return;
+                return 0;
 
 
             /*Archive feature not added yet
@@ -166,7 +166,7 @@ void useLog(log *head, int option)
                 if((strcmp(p->plateNum, tempNo) == 0) && p->status == 1)
                 {
                     printf("User already logged out. Exiting Log Out.\n");
-                    return;
+                    return 0;
                 }
             }
 
@@ -180,7 +180,7 @@ void useLog(log *head, int option)
                 printf("1. End Transaction. \n2. Archive\n");
                 scanf("%d", &choice);
                 if(choice == 1)
-                    return;
+                    return 0;
                 /*Archive feature not added yet
             
                 if(choice == 2)
@@ -207,7 +207,7 @@ void useLog(log *head, int option)
 
                     //calculating balance
                     printf("Total balance is: Php %.2f", (((temphr*60 + tempmin)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)) * 0.5 /*rate*/);
-                    return;
+                    return 0;
                     
                 }
             }
