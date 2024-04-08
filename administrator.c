@@ -20,8 +20,11 @@ typedef struct node Profile;
 /*void traverseProfile(void){}
 void dscrpncyCheck(void){}
 void registerProfile(void)*/
+Profile *create_list(FILE*inrec);//read profile records from file
+void display(Profile*head);//to display data from records file on screen(temp function)
+void Administrator(Profile *head);
 
-/*int Administrator(Profile * head){
+/*void Administrator(Profile * head){
     Admin admin;
     Profile * p, *new;
     int option;
@@ -75,18 +78,19 @@ void registerProfile(void)*/
 
 int main(){
 
-    Profile profile;
+    Profile *profile;
     
-    FILE *inrec = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\records.txt", "r");
-    FILE *inlog = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\logbook.txt", "r");
-    FILE *indcy = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\discrepancy.txt", "r");
+    FILE *inrec = fopen("records.txt", "r");
+    /*FILE *inlog = fopen("logbook.txt", "r");
+    FILE *indcy = fopen("discrepancy.txt", "r");*/
 
-    if (inrec == NULL || inlog == NULL || indcy == NULL) {
+    if (inrec == NULL /*|| inlog == NULL || indcy == NULL*/) {
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
    
-    printf("hi Xar!");
+    profile = create_list(inrec); 
+    display(profile);
     //CODE GOES HERE - xar;)
     //Administrator(&profile);
     
@@ -94,6 +98,38 @@ int main(){
 
 
     fclose(inrec);
-    fclose(inlog);
-    fclose(indcy);
+    /*fclose(inlog);
+    fclose(indcy);*/
 }
+
+Profile *create_list(FILE*inrec){
+  int k,n;
+  Profile *p, *head;
+  fscanf(inrec, "%d", &n);//num of profiles in the records
+  for(k=0; k<n; k++){
+    if(k==0){
+      head=(Profile*)malloc(sizeof(Profile));
+      p=head;
+    }
+    else{
+      p->nxtPtr=(Profile*)malloc(sizeof(Profile));
+      p=p->nxtPtr;
+    }
+    fscanf(inrec,"%s %s %c", p->plateNum, p->profileID, &p->type);
+  }
+  p->nxtPtr=NULL;
+  return head;
+}//creating profile linked list function
+
+void display(Profile*head){
+  int count = 1;
+  Profile *p;
+  p=head;
+  printf("Data in Records File:");
+  while(p!=NULL){
+    printf("\n%s %s %c", p->plateNum, p->profileID, p->type);
+    count++;
+    p=p->nxtPtr;
+  }
+  printf("\n");
+}//temporary funcion for checking
