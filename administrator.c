@@ -18,7 +18,8 @@ struct node { //struct of Profile
 typedef struct node Profile;
 
 /*void traverseProfile(void){}
-void dscrpncyCheck(void){}*/
+void dscrpncyCheck(void){}
+void registerProfile(void)*/
 
 /*int Administrator(Profile * head){
     Admin admin;
@@ -57,15 +58,7 @@ void dscrpncyCheck(void){}*/
                     break;
                 }
                 else if(option == 2){ //Profile register
-                    new = (Profile *) malloc(sizeof(Profile));
-                    printf("REGISTER");
-                    Printf("Profile ID: ");
-                    scanf("%s", new->profileID);
-                    Printf("Vehicle Type: ");
-                    scanf(" %c", new->type);
-                    strcpy(new->plateNum, plate);
-                    p->nxtPtr=new;
-                    new->nxtPtr=NULL;
+                    registerProfile();
                     break;
                 }
             }
