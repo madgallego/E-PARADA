@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include<string.h>
 #include <time.h>
 #define MAX 100
 
@@ -22,9 +23,9 @@ void dscrpncyCheck(void){}
 void registerProfile(void)*/
 Profile *create_list(FILE*inrec);//read profile records from file
 void display(Profile*head);//to display data from records file on screen(temp function)
-void Administrator(Profile *head);
+void Administrator(Profile **head);
 
-/*void Administrator(Profile * head){
+/*void Administrator(Profile **head){
     Admin admin;
     Profile * p, *new;
     int option;
@@ -91,9 +92,8 @@ int main(){
    
     profile = create_list(inrec); 
     display(profile);
-    //CODE GOES HERE - xar;)
     //Administrator(&profile);
-    
+    //CODE GOES HERE - xar;)
 
 
 
@@ -102,33 +102,44 @@ int main(){
     fclose(indcy);*/
 }
 
-Profile *create_list(FILE*inrec){
-  int k,n;
-  Profile *p, *head;
-  fscanf(inrec, "%d", &n);//num of profiles in the records
-  for(k=0; k<n; k++){
-    if(k==0){
-      head=(Profile*)malloc(sizeof(Profile));
-      p=head;
+Profile *create_list(FILE *inrec) {
+    Profile *head = NULL;
+    Profile *p = NULL;
+    Profile *prev = NULL;
+    char tempPlate[MAX];
+    char tempProfileID[MAX];
+    char tempType;
+
+    while (fscanf(inrec, "%s %s %c", tempPlate, tempProfileID, &tempType) == 3) {
+        p = (Profile*)malloc(sizeof(Profile));
+        if (p == NULL) {
+            fprintf(stderr, "Memory allocation failed\n");
+            exit(EXIT_FAILURE);
+        }
+
+        strcpy(p->plateNum, tempPlate);
+        strcpy(p->profileID, tempProfileID);
+        p->type = tempType;
+        p->nxtPtr = NULL;
+
+        if (head == NULL) {
+            head = p;
+        } else {
+            prev->nxtPtr = p;
+        }
+
+        prev = p;
     }
-    else{
-      p->nxtPtr=(Profile*)malloc(sizeof(Profile));
-      p=p->nxtPtr;
-    }
-    fscanf(inrec,"%s %s %c", p->plateNum, p->profileID, &p->type);
-  }
-  p->nxtPtr=NULL;
-  return head;
+
+    return head;
 }//creating profile linked list function
 
 void display(Profile*head){
-  int count = 1;
   Profile *p;
   p=head;
   printf("Data in Records File:");
   while(p!=NULL){
     printf("\n%s %s %c", p->plateNum, p->profileID, p->type);
-    count++;
     p=p->nxtPtr;
   }
   printf("\n");
