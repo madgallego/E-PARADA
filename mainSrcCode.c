@@ -16,8 +16,10 @@ Electronic Parking and Documentation Algorithm
 */
 
 #include<stdio.h>
-#include<time.h>
 #include<stdlib.h>
+#include<string.h>
+#include<time.h>
+
 
 
 //---------------------------------------------------------------------
@@ -51,6 +53,11 @@ int useLog(log *head, int option);
 
 //-------------------------------------------------------------------------
 //ALL STRUCTURES GO HERE
+typedef struct { //struct of Admin
+	char user[MAX];
+	char passkey[MAX];
+} Admin;
+
 struct node { //struct of Profile
 	char plateNum [MAX];
 	char profileID [MAX];
