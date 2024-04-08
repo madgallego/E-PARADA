@@ -10,7 +10,7 @@ typedef struct logbook{
     //unsure!!
     //char type;
 
-    //0 for logged in, 1 for logged out
+    //0 for logged out, 1-X for parking designation
     int status;
     
     struct tm timeIn;
@@ -18,7 +18,8 @@ typedef struct logbook{
     struct logbook * next;
 }log;
 
-void useLog(log *head, int option);
+//RETURNS PARKING DESIGNATION. MOTOR CYCLE LOT IS CAR LOT SIZE++
+int useLog(log *head, int option);
 
 
 //FUNCTION REQUIREMENTS
@@ -34,7 +35,11 @@ void dscrpncyCheck(void);
 
 int main()
 {
-    
+    //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
+    int car[20] = 0; //CHANGE SIZE IF NEEDED
+    int motor[20] = 0; //CHANGE SIZE IF NEEDED
+
+
     log newLog; 
 
 
@@ -48,6 +53,7 @@ void useLog(log *head, int option)
     char tempNo[MAX];
     char tempID[MAX];
     int choice, temphr, tempmin, outNotFound = 0;
+
     p = head;
     time_t t;
     if(option == 1)
@@ -97,10 +103,43 @@ void useLog(log *head, int option)
                 
                 t = time(NULL);
                 new->timeIN = localtime(&t);
-                new->status = 0;
+
+                /*PLEASE ADD LIST TRAVERSAL FOR PROFILE UNTIL PLATE NUMBER IS FOUND
+                WHEN PLATE NUMBER FOUND, PLEASE CHECK VEHICLE TYPE
+                
+                if(pointer->type == A)
+                {
+                    for(int i = 0; i<size of car spaces; i++)
+                    {
+                        searches for empty car spaces
+                        if(car[i] == 0)
+                        {
+                            car[i] = 1;
+                            p->status = i;
+                            break;
+                        }
+                    }
+                }
+                else if(pointer->type == B)
+                {
+                    for(int i = 0; i < size of motor spaces; i++)
+                    {
+                        if(motor[i] == 0)
+                        {
+                            motor[i] = 1;
+                            p->status = i = size of car spaces;
+                            break;
+                        }
+                    }
+                }
+                
+                add extra selections if necessary*/
+
+
                 new->next = NULL;
                 p->next = new;
-                return;
+                //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
+                return p->status + 1;
             }
         }
 
@@ -158,7 +197,7 @@ void useLog(log *head, int option)
                 //driver found
                 if(strcmp(p->plateNum, tempNo) == 0)
                 {
-                    p->status = 1;
+                    if(p->status > 2)
                     
                     t = time(NULL);
                     p->timeOut = localtime(&t);
@@ -172,7 +211,14 @@ void useLog(log *head, int option)
                     
                 }
             }
-            printf("Driver not logged in.");
+            printf("Driver not logged in. \n1. End Transaction\n2. Log Out another driver\n");
+            scanf("%d", &choice);
+            if(choice == 1)
+                return 0;
+            else if(choice == 2)
+                ;//DO NOTHING
+                
+
         //Checks if car was even logged in (prevent security breaches)
         } while (outNotFound == 0);
         
