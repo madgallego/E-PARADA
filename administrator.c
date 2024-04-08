@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
+#include <unistd.h> // For sleep() function
 #include <time.h>
+
 #define MAX 100
 
 typedef struct { //struct of Admin
@@ -21,9 +23,15 @@ typedef struct node Profile;
 /*void traverseProfile(void){}
 void dscrpncyCheck(void){}
 void registerProfile(void)*/
+void clearTerminal();
+void space_up(int lines);
+void space_left(int spaces);
+void loading(int seconds);
+void SignIn();
 Profile *create_list(FILE*inrec);//read profile records from file
 void display(Profile*head);//to display data from records file on screen(temp function)
 void Administrator(Profile **head);
+
 
 /*void Administrator(Profile **head){
     Admin admin;
@@ -79,6 +87,7 @@ void Administrator(Profile **head);
 
 int main(){
 
+    SignIn();
     Profile *profile;
     
     FILE *inrec = fopen("records.txt", "r");
@@ -144,3 +153,81 @@ void display(Profile*head){
   }
   printf("\n");
 }//temporary funcion for checking
+
+void clearTerminal() {
+    system("clear || cls");
+}
+
+void space_up(int lines) {
+    for (int i = 0; i < lines; i++)
+        printf("\n");
+}
+
+void space_left(int spaces) {
+    for (int i = 0; i < spaces; i++)
+        printf(" ");
+}
+
+void loading(int seconds) {
+    printf("Loading");
+    for (int i = 0; i < 3; i++) {
+        printf(". ");
+        fflush(stdout);
+        sleep(seconds); // Sleep for specified number of seconds
+    }
+    printf("\n");
+}
+
+void SignIn() {
+    Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}};
+    Admin enter;
+
+    while (1) {
+
+        clearTerminal();
+        space_up(5);
+        space_left(20);
+        printf("-------------------------------\n");
+        space_left(20);
+        printf("        ADMIN LOGIN\n");
+        space_left(20);
+        printf("-------------------------------\n");
+        space_up(2);
+        space_left(25);
+        printf("User: ");
+        scanf("%s", enter.user);
+        space_left(25);
+        printf("Password: ");
+        scanf("%s", enter.passkey);
+        space_up(2);
+        space_left(20);
+        printf("-------------------------------\n");
+
+        // Check if the input_passkey matches any of the predefined passkeys
+        int i;
+        int flag = 0;
+        for (i = 0; i < 5; i++) {
+            if ((strcmp(admin[i].user, enter.user) == 0) && (strcmp(admin[i].passkey, enter.passkey) == 0)) {
+                flag = 1;
+                break;
+            }
+        }
+
+        if (flag == 1) {
+            space_up(2);
+            space_left(20);
+            printf("Log in successful\n"); //successful
+            space_up(2);
+            space_left(20);
+            loading(1);
+            clearTerminal();
+            break;
+        } else {
+            space_left(20);
+            printf("Invalid passkey. Try again.\n"); //err
+            space_up(2);
+            space_left(20);
+            loading(1);
+        }
+    }
+}
