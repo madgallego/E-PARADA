@@ -17,10 +17,10 @@ struct node { //struct of Profile
 };// for records linked list
 typedef struct node Profile;
 
-void traverseProfile(void){}
-void dscrpncyCheck(void){}
+/*void traverseProfile(void){}
+void dscrpncyCheck(void){}*/
 
-int Administrator(Profile * head){
+/*int Administrator(Profile * head){
     Admin admin;
     Profile * p, *new;
     int option;
@@ -78,10 +78,29 @@ int Administrator(Profile * head){
             }
         }
     }
-}
+}*/
 
 int main(){
-    Profile profile;
 
-    Administrator(&profile);
+    Profile profile;
+    
+    FILE *inrec = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\records.txt", "r");
+    FILE *inlog = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\logbook.txt", "r");
+    FILE *indcy = fopen("C:\\Users\\xaris\\OneDrive\\Documents\\C Files\\discrepancy.txt", "r");
+
+    if (inrec == NULL || inlog == NULL || indcy == NULL) {
+       printf("Error opening files.\n");
+       return 1; // Exit with error
+    }
+   
+    printf("hi Xar!");
+    //CODE GOES HERE - xar;)
+    //Administrator(&profile);
+    
+
+
+
+    fclose(inrec);
+    fclose(inlog);
+    fclose(indcy);
 }
