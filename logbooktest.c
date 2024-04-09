@@ -47,7 +47,7 @@ int main()
 }
 
 //option if log in (1) or log out (2)
-void useLog(log *head, int option)
+int useLog(log *head, int option)
 {
     log * p, *new;
     char tempNo[MAX];
