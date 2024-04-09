@@ -49,12 +49,13 @@ int main()
 //option if log in (1) or log out (2)
 int useLog(log *head, int option)
 {
-    log * p, *new;
+    log * p, *q, *new;
     char tempNo[MAX];
     char tempID[MAX];
     int choice, temphr, tempmin, outNotFound = 0;
 
     p = head;
+    q = head;
     time_t t;
     if(option == 1)
     {
@@ -78,7 +79,7 @@ int useLog(log *head, int option)
             printf("1. End Transaction. \n2. Archive\n");
             scanf("%d", &choice);
             if(choice == 1)
-                return 0;
+            return 0;
 
 
             /*Archive feature not added yet
@@ -194,20 +195,20 @@ int useLog(log *head, int option)
             while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
             {
                 p = p->next;
-                //driver found
-                if(strcmp(p->plateNum, tempNo) == 0)
-                {
-                    if(p->status > 2)
-                    
+                //driver found and checks if driver is logged out or not
+                if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
+                {             
                     t = time(NULL);
                     p->timeOut = localtime(&t);
                     //change timeOut to admin input (comment if not necessary)
                     p->timeOut.tm_hour = temphr;
                     p->timeOut.tm_min = tempmin;
+                    p->status = 0;
 
                     //calculating balance
                     printf("Total balance is: Php %.2f", (((temphr*60 + tempmin)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)) * 0.5 /*rate*/);
-                    return 0;
+
+                    return p->status;
                     
                 }
             }
