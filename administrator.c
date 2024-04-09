@@ -183,7 +183,7 @@ void SignIn() {
     Admin enter;
     while (1) {
         clearTerminal();
-        space_up(5);
+        space_up(3);
         space_left(20);
         printf("-------------------------------\n");
         space_left(20);
@@ -210,17 +210,17 @@ void SignIn() {
             }
         }
         if (flag == 1) {
-            space_up(2);
+            space_up(1);
             space_left(20);
             printf("Log in successful\n"); //successful
             delay(2);
             clearTerminal();
             break;
         } else {
-            space_up(2);
+            space_up(1);
             space_left(20);
-            printf("Invalid passkey. Try again.\n"); //err
-            delay(2);
+            printf("Invalid user or passkey. Try again.\n"); //err
+            delay(3);
         }
     }
 }
