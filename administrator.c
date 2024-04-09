@@ -19,16 +19,24 @@ struct node { //struct of Profile
 };// for records linked list
 typedef struct node Profile;
 
-/*void traverseProfile(void){}
-void dscrpncyCheck(void){}
-void registerProfile(void)*/
+/*------------------FUNCTION REQUIREMENTS--------------
+//please define with return int (0 for no prob,1 for no Plate Num)
+void traverseProfile(void);
+//please define with void return and void parameters
+void registerProfile(void);
+//please define with return int and parameter of profile ID. RETURN 0 IF NO ERROR, 1 IF NO ID
+void dscrpncyCheck(void);
+//-----------------------------------------------------*/
+
+//screen layout functions
 void clearTerminal();
 void space_up(int lines);
 void space_left(int spaces);
 void delay(int seconds);
-int SignIn();
-Profile *create_list(FILE*inrec);//read profile records from file
-void display(Profile*head);//to display data from records file on screen(temp function)
+
+int SignIn(); //return 0 for successful login, 1 for not
+Profile *create_list(FILE*inrec);//read records.txt to Profile lined list
+void display(Profile*head);//displays data from records.txt(temp function)
 void Administrator(Profile **head);
 
 
@@ -85,19 +93,21 @@ void Administrator(Profile **head);
 }*/
 
 int main(){
-
-    if(SignIn() == 1)
-        return 1;
-    Profile *profile;
-    
     FILE *inrec = fopen("records.txt", "r");
-    /*FILE *inlog = fopen("logbook.txt", "r");
-    FILE *indcy = fopen("discrepancy.txt", "r");*/
-
-    if (inrec == NULL /*|| inlog == NULL || indcy == NULL*/) {
+    FILE *inlog = fopen("logbook.txt", "r");
+    FILE *indcy = fopen("discrepancy.txt", "r");
+    if (inrec == NULL || inlog == NULL || indcy == NULL) {
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
+    
+    if(SignIn() == 1){
+        return 1;//signin not successful
+    }
+
+    Profile *profile;
+    
+    
    
     profile = create_list(inrec); 
     display(profile);
@@ -109,7 +119,7 @@ int main(){
     fclose(inrec);
     /*fclose(inlog);
     fclose(indcy);*/
-}
+}//main function
 
 Profile *create_list(FILE *inrec) {
     Profile *head = NULL;
@@ -180,9 +190,9 @@ void delay(int seconds) {
 }
 
 int SignIn() {
-    Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}};
+    Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}}; //where to store this po?
     Admin enter;
-    int count=0;
+    int count=0;//sign in attempts
     while (count <3) {
         clearTerminal();
         space_up(3);
