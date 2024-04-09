@@ -47,7 +47,7 @@ int main()
 }
 
 //option if log in (1) or log out (2)
-void useLog(log *head, int option)
+int useLog(log *head, int option)
 {
     log * p, *q, *new;
     char tempNo[MAX];
@@ -167,7 +167,7 @@ void useLog(log *head, int option)
                 if((strcmp(p->plateNum, tempNo) == 0) && p->status == 1)
                 {
                     printf("User already logged out. Exiting Log Out.\n");
-                    return;
+                    return 0;
                 }
             }
 
