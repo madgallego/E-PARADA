@@ -37,7 +37,7 @@ int main()
 {
     //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
     int car[20] = 0; //CHANGE SIZE IF NEEDED
-    int motor[20] = 0; //CHANGE SIZE IF NEEDED
+    int motor[30] = 0; //CHANGE SIZE IF NEEDED
 
 
     log newLog; 
