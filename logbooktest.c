@@ -127,7 +127,7 @@ int useLog(log *head, int option)
                         if(motor[i] == 0)
                         {
                             motor[i] = 1;
-                            p->status = i = size of car spaces;
+                            p->status = i + size of car spaces;
                             break;
                         }
                     }
