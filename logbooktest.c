@@ -49,13 +49,12 @@ int main()
 //option if log in (1) or log out (2)
 int useLog(log *head, int option)
 {
-    log * p, *q, *new;
+    log * p, *new;
     char tempNo[MAX];
     char tempID[MAX];
     int choice, temphr, tempmin, outNotFound = 0;
 
     p = head;
-    q = head;
     time_t t;
     if(option == 1)
     {
