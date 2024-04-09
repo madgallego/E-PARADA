@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include<string.h>
-#include <unistd.h> // For sleep() function
 #include <time.h>
 
 #define MAX 100
@@ -26,7 +25,7 @@ void registerProfile(void)*/
 void clearTerminal();
 void space_up(int lines);
 void space_left(int spaces);
-void loading(int seconds);
+void delay(int seconds);
 void SignIn();
 Profile *create_list(FILE*inrec);//read profile records from file
 void display(Profile*head);//to display data from records file on screen(temp function)
@@ -168,24 +167,23 @@ void space_left(int spaces) {
         printf(" ");
 }
 
-void loading(int seconds) {
-    printf("Loading");
-    for (int i = 0; i < 3; i++) {
-        printf(". ");
-        fflush(stdout);
-        sleep(seconds); // Sleep for specified number of seconds
-    }
-    printf("\n");
+void delay(int seconds) {
+    clock_t start_time = clock();
+    clock_t current_time;
+    double elapsed_time;
+
+    do {
+        current_time = clock();
+        elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
+    } while (elapsed_time < seconds);
 }
 
 void SignIn() {
     Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}};
     Admin enter;
-
     while (1) {
-
         clearTerminal();
-        space_up(5);
+        space_up(3);
         space_left(20);
         printf("-------------------------------\n");
         space_left(20);
@@ -202,7 +200,6 @@ void SignIn() {
         space_up(2);
         space_left(20);
         printf("-------------------------------\n");
-
         // Check if the input_passkey matches any of the predefined passkeys
         int i;
         int flag = 0;
@@ -212,22 +209,18 @@ void SignIn() {
                 break;
             }
         }
-
         if (flag == 1) {
-            space_up(2);
+            space_up(1);
             space_left(20);
             printf("Log in successful\n"); //successful
-            space_up(2);
-            space_left(20);
-            loading(1);
+            delay(2);
             clearTerminal();
             break;
         } else {
+            space_up(1);
             space_left(20);
-            printf("Invalid passkey. Try again.\n"); //err
-            space_up(2);
-            space_left(20);
-            loading(1);
+            printf("Invalid user or passkey. Try again.\n"); //err
+            delay(3);
         }
     }
 }
