@@ -26,7 +26,7 @@ void clearTerminal();
 void space_up(int lines);
 void space_left(int spaces);
 void delay(int seconds);
-void SignIn();
+int SignIn();
 Profile *create_list(FILE*inrec);//read profile records from file
 void display(Profile*head);//to display data from records file on screen(temp function)
 void Administrator(Profile **head);
@@ -86,7 +86,8 @@ void Administrator(Profile **head);
 
 int main(){
 
-    SignIn();
+    if(SignIn() == 1)
+        return 1;
     Profile *profile;
     
     FILE *inrec = fopen("records.txt", "r");
@@ -178,28 +179,29 @@ void delay(int seconds) {
     } while (elapsed_time < seconds);
 }
 
-void SignIn() {
+int SignIn() {
     Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}};
     Admin enter;
-    while (1) {
+    int count=0;
+    while (count <3) {
         clearTerminal();
         space_up(3);
         space_left(20);
-        printf("-------------------------------\n");
+        printf("==============================\n");
+        space_left(32);
+        printf("LOGIN\n");
         space_left(20);
-        printf("        ADMIN LOGIN\n");
-        space_left(20);
-        printf("-------------------------------\n");
+        printf("==============================\n");
         space_up(2);
         space_left(25);
-        printf("User: ");
+        printf("Admin: ");
         scanf("%s", enter.user);
         space_left(25);
         printf("Password: ");
         scanf("%s", enter.passkey);
         space_up(2);
         space_left(20);
-        printf("-------------------------------\n");
+        printf("===============================\n");
         // Check if the input_passkey matches any of the predefined passkeys
         int i;
         int flag = 0;
@@ -215,12 +217,15 @@ void SignIn() {
             printf("Log in successful\n"); //successful
             delay(2);
             clearTerminal();
-            break;
+            return 0;
         } else {
             space_up(1);
             space_left(20);
             printf("Invalid user or passkey. Try again.\n"); //err
+            count++; 
             delay(3);
         }
     }
+    printf("Wrong Password");
+    return 1;
 }
