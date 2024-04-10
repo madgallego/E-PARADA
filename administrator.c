@@ -74,7 +74,7 @@ void Administrator(Profile **head){
             else if(parkIn == 1){
                 printf("\nPlate number not found\n");
                 printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", option)
+                scanf("%d", option);
                     if(option == 1){
                         printf("\nTransaction Ended");
                     }
