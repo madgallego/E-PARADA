@@ -28,17 +28,25 @@ void registerProfile(void);
 int dscrpncyCheck(char plate[], char id[]);
 //-----------------------------------------------------*/
 int traverseProfile(Profile * head, char plate[], char id[]);
-
-//screen layout functions
+//screen layout functions for SignIn()
+//cears terminal
 void clearTerminal();
+//adds lines
 void space_up(int lines);
+//adds n spaces 
 void space_left(int spaces);
+//delays execution of next line for n seconds
 void delay(int seconds);
-
-int SignIn(); //return 0 for successful login, 1 for not
-Profile *create_list(FILE*inrec);//read records.txt to Profile lined list
-void display(Profile*head);//displays data from records.txt(temp function)
+//return 0 for successful login, 1 for not
+int SignIn(); 
+//read records.txt to Profile lined list
+Profile *create_list(FILE*inrec);
+//displays data from records.txt(temp function)
+void display(Profile*head);
 void Administrator(Profile **head);
+
+
+
 
 void Administrator(Profile **head){
     Admin admin;
