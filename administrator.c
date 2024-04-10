@@ -79,7 +79,6 @@ void Administrator(Profile **head){
         /*else if(option == 2){ //if Park Out
             dscrpncyCheck();
         }
-    }
     else if(option == 2){ //Search Profile Instructions
         printf("Enter Plate Number: ");
         scanf("%s", plate);
