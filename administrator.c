@@ -21,12 +21,13 @@ typedef struct node Profile;
 
 /*------------------FUNCTION REQUIREMENTS--------------
 //please define with return int (0 for no prob,1 for no Plate Num)
-void traverseProfile(void);
+int traverseProfile(Profile * head, char plate[], char id[]);
 //please define with void return and void parameters
 void registerProfile(void);
 //please define with return int and parameter of profile ID. RETURN 0 IF NO ERROR, 1 IF NO ID
-void dscrpncyCheck(void);
+int dscrpncyCheck(char plate[], char id[]);
 //-----------------------------------------------------*/
+int traverseProfile(Profile * head, char plate[], char id[]);
 
 //screen layout functions
 void clearTerminal();
@@ -39,18 +40,13 @@ Profile *create_list(FILE*inrec);//read records.txt to Profile lined list
 void display(Profile*head);//displays data from records.txt(temp function)
 void Administrator(Profile **head);
 
-
-/*void Administrator(Profile **head){
+void Administrator(Profile **head){
     Admin admin;
     Profile * p, *new;
-    int option;
+    int option, parkIn, dscrpncy;
     char plate[MAX];
+    char id[MAX];
     p = head;
-
-    printf("Admin: ");
-    scanf("%s", admin.user);
-    printf("Password: ");
-    scanf("%s", admin.passkey);
 
     printf("\n1. PMS\n2. Search Profile\n");
     scanf("%d", &option);
@@ -59,9 +55,28 @@ void Administrator(Profile **head);
         printf("\nChoose Action:\n1. Park In\n2. Park Out\n");
         scanf("%d", &option);
         if(option == 1){ //if Park In
-            traverseProfile();
+            printf("Plate No.: ");
+            scanf("%s", plate);
+            printf("Driver ID: ");
+            scanf("%s", id);
+            parkIn = traverseProfile(&p, plate, id);
+            if(parkIn == 0){
+                dscrpncy = dscrpncyCheck(plate, id);
+            }
+            else if(parkIn == 1){
+                printf("\nPlate number not found\n");
+                printf("\n1. End Transaction\n2. Register Profile\n");
+                scanf("%d", option)
+                    if(option == 1){
+                        printf("\nTransaction Ended");
+                    }
+                    else if(option == 2){
+                        registerProfile()
+                    }
+                }
+            }
         }
-        else if(option == 2){ //if Park Out
+        /*else if(option == 2){ //if Park Out
             dscrpncyCheck();
         }
     }
@@ -89,8 +104,8 @@ void Administrator(Profile **head);
                 p = p->nxtPtr;
             }
         }
-    }
-}*/
+    }*/
+}
 
 int main(){
     FILE *inrec = fopen("records.txt", "r");
@@ -111,7 +126,7 @@ int main(){
    
     profile = create_list(inrec); 
     display(profile);
-    //Administrator(&profile);
+    Administrator(&profile);
     //CODE GOES HERE - xar;)
 
 
