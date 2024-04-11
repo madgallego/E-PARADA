@@ -21,15 +21,15 @@ return 0;
 }
 
 int traverseProfile(Profile * head, char plate[], char id[]){
-    Profile *p
+    Profile *p;
 
     p = head;
     while(p->nxtPtr != NULL){
-        if(plate == head->plateNum && id == head->profileID){
+        if((strcmp(plate, p->plateNum) != 0) && (strcmp(id, p->profileID) != 0)){
             return 0;
         }
         else{
-            p = p->nxtPtr
+            p = p->nxtPtr;
         }
     }
     
