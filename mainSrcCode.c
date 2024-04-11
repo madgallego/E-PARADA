@@ -79,6 +79,18 @@ Profile *create_list(FILE*inrec);
 //to display data from records file on screen(temp function)
 void display(Profile*head);
 
+//screen layout functions for SignIn()
+//cears terminal
+void clearTerminal();
+//adds lines
+void space_up(int lines);
+//adds n spaces 
+void space_left(int spaces);
+//delays execution of next line for n seconds
+void delay(int seconds);
+//return 0 for successful login, 1 for not
+int SignIn(); 
+
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
