@@ -46,7 +46,7 @@ void Administrator(Profile **head){
     int option, parkIn, dscrpncy;
     char plate[MAX];
     char id[MAX];
-    p = head;
+    p = *head;
 
     printf("\n1. PMS\n2. Search Profile\n");
     scanf("%d", &option);
@@ -59,19 +59,19 @@ void Administrator(Profile **head){
             scanf("%s", plate);
             printf("Driver ID: ");
             scanf("%s", id);
-            parkIn = traverseProfile(&p, plate, id);
+            parkIn = traverseProfile(p, plate, id);
             if(parkIn == 0){
                 dscrpncy = dscrpncyCheck(plate, id);
             }
             else if(parkIn == 1){
                 printf("\nPlate number not found\n");
                 printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", option)
+                scanf("%d", &option);
                     if(option == 1){
                         printf("\nTransaction Ended");
                     }
                     else if(option == 2){
-                        registerProfile()
+                        registerProfile();
                     }
                 }
             }
