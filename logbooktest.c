@@ -95,7 +95,6 @@ int useLog(log *head, int option)
         //changed to do...while since p->next is NULL if there is only one log
         do
         {
-            p = p->next;
             if(p->next == NULL)
             {
                 new = (log *) malloc(sizeof(log));
@@ -104,7 +103,7 @@ int useLog(log *head, int option)
                 strcpy(new->profileID, tempID);
                 
                 t = time(NULL);
-                new->timeIN = localtime(&t);
+                new->timeIN = *localtime(&t);
 
                 /*PLEASE ADD LIST TRAVERSAL FOR PROFILE UNTIL PLATE NUMBER IS FOUND
                 WHEN PLATE NUMBER FOUND, PLEASE CHECK VEHICLE TYPE
@@ -143,6 +142,7 @@ int useLog(log *head, int option)
                 //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
                 return p->status + 1;
             }
+            p = p->next;
         }while(p->next != NULL);
 
 
@@ -200,7 +200,7 @@ int useLog(log *head, int option)
                 if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
                 {             
                     t = time(NULL);
-                    p->timeOut = localtime(&t);
+                    p->timeOut = *localtime(&t);
                     //change timeOut to admin input (comment if not necessary)
                     p->timeOut.tm_hour = temphr;
                     p->timeOut.tm_min = tempmin;
