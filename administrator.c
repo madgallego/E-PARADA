@@ -43,6 +43,10 @@ int SignIn();
 Profile *create_list(FILE*inrec);
 //displays data from records.txt(temp function)
 void display(Profile*head);
+
+//free the allocated space in linked list
+void freeProfile(Profile ** head);
+
 void Administrator(Profile **head);
 
 
@@ -260,4 +264,13 @@ int SignIn() {
     }
     printf("Wrong Password");
     return 1;
+}
+
+void freeProfile(Profile ** head){
+    Profile * temp;
+    while(*head != NULL){
+        temp = *head;
+        *head = (*head)->nxtPtr;
+        free(temp);
+    }
 }
