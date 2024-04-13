@@ -39,8 +39,9 @@ int main()
     int car[20] = 0; //CHANGE SIZE IF NEEDED
     int motor[30] = 0; //CHANGE SIZE IF NEEDED
 
-
-    log newLog; 
+    //declare logbook
+    log * head = (log *) (malloc(sizeof(log)));
+    head->next = NULL;
 
 
     return 0;
@@ -91,7 +92,8 @@ int useLog(log *head, int option)
             */
         }
         //adding log details
-        while(p->next != NULL)
+        //changed to do...while since p->next is NULL if there is only one log
+        do
         {
             p = p->next;
             if(p->next == NULL)
@@ -141,7 +143,7 @@ int useLog(log *head, int option)
                 //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
                 return p->status + 1;
             }
-        }
+        }while(p->next != NULL);
 
 
     }
