@@ -74,6 +74,8 @@ void space_left(int spaces);
 void delay(int seconds);
 //return 0 for successful login, 1 for not
 int SignIn(); 
+//prints logbook to logbook.txt. Happens at the end of program execution
+void printLog(log * head);
 
 
 //Main function admin log in and for managing the program
