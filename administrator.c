@@ -28,6 +28,7 @@ void registerProfile(void);
 int dscrpncyCheck(char plate[], char id[]);
 //-----------------------------------------------------*/
 int traverseProfile(Profile * head, char plate[], char id[]);
+void dscrpncyCheck(Profile * head, char plate[], char id[]);
 //screen layout functions for SignIn()
 //cears terminal
 void clearTerminal();
@@ -49,79 +50,9 @@ void freeProfile(Profile ** head);
 
 void Administrator(Profile **head);
 
-
-
-
-void Administrator(Profile **head){
-    Admin admin;
-    Profile * p, *new;
-    int option, parkIn, dscrpncy;
-    char plate[MAX];
-    char id[MAX];
-    p = *head;
-
-    printf("\n1. PMS\n2. Search Profile\n");
-    scanf("%d", &option);
-
-    if(option == 1){ //PMS instructions
-        printf("\nChoose Action:\n1. Park In\n2. Park Out\n");
-        scanf("%d", &option);
-        if(option == 1){ //if Park In
-            printf("Plate No.: ");
-            scanf("%s", plate);
-            printf("Driver ID: ");
-            scanf("%s", id);
-            parkIn = traverseProfile(p, plate, id);
-            if(parkIn == 0){
-                dscrpncy = dscrpncyCheck(plate, id);
-            }
-            else if(parkIn == 1){
-                printf("\nPlate number not found\n");
-                printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", &option);
-                    if(option == 1){
-                        printf("\nTransaction Ended");
-                    }
-                    else if(option == 2){
-                        registerProfile();
-                    }
-                }
-            }
-        }
-        /*else if(option == 2){ //if Park Out
-            dscrpncyCheck();
-        }
-    else if(option == 2){ //Search Profile Instructions
-        printf("Enter Plate Number: ");
-        scanf("%s", plate);
-        while(1){ //Traverse the linked list
-            if (p->nxtPtr == NULL){ //If plate number not found
-                printf("\nPlate number not found\n");
-                printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", &option);
-                if(option == 1){
-                    break;
-                }
-                else if(option == 2){ //Profile register
-                    registerProfile();
-                    break;
-                }
-            }
-            else if(plate == (*p).plateNum){ //If plate number found
-                printf("%s %s", (*p).plateNum, (*p).profileID);
-                break;
-            }
-            else{ //Continue to look for the plate number
-                p = p->nxtPtr;
-            }
-        }
-    }*/
-}
-
 int main(){
     FILE *inrec = fopen("records.txt", "r");
     FILE *inlog = fopen("logbook.txt", "r");
-    FILE *indcy = fopen("discrepancy.txt", "r");
     if (inrec == NULL || inlog == NULL || indcy == NULL) {
        printf("Error opening files.\n");
        return 1; // Exit with error
@@ -140,11 +71,10 @@ int main(){
     Administrator(&profile);
     //CODE GOES HERE - xar;)
 
-
+    freeProfile(&profile);
 
     fclose(inrec);
-    /*fclose(inlog);
-    fclose(indcy);*/
+    //fclose(inlog);
 }//main function
 
 Profile *create_list(FILE *inrec) {
@@ -266,11 +196,77 @@ int SignIn() {
     return 1;
 }
 
+void Administrator(Profile **head){
+    Admin admin;
+    Profile * p;
+    int option, parkIn, dscrpncy;
+    char plate[MAX];
+    char id[MAX];
+    p = *head;
+
+    printf("\n1. PMS\n2. Search Profile\n");
+    scanf("%d", &option);
+
+    if(option == 1){ //PMS instructions
+        printf("\nChoose Action:\n1. Park In\n2. Park Out\n");
+        scanf("%d", &option);
+        if(option == 1){ //if Park In
+            printf("Plate No.: ");
+            scanf("%s", plate);
+            printf("Driver ID: ");
+            scanf("%s", id);
+            parkIn = traverseProfile(p, plate, id);
+            if(parkIn == 0){
+                dscrpncyCheck(p, plate, id);
+            }
+            else if(parkIn == 1){
+                printf("\nPlate number not found\n");
+                printf("\n1. End Transaction\n2. Register Profile\n");
+                scanf("%d", &option);
+                    if(option == 1){
+                        printf("\nTransaction Ended");
+                    }
+                    else if(option == 2){
+                        registerProfile();
+                    }
+                }
+            }
+        }
+        /*else if(option == 2){ //if Park Out
+            dscrpncyCheck();
+        }
+    else if(option == 2){ //Search Profile Instructions
+        printf("Enter Plate Number: ");
+        scanf("%s", plate);
+        while(1){ //Traverse the linked list
+            if (p->nxtPtr == NULL){ //If plate number not found
+                printf("\nPlate number not found\n");
+                printf("\n1. End Transaction\n2. Register Profile\n");
+                scanf("%d", &option);
+                if(option == 1){
+                    break;
+                }
+                else if(option == 2){ //Profile register
+                    registerProfile();
+                    break;
+                }
+            }
+            else if(plate == (*p).plateNum){ //If plate number found
+                printf("%s %s", (*p).plateNum, (*p).profileID);
+                break;
+            }
+            else{ //Continue to look for the plate number
+                p = p->nxtPtr;
+            }
+        }
+    }*/
+}
+
 void freeProfile(Profile ** head){
-    Profile * temp;
+    Profile * p;
     while(*head != NULL){
-        temp = *head;
+        p = *head;
         *head = (*head)->nxtPtr;
-        free(temp);
+        free(p);
     }
 }
