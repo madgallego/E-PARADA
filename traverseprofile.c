@@ -25,8 +25,13 @@ int traverseProfile(Profile * head, char plate[], char id[], char type){
 
     p = head;
     while(p->nxtPtr != NULL){
-        if((strcmp(plate, p->plateNum) != 0) && (strcmp(id, p->profileID) != 0)){
-            return 0;
+        if((strcmp(plate, p->plateNum) != 0)){ //if plate number found
+            if(p->type == 'A') // if car
+                return 2;
+            else if(p->type == 'B') //if motorcycle
+                return 3;
+            else
+                printf("ERROR: No vehicle type identified");
         }
         else{
             p = p->nxtPtr;

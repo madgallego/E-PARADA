@@ -19,16 +19,6 @@ struct node { //struct of Profile
 };// for records linked list
 typedef struct node Profile;
 
-/*------------------FUNCTION REQUIREMENTS--------------
-//please define with return int (0 for no prob,1 for no Plate Num)
-int traverseProfile(Profile * head, char plate[], char id[]);
-//please define with void return and void parameters
-void registerProfile(void);
-//please define with return int and parameter of profile ID. RETURN 0 IF NO ERROR, 1 IF NO ID
-int dscrpncyCheck(char plate[], char id[]);
-//-----------------------------------------------------*/
-int traverseProfile(Profile * head, char plate[], char id[]);
-void dscrpncyCheck(Profile * head, char plate[], char id[]);
 //screen layout functions for SignIn()
 //cears terminal
 void clearTerminal();
@@ -48,7 +38,7 @@ void display(Profile*head);
 //free the allocated space in linked list
 void freeProfile(Profile ** head);
 
-void Administrator(Profile **head);
+//void Administrator(Profile **head);
 
 int main(){
     FILE *inrec = fopen("records.txt", "r");
@@ -198,7 +188,7 @@ int SignIn() {
     return 1;
 }
 
-void Administrator(Profile **head){
+/*void Administrator(Profile **head){
     Admin admin;
     Profile * p;
     int option, parkIn, dscrpncy;
@@ -261,8 +251,8 @@ void Administrator(Profile **head){
                 p = p->nxtPtr;
             }
         }
-    }*/
-}
+    }
+}*/
 
 void freeProfile(Profile ** head){
     Profile * p;
