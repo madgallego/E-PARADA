@@ -53,7 +53,8 @@ void Administrator(Profile **head);
 int main(){
     FILE *inrec = fopen("records.txt", "r");
     FILE *inlog = fopen("logbook.txt", "r");
-    if (inrec == NULL || inlog == NULL || indcy == NULL) {
+    FILE *indisc = fopen("discrepancy.txt", "r");
+    if (inrec == NULL || inlog == NULL || indisc == NULL) {
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
@@ -75,6 +76,7 @@ int main(){
 
     fclose(inrec);
     //fclose(inlog);
+    //fclose(indisc);
 }//main function
 
 Profile *create_list(FILE *inrec) {
