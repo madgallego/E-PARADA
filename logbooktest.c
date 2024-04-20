@@ -41,7 +41,7 @@ int main()
 
     //declare logbook
     log * head = (log *) (malloc(sizeof(log)));
-    head->next = NULL;
+    head->next = NULL;  
 
 
     return 0;
@@ -91,21 +91,13 @@ int useLog(log *head, int option)
             }    
             */
         }
-        //adding log details
-        //changed to do...while since p->next is NULL if there is only one log
-        do
-        {
-            if(p->next == NULL)
-            {
-                new = (log *) malloc(sizeof(log));
-                
-                strcpy(new->plateNum, tempNo);
-                strcpy(new->profileID, tempID);
-                
-                t = time(NULL);
-                new->timeIN = *localtime(&t);
-
-                /*PLEASE ADD LIST TRAVERSAL FOR PROFILE UNTIL PLATE NUMBER IS FOUND
+        //making new pointer
+        new = (log *) malloc(sizeof(log));
+        strcpy(new->plateNum, tempNo);
+        strcpy(new->profileID, tempID);
+        t = time(NULL);
+        new->timeIn = *localtime(&t);
+        /*PLEASE ADD LIST TRAVERSAL FOR PROFILE UNTIL PLATE NUMBER IS FOUND
                 WHEN PLATE NUMBER FOUND, PLEASE CHECK VEHICLE TYPE
                 
                 if(pointer->type == A)
@@ -116,7 +108,7 @@ int useLog(log *head, int option)
                         if(car[i] == 0)
                         {
                             car[i] = 1;
-                            p->status = i;
+                            new->status = i;
                             break;
                         }
                     }
@@ -128,22 +120,27 @@ int useLog(log *head, int option)
                         if(motor[i] == 0)
                         {
                             motor[i] = 1;
-                            p->status = i + size of car spaces;
+                            new->status = i + size of car spaces;
                             break;
                         }
                     }
                 }
                 
                 add extra selections if necessary*/
-
-
-                new->next = NULL;
-                p->next = new;
-                //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
-                return p->status + 1;
-            }
+        new->next = NULL;
+        //adding log details
+        while(p->next!= NULL)
+        {
             p = p->next;
-        }while(p->next != NULL);
+        }
+        if(p->next == NULL)
+        {
+            *p = *new;
+            p->next = (log *) malloc(sizeof(log));
+            p->next->next = NULL;
+            //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
+            return p->status + 1;
+        }
 
 
     }
@@ -156,16 +153,20 @@ int useLog(log *head, int option)
             printf("Driver ID: ");
             scanf("%s", tempID);
 
-            //MANUAL TIME OUT!! CHANGE TO COMMENT IF NEEDED
-            printf("Time Out(MILITARY TIME): ");
-            scanf("%d: %d", &temphr, &tempmin);
+
 
 
             //CHECKS IF ALREADY LOGGED OUT
-            while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
+
+            if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
+            {
+                printf("User already logged out. Exiting Log Out.\n");
+                return 0;
+            }
+            while((strcmp(p->plateNum, tempNo) != 0) && p->next->next != NULL)
             {
                 p = p->next;
-                if((strcmp(p->plateNum, tempNo) == 0) && p->status == 1)
+                if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
                 {
                     printf("User already logged out. Exiting Log Out.\n");
                     return 0;
@@ -193,7 +194,19 @@ int useLog(log *head, int option)
                 */
             }
             //find platenumber to log out
-            while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
+            if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
+            {             
+                t = time(NULL);
+                p->timeOut = *localtime(&t);
+                p->status = 0;
+
+                //calculating balance
+                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)) * 0.5 /*rate*/);
+
+                return p->status;
+                    
+            }
+            while((strcmp(p->plateNum, tempNo) != 0) && p->next->next != NULL)
             {
                 p = p->next;
                 //driver found and checks if driver is logged out or not
