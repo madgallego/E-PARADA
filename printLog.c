@@ -25,6 +25,20 @@ int main()
 {
     //ensure that head is never lost
     log * head = (log*) malloc(sizeof(log));
+    head->next = NULL;
+    log *q, * p = head;
+    //delete last log since it containts garbage
+    while(p->next != NULL)
+    {
+        q = p;
+        p = p->next;
+    }
+    if(p->next == NULL)
+    {
+        free(p);
+        q->next = NULL;
+    }
+    printLog(head);
 }
 
 void printLog(log * head)
@@ -53,5 +67,5 @@ void printLog(log * head)
         p = p->next;
     }
 
-    return 0;
+    return;
 }
