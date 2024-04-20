@@ -5,7 +5,7 @@
 
 #define MAX 100
 
-void traverseProfile(Profile * head, FILE * prnt);
+int traverseProfile(Profile * head, char plate[], char id[]);
 
 struct node { //struct of Profile
 	char plateNum [MAX];
