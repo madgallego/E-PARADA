@@ -113,7 +113,7 @@ void display(Profile*head){
 }//temporary funcion for checking
 
 void clearTerminal() {
-    system("clear || cls");
+    printf("\e[1;1H\e[2J");
 }
 
 void space_up(int lines) {
