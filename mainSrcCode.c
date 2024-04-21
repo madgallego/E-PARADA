@@ -74,16 +74,19 @@ void space_left(int spaces);
 void delay(int seconds);
 //return 0 for successful login, 1 for not
 int SignIn(); 
-//prints logbook to logbook.txt. Happens at the end of program execution
-void printLog(log * head);
+//prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
+void printLog(log * head, int option);
 
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
 
-//used for logged ins and log outs. returns parking designation(car = 1-20, motor 21-40)
-//return 0 for end transaction
-int useLog(log *head, int option);
+//HANDLES LOGS
+//RETURNS PARKING DESIGNATION. 
+//FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
+//CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
+//OPTION FOR LOG IN OR LOG OUT
+int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 
 //-------------------------------------------------------------------------
