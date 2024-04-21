@@ -56,16 +56,19 @@ void printLog(log * head)
         strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
 
         printf("| %s | ", timeIN);
+        fprintf(ptr, "| %s | ", timeIN);
         printf("%s | %s ", p->plateNum, p->profileID);
+        fprintf(ptr, "%s | %s ", p->plateNum, p->profileID);
         //gets hour of time in
         //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
         strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
         strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
 
         printf("| %s | %s |\n", timeIN, timeOUT);
+        fprintf(ptr, "| %s | %s |\n", timeIN, timeOUT);
 
         p = p->next;
     }
-
+    fclose(ptr);
     return;
 }
