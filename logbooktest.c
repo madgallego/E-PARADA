@@ -17,27 +17,36 @@ typedef struct logbook{
     struct tm timeOut;
     struct logbook * next;
 }log;
-
-//RETURNS PARKING DESIGNATION. MOTOR CYCLE LOT IS CAR LOT SIZE++
-int useLog(log *head, int option);
+struct node { //struct of Profile
+	char plateNum [MAX];
+	char profileID [MAX];
+	char type;
+    struct node * nxtPtr;
+};// for records linked list
+typedef struct node Profile;
+//RETURNS PARKING DESIGNATION. 
+//FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
+//CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
+//OPTION FOR LOG IN OR LOG OUT
+int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 
 //FUNCTION REQUIREMENTS
 //-------------------------------------------------------------
 //please define with return int (0 for no prob,1 for no Plate Num)
-void traverseProfile(void);
+int traverseProfile(Profile * head, char plate[]);
 //please define with void return and void parameters
 void registerProfile(void);
-//please define with return int and parameter of profile ID. RETURN 0 IF NO ERROR, 1 IF NO ID
-void dscrpncyCheck(void);
+
+void dscrpncyCheck(Profile * profile, char plate[], char id[]);
 ///----------------------------------------------------------==
 
 
 int main()
 {
     //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
-    int car[20] = 0; //CHANGE SIZE IF NEEDED
-    int motor[30] = 0; //CHANGE SIZE IF NEEDED
+    int car[20] = {0}; //CHANGE SIZE IF NEEDED
+    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
 
     //declare logbook
     log * head = (log *) (malloc(sizeof(log)));
@@ -48,7 +57,7 @@ int main()
 }
 
 //option if log in (1) or log out (2)
-int useLog(log *head, int option)
+int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
 {
     log * p, *new;
     char tempNo[MAX];
@@ -64,7 +73,7 @@ int useLog(log *head, int option)
         printf("Driver ID: ");
         scanf("%s", tempID);
         //ends once profile is registered or transaction is ended
-        while(traverseProfile(/*parameters here*/) == 1)
+        if(traverseProfile(pHead, tempNo) == 1)
         {
             printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
             scanf("%d", &choice);
@@ -73,61 +82,43 @@ int useLog(log *head, int option)
             else if(option == 2)
                 registerProfile(/*parameters here*/);
         }
-        while(dscrpncyCheck(/* PROFILE ID HERE. OTHER PARAMETERS UNKOWN*/) == 1)
-        {
-            printf("Profile ID not found in the data base");
-            printf("1. End Transaction. \n2. Archive\n");
-            scanf("%d", &choice);
-            if(choice == 1)
-            return 0;
-
-
-            /*Archive feature not added yet
-            
-            if(choice == 2)
-            {
-                archive();
-                break;??
-            }    
-            */
-        }
+        dscrpncyCheck(pHead, tempNo, tempID);
         //making new pointer
         new = (log *) malloc(sizeof(log));
         strcpy(new->plateNum, tempNo);
         strcpy(new->profileID, tempID);
         t = time(NULL);
         new->timeIn = *localtime(&t);
-        /*PLEASE ADD LIST TRAVERSAL FOR PROFILE UNTIL PLATE NUMBER IS FOUND
-                WHEN PLATE NUMBER FOUND, PLEASE CHECK VEHICLE TYPE
-                
-                if(pointer->type == A)
-                {
-                    for(int i = 0; i<size of car spaces; i++)
-                    {
-                        searches for empty car spaces
-                        if(car[i] == 0)
-                        {
-                            car[i] = 1;
-                            new->status = i;
-                            break;
-                        }
-                    }
-                }
-                else if(pointer->type == B)
-                {
-                    for(int i = 0; i < size of motor spaces; i++)
-                    {
-                        if(motor[i] == 0)
-                        {
-                            motor[i] = 1;
-                            new->status = i + size of car spaces;
-                            break;
-                        }
-                    }
-                }
-                
-                add extra selections if necessary*/
         new->next = NULL;
+        if(traverseProfile(pHead, tempNo) == 2)
+        {
+            for(int i = 0; i < 20; i++)
+            {
+                //free spot
+                if(car[i] == 0)
+                {
+                    //setup parking spot for return
+                    new->status = i + 1;
+                    car[i] = 1;
+                    break;
+                }
+            }
+        }
+        else if(traverseProfile(pHead, tempNo) == 3)
+        {
+            for(int i = 0; i < 20; i++)
+            {
+                //free spot
+                if(motor[i] == 0)
+                {
+                    //setup parking spot for return
+                    new->status = i + 21;
+                    motor[i] = 1;
+                    break;
+                }
+            }
+        }
+    
         //adding log details
         while(p->next!= NULL)
         {
@@ -139,10 +130,8 @@ int useLog(log *head, int option)
             p->next = (log *) malloc(sizeof(log));
             p->next->next = NULL;
             //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
-            return p->status + 1;
+            return p->status;
         }
-
-
     }
     else if(option == 2)
     {
@@ -152,9 +141,6 @@ int useLog(log *head, int option)
             scanf("%s", tempNo);
             printf("Driver ID: ");
             scanf("%s", tempID);
-
-
-
 
             //CHECKS IF ALREADY LOGGED OUT
 
@@ -177,22 +163,7 @@ int useLog(log *head, int option)
             p = head;
 
             //CHECK FOR DISCREPANCY
-            while(dscrpncyCheck(/* PROFILE ID HERE. OTHER PARAMETERS UNKOWN*/) == 1)
-            {
-                printf("Profile ID not found in the data base");
-                printf("1. End Transaction. \n2. Archive\n");
-                scanf("%d", &choice);
-                if(choice == 1)
-                    return 0;
-                /*Archive feature not added yet
-            
-                if(choice == 2)
-                {
-                    archive();??
-                    break;
-                }
-                */
-            }
+            dscrpncyCheck(pHead, tempNo, tempID);
             //find platenumber to log out
             if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
             {             
@@ -235,10 +206,7 @@ int useLog(log *head, int option)
                 
 
         //Checks if car was even logged in (prevent security breaches)
-        } while (outNotFound == 0);
-        
-        
-        
+        } while(1);
     }
 
 
