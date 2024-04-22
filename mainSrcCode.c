@@ -48,11 +48,11 @@ void arrow(int artype, int designation, int vtype);
 //prints downward arrow
 void arrowD(int artype, int designation, int vtype);
 
-//traverses profile for finding plate Num and ID(???)
-void traverseProfile(void);
+//traverses profile for finding plate Num and vehicle type
+int traverseProfile(Profile * head, char plate[]);
 
 //(unsure)Archives the discrepancy(??) or finds user ID
-void dscrpncyCheck(void);
+void dscrpncyCheck(Profile * profile, char plate[], char id[]);
 
 //creates new struct for new profile and store to a .txt file
 void registerProfile(void);
@@ -77,6 +77,8 @@ int SignIn();
 //prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
 void printLog(log * head, int option);
 
+//prints current logged in users. Happens after every termination of useLog function(to update logbook displayed)
+void currLog(log * head);
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
