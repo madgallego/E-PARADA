@@ -8,7 +8,7 @@
 
 Electronic Parking and Documentation Algorithm
 
- programmed by: JOLOC, GABARDA, GALLEGO, TABAYAG
+ programmed by: GABARDA, GALLEGO, JOLOC, TABAYAG
 
  ACADEMIC YEAR 2023-2024
  CS103 MS ARLENE SATUITO
@@ -20,6 +20,32 @@ Electronic Parking and Documentation Algorithm
 #include <time.h>
 
 #define MAX 100
+
+/*-------------------------------ALL STRUCTURE DEFINITION HERE!!!!--------------------------------------*/
+typedef struct { //struct of Admin
+	char user[MAX];
+	char passkey[MAX];
+} Admin;
+struct node { //struct of Profile
+	char plateNum [MAX];
+	char profileID [MAX];
+	char type;//(A:CAR,B:MOTOR)
+    struct node * nxtPtr;
+};// for records linked list
+typedef struct node Profile;
+typedef struct logbook{
+    char plateNum[MAX];
+    char profileID[MAX];
+    //unsure!!
+    //char type;
+
+    //0 for logged out, 1-X for parking designation
+    int status;
+    
+    struct tm timeIn;
+    struct tm timeOut;
+    struct logbook * next;
+}log;
 
 /*-------------------------------ALL FUNCTION PROTOTYPES HERE!!!!--------------------------------------*/
 
@@ -83,33 +109,7 @@ void registerProfile(void);
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
 
-/*-------------------------------ALL STRUCTURE DEFINITION HERE!!!!--------------------------------------*/
-typedef struct { //struct of Admin
-	char user[MAX];
-	char passkey[MAX];
-} Admin;
-struct node { //struct of Profile
-	char plateNum [MAX];
-	char profileID [MAX];
-	char type;
-    struct node * nxtPtr;
-};// for records linked list
-typedef struct node Profile;
-typedef struct logbook{
-    char plateNum[MAX];
-    char profileID[MAX];
-    //unsure!!
-    //char type;
-
-    //0 for logged out, 1-X for parking designation
-    int status;
-    
-    struct tm timeIn;
-    struct tm timeOut;
-    struct logbook * next;
-}log;
-
-
+/*--------------------------------FUNCTIONS DEFINITIONS START HERE!!!!--------------------------------------*/
 int main(){
     FILE *inrec = fopen("records.txt", "r");
     FILE *inlog = fopen("logbook.txt", "r");
@@ -127,8 +127,8 @@ int main(){
     profile = create_list(inrec); //creating the list
     display(profile);
 
-    Administrator(&profile);
-    //CODE GOES HERE - xar;)
+    //Administrator(&profile);
+    //CODE CONTINUES DOWN HERE - xar;)
 
     
 
@@ -143,8 +143,8 @@ int main(){
 
 
     fclose(inrec);
-    //fclose(inlog);
-    //fclose(indisc);
+    fclose(inlog);
+    fclose(indisc);
 }//main function
 
 Profile *create_list(FILE *inrec) {
