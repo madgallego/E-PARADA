@@ -208,7 +208,9 @@ void delay(int seconds) {
     } while (elapsed_time < seconds);
 }
 
-int SignIn() {
+int SignIn() {     
+    FILE * inkey=fopen("passkey.txt", "r");
+    
     Admin admin[5] = {{"lex", "bbmharc"}, {"lester", "bblester"}, {"yno", "bbyno"}, {"joy", "bbxar"}, {"cs1b", "satuits"}}; //where to store this po?
     Admin enter;
     int count=0;//sign in attempts
