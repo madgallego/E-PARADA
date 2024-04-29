@@ -387,7 +387,7 @@ void dscrpncyCheck(Profile * head, char plate[], char id[]){
 }
 
 //option if log in (1) or log out (2)
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
+/*int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
 {
     log *p, *new;
     char tempNo[MAX];
@@ -412,7 +412,7 @@ int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
                 return 0;
             }
             else if(option == 2){
-                registerProfile(/*parameters here*/);
+                registerProfile(-parameters here-);
             }
         }
         dscrpncyCheck(pHead, tempNo, tempID);
@@ -493,4 +493,4 @@ int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
     }
 
     return -1; // Invalid option
-}
+}*/
