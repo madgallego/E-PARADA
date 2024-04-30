@@ -281,11 +281,11 @@ int SignIn() {
         clearTerminal();
         space_up(3);
         space_left(20);
-        printf("==============================\n");
-        space_left(32);
+        printf("================================================\n");
+        space_left(41);
         printf("LOGIN\n");
         space_left(20);
-        printf("==============================\n");
+        printf("================================================\n");
         space_up(2);
         space_left(25);
         printf("Admin: ");
@@ -295,7 +295,7 @@ int SignIn() {
         scanf("%s", enter.passkey);
         space_up(2);
         space_left(20);
-        printf("===============================\n");
+        printf("================================================\n");
 
         int i;
         int flag = 0;
@@ -318,34 +318,82 @@ int SignIn() {
             space_left(20);
             printf("Invalid user or passkey.\n");
             attempts++;
-            delay(2);
+            delay(1);
         }
     }
+    int choice;
 
     clearTerminal();
-    space_up(2);
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(41);
+    printf("LOGIN\n");
+    space_left(20);
+    printf("================================================\n");
     space_left(20);
     printf("Too many failed attempts. Would you like to:\n");
+    space_up(2);
+    space_left(25);
     printf("1. Exit Program\n");
+    space_left(25);
     printf("2. Reset Password using Security Key\n");
-
-    int choice;
+    space_up(2);
+    space_left(25);
+    printf("Choice: ");
     scanf("%d", &choice);
-
+    space_up(2);
+    space_left(20);
+    printf("================================================\n");
+    delay(1);
+    
     if (choice == 1) {
+        clearTerminal();
         return 1; // Sign-in not successful, exit
     } else if (choice == 2) {
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(37);
+        printf("RESET PASSWORD\n");
+        space_left(20);
+        printf("================================================\n");
+        space_up(2);
+        space_left(20);
         printf("Enter 8-digit Security Key: ");
         char security_key[9];
         scanf("%s", security_key);
-
+        space_up(2);
+        space_left(20);
+        printf("================================================\n");
+             
         if (strcmp(security_key, SECURITY_KEY) == 0) {
+            clearTerminal();
+            space_up(3);
+            space_left(20);
+            printf("================================================\n");
+            space_left(37);
+            printf("RESET PASSWORD\n");
+            space_left(20);
+            printf("================================================\n");
+            space_left(20);
             printf("Security key verified. You can reset your password.\n");
+            space_up(2);
+            space_left(20);
             // Reset passkey for the specified user
             resetPasskey("passkey.txt", admin, admin_count, enter.user);
+            space_up(2);
+            space_left(20);
+            printf("================================================\n");
+            delay(1);
             return 2;
         } else {
+            space_up(2);
+            space_left(20);
             printf("Incorrect security key. Exiting program.\n");
+            delay(1);
+            clearTerminal();
             return 1;
         }
     }    
