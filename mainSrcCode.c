@@ -423,6 +423,7 @@ void Administrator(Profile **head){
     int option, parkIn;
     char plate[MAX];
     char id[MAX];
+    char type[MAX];
     
     space_up(3);
     space_left(20);
@@ -496,8 +497,13 @@ void Administrator(Profile **head){
         printf("================================================");
         space_up(3);
         space_left(25);
-        printf("Enter Plate Number: ");
-        scanf("%s", plate);
+        printf("Enter Plate Number and Vehicle Type: ");
+        scanf("%s %c", plate, &type);
+
+        traverseProfile(p, plate);
+
+
+
         while(1){ //Traverse the linked list
             if (p->nxtPtr == NULL){ //If plate number not found
                 space_up(1);
