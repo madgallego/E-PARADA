@@ -91,6 +91,17 @@ void currLog(log * head)
     char timeIN[100];
     char timeOUT[100];
     printf("CURRENT LOGGED IN USERS\n");
+    if(p->next == NULL)
+    {
+        if(p->status != 0)
+        {
+            //gets date of timeIn
+            strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
+            printf("| %s | ", timeIN);
+            printf("%s | %s |\n", p->plateNum, p->profileID);
+            return;
+        }
+    }
     while(p->next != NULL)
     {
         if(p->status != 0)
