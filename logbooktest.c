@@ -30,6 +30,7 @@ typedef struct node Profile;
 //OPTION FOR LOG IN OR LOG OUT
 int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
+void rgstr(Profile ** head, char plate[], char id[]);
 
 //FUNCTION REQUIREMENTS
 //-------------------------------------------------------------
@@ -82,7 +83,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
             if(option == 1)
                 return 0;
             else if(option == 2)
-                registerProfile(/*parameters here*/);
+                rgstr(&pHead, tempNo, tempID);
         }
         dscrpncyCheck(pHead, tempNo, tempID);
         //making new pointer
