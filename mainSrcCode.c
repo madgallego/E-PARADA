@@ -427,7 +427,7 @@ void Administrator(Profile **head){
     space_up(3);
     space_left(20);
     printf("================================================\n");
-    space_left(41);
+    space_left(40);
     printf("E-PARADA\n");
     space_left(20);
     printf("================================================\n");
@@ -442,8 +442,24 @@ void Administrator(Profile **head){
     scanf("%d", &option);
 
     if(option == 1){ //PMS instructions
-        printf("\nChoose Action:\n1. Park In\n2. Park Out\n");
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(36);
+        printf("PARKING (PMS)\n");
+        space_left(20);
+        printf("================================================\n");
+        space_up(2);
+        space_left(25);
+        printf("1. Park In\n");
+        space_left(25);
+        printf("2. Park Out\n");
+        space_up(2);
+        space_left(25);
+        printf("Choice: ");
         scanf("%d", &option);
+
         if(option == 1){ //if Park In
             printf("Plate No.: ");
             scanf("%s", plate);
@@ -457,31 +473,49 @@ void Administrator(Profile **head){
                 printf("\nPlate number not found\n");
                 printf("\n1. End Transaction\n2. Register Profile\n");
                 scanf("%d", &option);
-                    if(option == 1){
-                        printf("\nTransaction Ended");
-                    }
-                    else if(option == 2){
-                        rgstr(p, plate, id);
-                    }
+                if(option == 1){
+                    printf("\nTransaction Ended");
+                }
+                else if(option == 2){
+                    rgstr(p, plate, id);
                 }
             }
         }
         else if(option == 2){ //if Park Out
             dscrpncyCheck(p, plate, id);
         }
+    }          
     else if(option == 2){ //Search Profile Instructions
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(36);
+        printf("SEARCH PROFILE\n");
+        space_left(20);
+        printf("================================================");
+        space_up(3);
+        space_left(25);
         printf("Enter Plate Number: ");
         scanf("%s", plate);
         while(1){ //Traverse the linked list
             if (p->nxtPtr == NULL){ //If plate number not found
-                printf("\nPlate number not found\n");
-                printf("\n1. End Transaction\n2. Register Profile\n");
+                space_up(1);
+                space_left(25);
+                printf("Plate number not found.\n\n");
+                space_left(25);
+                printf("1. End Transaction\n");
+                space_left(25);
+                printf("2. Register Profile\n\n\n");
+                space_left(25);
+                printf("Choice: ");
                 scanf("%d", &option);
+                
                 if(option == 1){
                     break;
                 }
                 else if(option == 2){ //Profile register
-                    rgstr(p, plate, id);;
+                    rgstr(p, plate, id);
                     break;
                 }
             }
