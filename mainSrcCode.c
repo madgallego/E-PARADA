@@ -497,15 +497,27 @@ void Administrator(Profile **head){
         printf("================================================");
         space_up(3);
         space_left(25);
-        printf("Enter Plate Number:");
-        scanf("%s %c", plate);
+        printf("Enter Plate Number: ");
+        scanf("%s", plate);
 
-        traverseProfile(p, plate);
-
-
-
-        while(1){ //Traverse the linked list
-            if (p->nxtPtr == NULL){ //If plate number not found
+        while (p != NULL) { // Traverse the linked list
+            if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
+                space_up(1);
+                space_left(32);
+                printf("Search Result:\n");
+                space_left(25);
+                printf("Plate Number: %s\n", p->plateNum);
+                space_left(25);
+                printf("ID: %s\n", p->profileID);
+                space_left(25);
+                printf("Vehicle Type: %c\n\n", p->type);
+                space_left(20);
+                printf("================================================\n");
+                break;
+            } else {
+                p = p->nxtPtr; // Continue to the next node
+            }
+            if (p == NULL) { // Plate number not found
                 space_up(1);
                 space_left(25);
                 printf("Plate number not found.\n\n");
@@ -516,23 +528,15 @@ void Administrator(Profile **head){
                 space_left(25);
                 printf("Choice: ");
                 scanf("%d", &option);
-                
-                if(option == 1){
-                    break;
+        
+                if (option == 1) {// End the transaction
+                    delay(2);
+                    clearTerminal();
+                } else if (option == 2) {
+                rgstr(p, plate, id); // Register a new profile
                 }
-                else if(option == 2){ //Profile register
-                    rgstr(p, plate, id);
-                    break;
-                }
             }
-            else if(plate == (*p).plateNum){ //If plate number found
-                printf("%s %s", (*p).plateNum, (*p).profileID);
-                break;
-            }
-            else{ //Continue to look for the plate number
-                p = p->nxtPtr;
-            }
-        }
+        }              
     }
 }
 
