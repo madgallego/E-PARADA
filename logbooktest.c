@@ -28,7 +28,7 @@ typedef struct node Profile;
 //FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
 //CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
 //OPTION FOR LOG IN OR LOG OUT
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
+int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
 
 //FUNCTION REQUIREMENTS
@@ -49,22 +49,24 @@ int main()
     int motor[20] = {0}; //CHANGE SIZE IF NEEDED
 
     //declare logbook
-    log * head = (log *) (malloc(sizeof(log)));
-    head->next = NULL;  
+    log * head = NULL;
+    Profile * phead = NULL;
+    //sample use of useLog
+    int x = useLog(&head, phead, car, motor, 1);
 
 
     return 0;
 }
 
 //option if log in (1) or log out (2)
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
+int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
 {
-    log * p, *new;
+    log * p, *q, *new;
     char tempNo[MAX];
     char tempID[MAX];
     int choice, temphr, tempmin, outNotFound = 0;
 
-    p = head;
+    p = *head;
     time_t t;
     if(option == 1)
     {
@@ -118,7 +120,11 @@ int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
                 }
             }
         }
-    
+        if(head == NULL)
+        {
+            *head = new;
+            return (*head)->status + 1; 
+        }
         //adding log details
         while(p->next!= NULL)
         {
@@ -126,11 +132,9 @@ int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
         }
         if(p->next == NULL)
         {
-            *p = *new;
-            p->next = (log *) malloc(sizeof(log));
-            p->next->next = NULL;
+            p->next = new;
             //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
-            return p->status;
+            return p->status + 1;
         }
     }
     else if(option == 2)
@@ -146,56 +150,53 @@ int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
 
             if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
             {
-                printf("User already logged out. Exiting Log Out.\n");
-                return 0;
-            }
-            while((strcmp(p->plateNum, tempNo) != 0) && p->next->next != NULL)
-            {
-                p = p->next;
-                if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
+                q = p->next;
+                while(q != NULL)
+                {
+                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
+                    {
+                        p = q;
+                    }
+                    q = q->next;
+                }
+                if((p->status == 0 && q == NULL))
                 {
                     printf("User already logged out. Exiting Log Out.\n");
                     return 0;
                 }
             }
-
-            //resets p back to head
-            p = head;
-
+            while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
+            {
+                q = p->next;
+                while(q != NULL)
+                {
+                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
+                    {
+                        p = q;
+                    }
+                    q = q->next;
+                }
+                if((p->status == 0 && q == NULL))
+                {
+                    printf("User already logged out. Exiting Log Out.\n");
+                    return 0;
+                }
+            }
             //CHECK FOR DISCREPANCY
             dscrpncyCheck(pHead, tempNo, tempID);
             //find platenumber to log out
-            if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
+            if(p->status != 0)
             {             
                 t = time(NULL);
                 p->timeOut = *localtime(&t);
+
                 p->status = 0;
 
                 //calculating balance
-                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)) * 0.5 /*rate*/);
+                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)/60) * 0.5 /*rate*/);
 
                 return p->status;
                     
-            }
-            while((strcmp(p->plateNum, tempNo) != 0) && p->next->next != NULL)
-            {
-                p = p->next;
-                //driver found and checks if driver is logged out or not
-                if((strcmp(p->plateNum, tempNo) == 0) && p->status != 0)
-                {             
-                    t = time(NULL);
-                    p->timeOut = *localtime(&t);
-                    //change timeOut to admin input (comment if not necessary)
-                    p->timeOut.tm_hour = temphr;
-                    p->timeOut.tm_min = tempmin;
-                    p->status = 0;
-
-                    //calculating balance
-                    printf("Total balance is: Php %.2f", (((temphr*60 + tempmin)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)) * 0.5 /*rate*/);
-
-                    return p->status;
-                    
-                }
             }
             printf("Driver not logged in. \n1. End Transaction\n2. Log Out another driver\n");
             scanf("%d", &choice);
