@@ -188,45 +188,40 @@ int SignIn() {
     return 1;
 }
 
-/*void Administrator(Profile **head){
-    Admin admin;
+void Administrator(Profile **head){
     Profile * p;
-    int option, parkIn, dscrpncy;
+    log * q = NULL;
+    int option, map, dscrpncy;
     char plate[MAX];
     char id[MAX];
+    //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
+    int car[20] = {0}; //CHANGE SIZE IF NEEDED
+    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
     p = *head;
 
-    printf("\n1. PMS\n2. Search Profile\n");
+    
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(41);
+    printf("E-PARADA\n");
+    space_left(20);
+    printf("================================================\n");
+    space_up(2);
+    space_left(25);
+    printf("1. PMS\n");
+    space_left(25);
+    printf("2. Search Profile\n");
+    space_up(2);
+    space_left(25);
+    printf("Choice: ");
     scanf("%d", &option);
 
     if(option == 1){ //PMS instructions
         printf("\nChoose Action:\n1. Park In\n2. Park Out\n");
         scanf("%d", &option);
-        if(option == 1){ //if Park In
-            printf("Plate No.: ");
-            scanf("%s", plate);
-            printf("Driver ID: ");
-            scanf("%s", id);
-            parkIn = traverseProfile(p, plate, id);
-            if(parkIn == 0){
-                dscrpncyCheck(p, plate, id);
-            }
-            else if(parkIn == 1){
-                printf("\nPlate number not found\n");
-                printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", &option);
-                    if(option == 1){
-                        printf("\nTransaction Ended");
-                    }
-                    else if(option == 2){
-                        registerProfile();
-                    }
-                }
-            }
-        }
-        /*else if(option == 2){ //if Park Out
-            dscrpncyCheck();
-        }
+        map = uselog(&q, p, car, motor, option)
+        printing(map, car, motor)}
     else if(option == 2){ //Search Profile Instructions
         printf("Enter Plate Number: ");
         scanf("%s", plate);
@@ -239,7 +234,7 @@ int SignIn() {
                     break;
                 }
                 else if(option == 2){ //Profile register
-                    registerProfile();
+                    rgstr(head, plate, id);
                     break;
                 }
             }
@@ -252,7 +247,7 @@ int SignIn() {
             }
         }
     }
-}*/
+}
 
 void freeProfile(Profile ** head){
     Profile * p;
