@@ -497,7 +497,7 @@ void Administrator(Profile **head){
         printf("================================================");
         space_up(3);
         space_left(25);
-        printf("Enter Plate Number and Vehicle Type: ");
+        printf("Enter Plate Number:");
         scanf("%s %c", plate, &type);
 
         traverseProfile(p, plate);
