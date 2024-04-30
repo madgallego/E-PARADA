@@ -120,18 +120,18 @@ int main(){
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
-    
-    while(1){
-        if(SignIn() !=0 && SignIn() ==1){
 
-        }
-        else if(SignIn() ==1){
+    int signInResult;
+
+    do{
+        signInResult = SignIn();
+        
+        if(signInResult==0){
+            break;
+        }else if(signInResult==1){
             return 1;//signin not successful
         }
-        else{
-            break;
-        }
-    }
+    }while(signInResult==2);
 
     Profile *profile; 
     profile = create_list(inrec); //creating the list
@@ -237,7 +237,7 @@ void resetPasskey(const char *filename, Admin admin[], int admin_count, const ch
         }
     }
 
-    if (!found) {
+    if (found==0) {
         printf("Error: User '%s' not found.\n", username);
         return;
     }
@@ -316,7 +316,7 @@ int SignIn() {
         } else {
             space_up(1);
             space_left(20);
-            printf("Invalid user or passkey. Try again.\n");
+            printf("Invalid user or passkey.\n");
             attempts++;
             delay(2);
         }
@@ -348,9 +348,7 @@ int SignIn() {
             printf("Incorrect security key. Exiting program.\n");
             return 1;
         }
-    }
-
-    return 1; // Sign-in unsuccessful
+    }    
 }
 
 void freeProfile(Profile ** head){
