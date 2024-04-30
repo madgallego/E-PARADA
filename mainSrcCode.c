@@ -90,6 +90,7 @@ void clearTerminal();//cears terminal
 void space_up(int lines);//adds lines
 void space_left(int spaces);//adds n spaces 
 void delay(int seconds);//delays execution of next line for n seconds
+int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username);
 
 //free the allocated space in linked list
 void freeProfile(Profile ** head);
@@ -121,17 +122,39 @@ int main(){
        return 1; // Exit with error
     }
 
-    int signInResult;
+    int sign_in_result;
 
-    do{
-        signInResult = SignIn();
+    do {
+        sign_in_result = SignIn();
         
-        if(signInResult==0){
+        if (sign_in_result == 0) {// Successful login            
             break;
-        }else if(signInResult==1){
-            return 1;//signin not successful
+        } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
+            return 1;
+        } else if (sign_in_result == 2) {// Reset the password using security key            
+            Admin admin[MAX_ADMINS];
+            int admin_count = 0;
+            // Reopen and read the admin data again
+            FILE *file = fopen("passkey.txt", "r");
+            if (file == NULL) {
+                fprintf(stderr, "Error: Unable to open 'passkey.txt'.\n");
+                return 1;
+            }
+            while (admin_count < MAX_ADMINS && fscanf(file, "%s %s", admin[admin_count].user, admin[admin_count].passkey) == 2) {
+                admin_count++;
+            }
+            fclose(file);
+
+            // Reset the password
+            int reset_result = resetPasskey("passkey.txt", admin, admin_count, "AdminUsername"); // Example username
+            if (reset_result == 0) {
+                printf("Password has been reset successfully.\n");
+            } else {
+                printf("Error resetting password.\n");
+                return 1;
+            }
         }
-    }while(signInResult==2);
+    } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
 
     Profile *profile; 
     profile = create_list(inrec); //creating the list
@@ -218,35 +241,31 @@ void delay(int seconds) {
     } while (elapsed_time < seconds);
 }
 
-void resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
-    int found = 0;
-    char new_passkey[MAX];
-
-    // Find the specified admin
+int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
+    // Check if the username exists in the admin array
+    int user_found = 0;
     for (int i = 0; i < admin_count; i++) {
         if (strcmp(admin[i].user, username) == 0) {
-            found = 1;
-
+            user_found = 1;
             // Prompt for a new passkey
+            char new_passkey[MAX];
             printf("Enter a new passkey for user '%s': ", username);
             scanf("%s", new_passkey);
-
-            // Update the passkey in the admin array
-            strcpy(admin[i].passkey, new_passkey);
+            strcpy(admin[i].passkey, new_passkey);  // Update the passkey
             break;
         }
     }
 
-    if (found==0) {
+    if (!user_found) {
         printf("Error: User '%s' not found.\n", username);
-        return;
+        return 1;  // Indicate error
     }
 
-    // Write the updated admin data back to the file
+    // Rewrite the admin data to the file
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
-        fprintf(stderr, "Error: Unable to write to %s.\n", filename);
-        return;
+        fprintf(stderr, "Error: Unable to open '%s' for writing.\n", filename);
+        return 1;  // Indicate error
     }
 
     for (int i = 0; i < admin_count; i++) {
@@ -254,27 +273,28 @@ void resetPasskey(const char *filename, Admin admin[], int admin_count, const ch
     }
 
     fclose(file);
-
     printf("Passkey for user '%s' has been reset successfully.\n", username);
+    return 0;  // Indicate success
 }
 
 int SignIn() {
     FILE *file = fopen("passkey.txt", "r");
     if (file == NULL) {
-        fprintf(stderr, "Error: Unable to open passkey.txt.\n");
-        return -1;
+        fprintf(stderr, "Error: Unable to open 'passkey.txt'.\n");
+        return 1;  // Error opening file
     }
 
-    Admin admin[MAX_ADMINS]; // Only five admins
+    Admin admin[MAX_ADMINS];
     int admin_count = 0;
 
+    // Read the admin data from the file
     while (admin_count < MAX_ADMINS && fscanf(file, "%s %s", admin[admin_count].user, admin[admin_count].passkey) == 2) {
         admin_count++;
     }
 
     fclose(file);
 
-    Admin enter;
+    Admin entered_user;
     int attempts = 0;
 
     while (attempts < 3) {
@@ -289,46 +309,47 @@ int SignIn() {
         space_up(2);
         space_left(25);
         printf("Admin: ");
-        scanf("%s", enter.user);
+        scanf("%s", entered_user.user);
         space_left(25);
         printf("Password: ");
-        scanf("%s", enter.passkey);
+        scanf("%s", entered_user.passkey);
         space_up(2);
         space_left(20);
         printf("================================================\n");
 
-        int i;
-        int flag = 0;
-        for (i = 0; i < admin_count; i++) {
-            if ((strcmp(admin[i].user, enter.user) == 0) && (strcmp(admin[i].passkey, enter.passkey) == 0)) {
-                flag = 1;
+        int authenticated = 0;
+        for (int i = 0; i < admin_count; i++) {
+            if (strcmp(admin[i].user, entered_user.user) == 0 && strcmp(admin[i].passkey, entered_user.passkey) == 0) {
+                authenticated = 1;
                 break;
             }
         }
 
-        if (flag == 1) {
+        if (authenticated) {
             space_up(1);
             space_left(20);
-            printf("Log in successful\n");
+            printf("Login successful.\n");
             delay(2);
             clearTerminal();
-            return 0;
+            return 0;  // Successful login
         } else {
+            attempts++;
             space_up(1);
             space_left(20);
-            printf("Invalid user or passkey.\n");
-            attempts++;
+            printf("Invalid username or password. Attempts left: %d\n", 3 - attempts);
             delay(1);
         }
     }
+
     int choice;
 
+    // Handle failed login attempts
     clearTerminal();
     space_up(3);
     space_left(20);
     printf("================================================\n");
     space_left(41);
-    printf("LOGIN\n");
+    printf("LOGIN FAILED\n");
     space_left(20);
     printf("================================================\n");
     space_left(20);
@@ -342,14 +363,11 @@ int SignIn() {
     space_left(25);
     printf("Choice: ");
     scanf("%d", &choice);
-    space_up(2);
-    space_left(20);
-    printf("================================================\n");
+
     delay(1);
-    
+
     if (choice == 1) {
-        clearTerminal();
-        return 1; // Sign-in not successful, exit
+        return 1;  // Exit program
     } else if (choice == 2) {
         clearTerminal();
         space_up(3);
@@ -361,42 +379,21 @@ int SignIn() {
         printf("================================================\n");
         space_up(2);
         space_left(20);
-        printf("Enter 8-digit Security Key: ");
+        printf("Enter the 8-digit security key: ");
         char security_key[9];
         scanf("%s", security_key);
-        space_up(2);
-        space_left(20);
-        printf("================================================\n");
-             
+
         if (strcmp(security_key, SECURITY_KEY) == 0) {
-            clearTerminal();
-            space_up(3);
-            space_left(20);
-            printf("================================================\n");
-            space_left(37);
-            printf("RESET PASSWORD\n");
-            space_left(20);
-            printf("================================================\n");
-            space_left(20);
-            printf("Security key verified. You can reset your password.\n");
-            space_up(2);
-            space_left(20);
-            // Reset passkey for the specified user
-            resetPasskey("passkey.txt", admin, admin_count, enter.user);
-            space_up(2);
-            space_left(20);
-            printf("================================================\n");
-            delay(1);
-            return 2;
+            return 2;  // Security key verified, allow password reset
         } else {
-            space_up(2);
-            space_left(20);
             printf("Incorrect security key. Exiting program.\n");
             delay(1);
             clearTerminal();
-            return 1;
+            return 1;  // Exit program due to incorrect security key
         }
-    }    
+    }
+
+    return 1;  // Default return for unexpected behavior
 }
 
 void freeProfile(Profile ** head){
