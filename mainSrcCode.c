@@ -104,7 +104,7 @@ void dscrpncyCheck(Profile * profile, char plate[], char id[]);
   FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
   CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
   OPTION FOR LOG IN OR LOG OUT */
-int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
+int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
 //void registerProfile(void);
@@ -131,29 +131,12 @@ int main(){
             break;
         } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
             return 1;
-        } else if (sign_in_result == 2) {// Reset the password using security key            
-            Admin admin[MAX_ADMINS];
-            int admin_count = 0;
-            // Reopen and read the admin data again
-            FILE *file = fopen("passkey.txt", "r");
-            if (file == NULL) {
-                fprintf(stderr, "Error: Unable to open 'passkey.txt'.\n");
-                return 1;
-            }
-            while (admin_count < MAX_ADMINS && fscanf(file, "%s %s", admin[admin_count].user, admin[admin_count].passkey) == 2) {
-                admin_count++;
-            }
-            fclose(file);
-
-            // Reset the password
-            int reset_result = resetPasskey("passkey.txt", admin, admin_count, "AdminUsername"); // Example username
-            if (reset_result == 0) {
-                printf("Password has been reset successfully.\n");
-            } else {
-                printf("Error resetting password.\n");
-                return 1;
-            }
-        }
+        }// Reset the password using security key
+        space_up(1);
+        space_left(20);
+        printf("Password has been reset successfully.\n");
+        delay(2);
+        
     } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
 
     Profile *profile; 
@@ -249,6 +232,8 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
             user_found = 1;
             // Prompt for a new passkey
             char new_passkey[MAX];
+            space_up(2);
+            space_left(20);
             printf("Enter a new passkey for user '%s': ", username);
             scanf("%s", new_passkey);
             strcpy(admin[i].passkey, new_passkey);  // Update the passkey
@@ -256,7 +241,9 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
         }
     }
 
-    if (!user_found) {
+    if (user_found==0) {
+        space_up(2);
+        space_left(20);
         printf("Error: User '%s' not found.\n", username);
         return 1;  // Indicate error
     }
@@ -264,7 +251,8 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
     // Rewrite the admin data to the file
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
-        fprintf(stderr, "Error: Unable to open '%s' for writing.\n", filename);
+        printf("Error: Unable to open '%s' for writing.\n", filename);
+        delay(1);
         return 1;  // Indicate error
     }
 
@@ -273,7 +261,6 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
     }
 
     fclose(file);
-    printf("Passkey for user '%s' has been reset successfully.\n", username);
     return 0;  // Indicate success
 }
 
@@ -325,7 +312,7 @@ int SignIn() {
             }
         }
 
-        if (authenticated) {
+        if (authenticated==1) {
             space_up(1);
             space_left(20);
             printf("Login successful.\n");
@@ -337,18 +324,16 @@ int SignIn() {
             space_up(1);
             space_left(20);
             printf("Invalid username or password. Attempts left: %d\n", 3 - attempts);
-            delay(1);
+            delay(2);
         }
     }
-
     int choice;
-
     // Handle failed login attempts
     clearTerminal();
     space_up(3);
     space_left(20);
     printf("================================================\n");
-    space_left(41);
+    space_left(39);
     printf("LOGIN FAILED\n");
     space_left(20);
     printf("================================================\n");
@@ -362,9 +347,7 @@ int SignIn() {
     space_up(2);
     space_left(25);
     printf("Choice: ");
-    scanf("%d", &choice);
-
-    delay(1);
+    scanf("%d", &choice);   
 
     if (choice == 1) {
         return 1;  // Exit program
@@ -383,12 +366,29 @@ int SignIn() {
         char security_key[9];
         scanf("%s", security_key);
 
-        if (strcmp(security_key, SECURITY_KEY) == 0) {
-            return 2;  // Security key verified, allow password reset
-        } else {
-            printf("Incorrect security key. Exiting program.\n");
-            delay(1);
+        if (strcmp(security_key, SECURITY_KEY) == 0) {//security passkey matches
             clearTerminal();
+            space_up(3);
+            space_left(20);
+            printf("================================================\n");
+            space_left(37);
+            printf("RESET PASSWORD\n");
+            space_left(20);
+            printf("================================================\n");
+            
+            int reset_result = resetPasskey("passkey.txt", admin, admin_count, entered_user.user);
+            if (reset_result == 0) {
+                return 2;
+            } else {
+                space_up(1);
+                space_left(20);
+                printf("Error resetting password.\n\n");
+                return 1;
+            }
+        } else {
+            space_up(2);
+            space_left(20);
+            printf("Incorrect security key. Exiting program.\n");
             return 1;  // Exit program due to incorrect security key
         }
     }
