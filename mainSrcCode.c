@@ -96,10 +96,10 @@ void delay(int seconds);//delays execution of next line for n seconds
 void freeProfile(Profile ** head);
 
 //void Administrator(Profile **head);
-int traverseProfile(Profile * head, char plate[]);
+int traverseProfile(Profile * head, const char *plate[]);
 
 //return int 0 for no prob; 1 for no Plate Num
-void dscrpncyCheck(Profile * profile, char plate[], char id[]);
+void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
 /*RETURNS PARKING DESIGNATION 
   FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
   CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
@@ -107,7 +107,7 @@ void dscrpncyCheck(Profile * profile, char plate[], char id[]);
 int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
-void rrgstr(Profile ** head, char plate[], char id[]);
+void rgstr(Profile ** head, const char *plate[], const char *id[]);
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
@@ -141,12 +141,14 @@ int main(){
 
     Profile *profile; 
     profile = create_list(inrec); //creating the list
-    display(profile);
-
-    //Administrator(&profile);
+    
+    Administrator(&profile);
     //CODE CONTINUES DOWN HERE - xar;)
 
     
+
+
+
 
     //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
     /*int car[20] = {0}; //CHANGE SIZE IF NEEDED
@@ -360,17 +362,6 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
     return 0;  // Indicate success
 }
 
-void display(Profile*head){
-  Profile *p;
-  p=head;
-  printf("Data in Records File:");
-  while(p!=NULL){
-    printf("\n%s %s %c", p->plateNum, p->profileID, p->type);
-    p=p->nxtPtr;
-  }
-  printf("\n");
-}//temporary funcion for checking
-
 void clearTerminal() {
     printf("\e[1;1H\e[2J");
 }
@@ -405,7 +396,7 @@ void freeProfile(Profile ** head){
     }
 }
 
-void rgstr(Profile ** head, char plate[], char id[]){
+void rgstr(Profile ** head, const char *plate[], const char *id[]){
     Profile * new, * p;
     char type;
 
@@ -427,15 +418,27 @@ void rgstr(Profile ** head, char plate[], char id[]){
     }
 }
 
-/*void Administrator(Profile **head){
-    Admin admin;
-    Profile * p;
-    int option, parkIn, dscrpncy;
+void Administrator(Profile **head){
+    Profile *p = *head;
+    int option, parkIn;
     char plate[MAX];
     char id[MAX];
-    p = *head;
-
-    printf("\n1. PMS\n2. Search Profile\n");
+    
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(41);
+    printf("E-PARADA\n");
+    space_left(20);
+    printf("================================================\n");
+    space_up(2);
+    space_left(25);
+    printf("1. PMS\n");
+    space_left(25);
+    printf("2. Search Profile\n");
+    space_up(2);
+    space_left(25);
+    printf("Choice: ");
     scanf("%d", &option);
 
     if(option == 1){ //PMS instructions
@@ -446,7 +449,7 @@ void rgstr(Profile ** head, char plate[], char id[]){
             scanf("%s", plate);
             printf("Driver ID: ");
             scanf("%s", id);
-            parkIn = traverseProfile(p, plate, id);
+            parkIn = traverseProfile(p, plate);
             if(parkIn == 0){
                 dscrpncyCheck(p, plate, id);
             }
@@ -458,13 +461,13 @@ void rgstr(Profile ** head, char plate[], char id[]){
                         printf("\nTransaction Ended");
                     }
                     else if(option == 2){
-                        registerProfile();
+                        rgstr(p, plate, id);
                     }
                 }
             }
         }
-        /*else if(option == 2){ //if Park Out
-            dscrpncyCheck();
+        else if(option == 2){ //if Park Out
+            dscrpncyCheck(p, plate, id);
         }
     else if(option == 2){ //Search Profile Instructions
         printf("Enter Plate Number: ");
@@ -478,7 +481,7 @@ void rgstr(Profile ** head, char plate[], char id[]){
                     break;
                 }
                 else if(option == 2){ //Profile register
-                    registerProfile();
+                    rgstr(p, plate, id);;
                     break;
                 }
             }
@@ -491,9 +494,9 @@ void rgstr(Profile ** head, char plate[], char id[]){
             }
         }
     }
-}*/
+}
 
-int traverseProfile(Profile * head, char plate[]){
+int traverseProfile(Profile * head, const char *plate[]){
     Profile *p;
 
     p = head;
@@ -515,7 +518,7 @@ int traverseProfile(Profile * head, char plate[]){
         return 1;
 }
 
-void dscrpncyCheck(Profile * head, char plate[], char id[]){
+void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     FILE * ifp = fopen("discrepancy.txt","a");
     Profile * p;
     int option;
