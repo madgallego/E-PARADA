@@ -498,7 +498,7 @@ void Administrator(Profile **head){
         space_up(3);
         space_left(25);
         printf("Enter Plate Number:");
-        scanf("%s %c", plate, &type);
+        scanf("%s %c", plate);
 
         traverseProfile(p, plate);
 
