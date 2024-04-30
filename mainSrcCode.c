@@ -51,7 +51,7 @@ typedef struct logbook{
 
 /*-------------------------------ALL FUNCTION PROTOTYPES HERE!!!!--------------------------------------*/
 
-//Handles parking animation depending on return of useLog. Please subtract 1 from designation for array operations
+/*//Handles parking animation depending on return of useLog. Please subtract 1 from designation for array operations
 void peterParker(int designation, int car[20], int motor[20]);
 
 //Presents lower parking spot for car and occupied spots
@@ -76,7 +76,7 @@ void arrowD(int artype, int designation, int vtype);
 void printLog(log * head, int option);
 
 //prints current logged in users. Happens after every termination of useLog function(to update logbook displayed)
-void currLog(log * head);
+void currLog(log * head);*/
 
 //read records.txt to Profile lined list
 Profile *create_list(FILE*inrec);
@@ -86,11 +86,11 @@ void display(Profile*head);
 
 /*screen layout functions for SignIn()*/
 int SignIn(); //return 0 for successful login, 1 if not
+int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username);
 void clearTerminal();//cears terminal
 void space_up(int lines);//adds lines
 void space_left(int spaces);//adds n spaces 
 void delay(int seconds);//delays execution of next line for n seconds
-int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username);
 
 //free the allocated space in linked list
 void freeProfile(Profile ** head);
@@ -107,7 +107,7 @@ void dscrpncyCheck(Profile * profile, char plate[], char id[]);
 int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
-//void registerProfile(void);
+void rrgstr(Profile ** head, char plate[], char id[]);
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
@@ -187,82 +187,6 @@ Profile *create_list(FILE *inrec) {
     }
     return head;
 }//creating profile linked list function
-
-void display(Profile*head){
-  Profile *p;
-  p=head;
-  printf("Data in Records File:");
-  while(p!=NULL){
-    printf("\n%s %s %c", p->plateNum, p->profileID, p->type);
-    p=p->nxtPtr;
-  }
-  printf("\n");
-}//temporary funcion for checking
-
-void clearTerminal() {
-    printf("\e[1;1H\e[2J");
-}
-
-void space_up(int lines) {
-    for (int i = 0; i < lines; i++)
-        printf("\n");
-}
-
-void space_left(int spaces) {
-    for (int i = 0; i < spaces; i++)
-        printf(" ");
-}
-
-void delay(int seconds) {
-    clock_t start_time = clock();
-    clock_t current_time;
-    double elapsed_time;
-
-    do {
-        current_time = clock();
-        elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
-    } while (elapsed_time < seconds);
-}
-
-int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
-    // Check if the username exists in the admin array
-    int user_found = 0;
-    for (int i = 0; i < admin_count; i++) {
-        if (strcmp(admin[i].user, username) == 0) {
-            user_found = 1;
-            // Prompt for a new passkey
-            char new_passkey[MAX];
-            space_up(2);
-            space_left(20);
-            printf("Enter a new passkey for user '%s': ", username);
-            scanf("%s", new_passkey);
-            strcpy(admin[i].passkey, new_passkey);  // Update the passkey
-            break;
-        }
-    }
-
-    if (user_found==0) {
-        space_up(2);
-        space_left(20);
-        printf("Error: User '%s' not found.\n", username);
-        return 1;  // Indicate error
-    }
-
-    // Rewrite the admin data to the file
-    FILE *file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Error: Unable to open '%s' for writing.\n", filename);
-        delay(1);
-        return 1;  // Indicate error
-    }
-
-    for (int i = 0; i < admin_count; i++) {
-        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
-    }
-
-    fclose(file);
-    return 0;  // Indicate success
-}
 
 int SignIn() {
     FILE *file = fopen("passkey.txt", "r");
@@ -396,12 +320,110 @@ int SignIn() {
     return 1;  // Default return for unexpected behavior
 }
 
+int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
+    // Check if the username exists in the admin array
+    int user_found = 0;
+    for (int i = 0; i < admin_count; i++) {
+        if (strcmp(admin[i].user, username) == 0) {
+            user_found = 1;
+            // Prompt for a new passkey
+            char new_passkey[MAX];
+            space_up(2);
+            space_left(20);
+            printf("Enter a new passkey for user '%s': ", username);
+            scanf("%s", new_passkey);
+            strcpy(admin[i].passkey, new_passkey);  // Update the passkey
+            break;
+        }
+    }
+
+    if (user_found==0) {
+        space_up(2);
+        space_left(20);
+        printf("Error: User '%s' not found.\n", username);
+        return 1;  // Indicate error
+    }
+
+    // Rewrite the admin data to the file
+    FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Unable to open '%s' for writing.\n", filename);
+        delay(1);
+        return 1;  // Indicate error
+    }
+
+    for (int i = 0; i < admin_count; i++) {
+        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
+    }
+
+    fclose(file);
+    return 0;  // Indicate success
+}
+
+void display(Profile*head){
+  Profile *p;
+  p=head;
+  printf("Data in Records File:");
+  while(p!=NULL){
+    printf("\n%s %s %c", p->plateNum, p->profileID, p->type);
+    p=p->nxtPtr;
+  }
+  printf("\n");
+}//temporary funcion for checking
+
+void clearTerminal() {
+    printf("\e[1;1H\e[2J");
+}
+
+void space_up(int lines) {
+    for (int i = 0; i < lines; i++)
+        printf("\n");
+}
+
+void space_left(int spaces) {
+    for (int i = 0; i < spaces; i++)
+        printf(" ");
+}
+
+void delay(int seconds) {
+    clock_t start_time = clock();
+    clock_t current_time;
+    double elapsed_time;
+
+    do {
+        current_time = clock();
+        elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
+    } while (elapsed_time < seconds);
+}
+
 void freeProfile(Profile ** head){
     Profile * p;
     while(*head != NULL){
         p = *head;
         *head = (*head)->nxtPtr;
         free(p);
+    }
+}
+
+void rgstr(Profile ** head, char plate[], char id[]){
+    Profile * new, * p;
+    char type;
+
+    p = *head;
+    new = (Profile*)malloc(sizeof(Profile));
+    while(p->nxtPtr != NULL){
+        p = p->nxtPtr;
+    }
+
+    printf("Please indicate vehicle type(A=car, B=motorcycle): ");
+    scanf(" %c", &type);
+
+    if(p->nxtPtr == NULL){
+        strcpy(new->plateNum, plate);
+        strcpy(new->profileID, id);
+        new->type = type;
+        new->nxtPtr = NULL;
+        p->nxtPtr = new;
     }
 }
 
@@ -524,33 +546,30 @@ void dscrpncyCheck(Profile * head, char plate[], char id[]){
 }
 
 //option if log in (1) or log out (2)
-/*int useLog(log *head, Profile * pHead, int * car, int * motor, int option)
+/*int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
 {
-    log *p, *new;
+    log * p, *q, *new;
     char tempNo[MAX];
     char tempID[MAX];
-    int choice;
-    int temphr, tempmin;
-    int outNotFound = 0;
+    int choice, temphr, tempmin, outNotFound = 0;
+
+    p = *head;
     time_t t;
-
-    p = head;
-
-    if(option == 1){
+    if(option == 1)
+    {
         printf("Log IN\nPlate No: ");
         scanf("%s", tempNo);
         printf("Driver ID: ");
         scanf("%s", tempID);
         //ends once profile is registered or transaction is ended
-        if(traverseProfile(pHead, tempNo) == 1){
+        if(traverseProfile(pHead, tempNo) == 1)
+        {
             printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
             scanf("%d", &choice);
-            if(option == 1){
+            if(option == 1)
                 return 0;
-            }
-            else if(option == 2){
-                registerProfile(-parameters here-);
-            }
+            else if(option == 2)
+                rgstr(&pHead, tempNo, tempID);
         }
         dscrpncyCheck(pHead, tempNo, tempID);
         //making new pointer
@@ -560,74 +579,123 @@ void dscrpncyCheck(Profile * head, char plate[], char id[]){
         t = time(NULL);
         new->timeIn = *localtime(&t);
         new->next = NULL;
-
-        int profileType = traverseProfile(pHead, tempNo);
-
-        if (profileType == 2) {
-            for (int i = 0; i < 20; i++) {
-                if (car[i] == 0) {
-                    new->status = i + 1; // setup parking spot for return
+        if(traverseProfile(pHead, tempNo) == 2)
+        {
+            for(int i = 0; i < 20; i++)
+            {
+                //free spot
+                if(car[i] == 0)
+                {
+                    //setup parking spot for return
+                    new->status = i + 1;
                     car[i] = 1;
                     break;
                 }
             }
-        } else if (profileType == 3) {
-            for (int i = 0; i < 20; i++) {
-                if (motor[i] == 0) {
-                    new->status = i + 21; // setup parking spot for return
+        }
+        else if(traverseProfile(pHead, tempNo) == 3)
+        {
+            for(int i = 0; i < 20; i++)
+            {
+                //free spot
+                if(motor[i] == 0)
+                {
+                    //setup parking spot for return
+                    new->status = i + 21;
                     motor[i] = 1;
                     break;
                 }
             }
         }
+        if(head == NULL)
+        {
+            *head = new;
+            return (*head)->status + 1; 
+        }
         //adding log details
-        while(p->next!= NULL){
+        while(p->next!= NULL)
+        {
             p = p->next;
         }
-        
-        p->next = new;
-
-        // Return parking spot number, 0 for logout
-        return new->status;
+        if(p->next == NULL)
+        {
+            p->next = new;
+            //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
+            return p->status + 1;
+        }
     }
-     else if (option == 2) {
-        do {
+    else if(option == 2)
+    {
+        do
+        {
             printf("Log OUT\nPlate No: ");
             scanf("%s", tempNo);
             printf("Driver ID: ");
             scanf("%s", tempID);
 
-            // Reset pointer to the start of the list
-            p = head;
+            //CHECKS IF ALREADY LOGGED OUT
 
-            while (p != NULL) {
-                if (strcmp(p->plateNum, tempNo) == 0) {
-                    if (p->status == 0) {
-                        printf("User already logged out. Exiting Log Out.\n");
-                        return 0;
-                    } else {
-                        dscrpncyCheck(pHead, tempNo, tempID);
-
-                        t = time(NULL);
-                        p->timeOut = *localtime(&t);
-                        p->status = 0;
-
-                        float balance = (((p->timeOut.tm_hour * 60 + p->timeOut.tm_min) - (p->timeIn.tm_hour * 60 + p->timeIn.tm_min)) * 0.5);
-                        printf("Total balance is: Php %.2f\n", balance);
-
-                        return p->status;
+            if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
+            {
+                q = p->next;
+                while(q != NULL)
+                {
+                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
+                    {
+                        p = q;
                     }
+                    q = q->next;
                 }
-
-                p = p->next;
+                if((p->status == 0 && q == NULL))
+                {
+                    printf("User already logged out. Exiting Log Out.\n");
+                    return 0;
+                }
             }
+            while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
+            {
+                q = p->next;
+                while(q != NULL)
+                {
+                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
+                    {
+                        p = q;
+                    }
+                    q = q->next;
+                }
+                if((p->status == 0 && q == NULL))
+                {
+                    printf("User already logged out. Exiting Log Out.\n");
+                    return 0;
+                }
+            }
+            //CHECK FOR DISCREPANCY
+            dscrpncyCheck(pHead, tempNo, tempID);
+            //find platenumber to log out
+            if(p->status != 0)
+            {             
+                t = time(NULL);
+                p->timeOut = *localtime(&t);
 
-            printf("Driver not logged in.\n\t1. End Transaction\n\t2. Log Out another driver\n");
+                p->status = 0;
+
+                //calculating balance
+                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)/60) * 0.5 //rate);
+
+                return p->status;
+                    
+            }
+            printf("Driver not logged in. \n1. End Transaction\n2. Log Out another driver\n");
             scanf("%d", &choice);
-        } while (choice == 2);
+            if(choice == 1)
+                return 0;
+            else if(choice == 2)
+                ;//DO NOTHING
+                
 
-        return 0;
+        //Checks if car was even logged in (prevent security breaches)
+        } while(1);
     }
 
-    return -1; // Invalid option
+
 }*/
