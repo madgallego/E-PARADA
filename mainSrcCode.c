@@ -107,7 +107,7 @@ void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
 int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
-void rgstr(Profile ** head, const char *plate[], const char *id[]);
+int rgstr(Profile ** head, const char *plate[], const char *id[]);
 
 //Main function admin log in and for managing the program
 void Administrator(Profile **head);
@@ -396,16 +396,25 @@ void freeProfile(Profile ** head){
     }
 }
 
-void rgstr(Profile ** head, const char *plate[], const char *id[]){
+int rgstr(Profile ** head, const char *plate[], const char *id[]){
     Profile * new, * p;
     char type;
 
     p = *head;
     new = (Profile*)malloc(sizeof(Profile));
-    while(p->nxtPtr != NULL){
+    while(p != NULL){
         p = p->nxtPtr;
     }
-
+    clearTerminal();
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(36);
+    printf("REGISTER PROFILE\n");
+    space_left(20);
+    printf("================================================\n");
+    space_up(2);
+    space_left(25);
     printf("Please indicate vehicle type(A=car, B=motorcycle): ");
     scanf(" %c", &type);
 
@@ -416,6 +425,7 @@ void rgstr(Profile ** head, const char *plate[], const char *id[]){
         new->nxtPtr = NULL;
         p->nxtPtr = new;
     }
+    return 0;
 }
 
 void Administrator(Profile **head){
@@ -478,7 +488,11 @@ void Administrator(Profile **head){
                     printf("\nTransaction Ended");
                 }
                 else if(option == 2){
-                    rgstr(p, plate, id);
+                    if(rgstr(p, plate, id)==0){
+                        space_up(1);
+                        space_left(25);
+                        printf("Registered Successfully!");
+                    }
                 }
             }
         }
@@ -503,8 +517,8 @@ void Administrator(Profile **head){
         while (p != NULL) { // Traverse the linked list
             if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
                 space_up(1);
-                space_left(32);
-                printf("Search Result:\n");
+                space_left(25);
+                printf("Search Result\n\n");
                 space_left(25);
                 printf("Plate Number: %s\n", p->plateNum);
                 space_left(25);
@@ -512,7 +526,7 @@ void Administrator(Profile **head){
                 space_left(25);
                 printf("Vehicle Type: %c\n\n", p->type);
                 space_left(20);
-                printf("================================================\n");
+                printf("================================================\n\n");
                 break;
             } else {
                 p = p->nxtPtr; // Continue to the next node
@@ -533,7 +547,11 @@ void Administrator(Profile **head){
                     delay(2);
                     clearTerminal();
                 } else if (option == 2) {
-                rgstr(p, plate, id); // Register a new profile
+                    if(rgstr(p, plate, id)==0){
+                        space_up(1);
+                        space_left(25);
+                        printf("Registered Successfully!");
+                    }// Register a new profile
                 }
             }
         }              
