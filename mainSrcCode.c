@@ -122,8 +122,12 @@ int main(){
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
-
-    int sign_in_result, option;
+    //DECLARATIONS AND INITIALIZATIONS
+    int sign_in_result, option, spot;
+    int car[20] = {0}; //CHANGE SIZE IF NEEDED
+    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
+    //declare logbook
+    log * head = NULL;
 
     do {
         sign_in_result = SignIn();
@@ -147,11 +151,11 @@ int main(){
     //0: exit program 1: register profile 2: park in 3: park out
     printf("%d", option);
 
-    /*if (option == 1) {// End the transaction
+    /*if (option == 0) {// End the transaction
         delay(2);
         clearTerminal();
         return 0;
-    } else if (option == 2) {//register new profile
+    } else if (option == 1) {//register new profile
         clearTerminal();
         space_up(3);
         space_left(20);
@@ -173,14 +177,43 @@ int main(){
     }
 
     //CODE CONTINUES DOWN HERE - xar;)
+    
+    
+    //PMS
 
-    //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
-    /*int car[20] = {0}; //CHANGE SIZE IF NEEDED
-    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
-    //declare logbook
-    log * head = (log *) (malloc(sizeof(log)));
-    head->next = NULL; */ 
-
+    else if{option == 2} //PARK IN
+    {
+        clearTerminal();
+        spot = useLog(&head, profile, car, motor, 1);
+        while(spot == 0)
+        {
+            printf("Please resolve the error. Thank you!");
+            spot = useLog(&head, profile, car, motor, 1);
+        }
+        printf("Please proceed to the parking spot pointed...")
+        delay(3);
+        clearTerminal();
+        peterParker(spot, car, motor);
+        printf("Thank you for parking");
+        delay(3);
+        clearTerminal();
+    }
+    else if(option == 3)
+    {
+        do
+        {
+            clearTerminal();
+            spot = useLog(&head, profile, car, motor, 1);
+            delay(3);
+            clearTerminal();
+            printf("Continue Parking out?\n\t1. Yes\n\t2. No\n");
+            scanf("%d", &option);
+            if(option == 2)
+                break;
+        }while(1)
+        
+    }
+    */
     fclose(inrec);
     fclose(inlog);
     fclose(indisc);
