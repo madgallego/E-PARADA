@@ -108,7 +108,7 @@ void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
 int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
-int rgstr(Profile ** head, const char *plate[], const char *id[]);
+int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]);
 
 //Main function admin log in and for managing the program
 int Administrator(Profile **head);
@@ -144,8 +144,10 @@ int main(){
     profile = create_list(inrec); //creating the list
     
     option = Administrator(&profile);
+    //0: exit program 1: register profile 2: park in 3: park out
+    printf("%d", option);
 
-    if (option == 1) {// End the transaction
+    /*if (option == 1) {// End the transaction
         delay(2);
         clearTerminal();
         return 0;
@@ -163,7 +165,7 @@ int main(){
         printf("Enter ID: ");
         scanf("%s", id);
 
-        if(rgstr(&p, plate, id)==0){
+        if(rgstr(inrec, &p, plate, id)==0){
             space_up(1);
             space_left(20);
             printf("Registered Successfully!\n");
@@ -182,7 +184,8 @@ int main(){
     fclose(inrec);
     fclose(inlog);
     fclose(indisc);
-    return 0:
+
+    return 0;
 }//main function
 
 Profile *create_list(FILE *inrec) {
@@ -416,7 +419,7 @@ void freeProfile(Profile ** head){
     }
 }
 
-int rgstr(Profile ** head, const char *plate[], const char *id[]){
+int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]){
     Profile * new, * p;
     char type;
 
@@ -513,9 +516,7 @@ int Administrator(Profile **head){
         }
         else if(option == 2){
             return 3;
-        }
-
-                       
+        }                       
     }          
     else if(option == 2){ //Search Profile Instructions
         clearTerminal();
@@ -545,25 +546,31 @@ int Administrator(Profile **head){
                 space_left(20);
                 printf("================================================\n\n");
                 break;
-            } else {
+            }
+            else {
                 p = p->nxtPtr; // Continue to the next node
             }
-            if (p == NULL) { // Plate number not found
-                space_up(1);
-                space_left(25);
-                printf("Plate number not found.\n\n");
-                space_left(25);
-                printf("1. End Transaction\n");
-                space_left(25);
-                printf("2. Register Profile\n\n\n");
-                space_left(25);
-                printf("Choice: ");
-                scanf("%d", &option);
-        
-                
-                }
-            }
-        }              
+
+        }
+        if (p == NULL) { // Plate number not found
+            space_up(1);
+            space_left(25);
+            printf("Plate number not found.\n\n");
+            space_left(25);
+            printf("1. End Transaction\n");
+            space_left(25);
+            printf("2. Register Profile\n\n\n");
+            space_left(25);
+            printf("Choice: ");
+            scanf("%d", &option);
+
+            if(option==1){
+                return 0;
+            }else if(option ==2){
+                return 1;
+            }     
+        }
+    }                         
 }
 
 
