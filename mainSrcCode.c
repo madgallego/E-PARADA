@@ -105,7 +105,7 @@ void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
   FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
   CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
   OPTION FOR LOG IN OR LOG OUT */
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
+int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
 int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]);
@@ -550,6 +550,7 @@ int Administrator(Profile **head){
             else {
                 p = p->nxtPtr; // Continue to the next node
             }
+
         }
         if (p == NULL) { // Plate number not found
             space_up(1);
@@ -569,8 +570,9 @@ int Administrator(Profile **head){
                 return 1;
             }     
         }
-    }              
+    }                         
 }
+
 
 int traverseProfile(Profile * head, const char *plate[]){
     Profile *p;
