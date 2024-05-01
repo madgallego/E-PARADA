@@ -736,6 +736,14 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                     return 0;
                 }
             }
+            else if(p->next == NULL)
+            {
+                 if((p->status == 0 && q == NULL))
+                {
+                    printf("User already logged out. Exiting Log Out.\n");
+                    return 0;
+                }
+            }
             while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
             {
                 q = p->next;
@@ -756,7 +764,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
             //CHECK FOR DISCREPANCY
             dscrpncyCheck(pHead, tempNo, tempID);
             //find platenumber to log out
-            if(p->status != 0)
+            if((strcmp(p->plateNum, tempNo) == 0) && (strcmp(p->profileID, tempID) == 0) && p->status != 0)
             {             
                 t = time(NULL);
                 p->timeOut = *localtime(&t);
