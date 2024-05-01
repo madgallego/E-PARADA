@@ -564,8 +564,8 @@ int Administrator(Profile **head){
                 }
             }
         }              
-    }
 }
+
 
 int traverseProfile(Profile * head, const char *plate[]){
     Profile *p;
