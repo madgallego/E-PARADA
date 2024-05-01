@@ -90,7 +90,7 @@ void currLog(log * head)
     log * p = head;
     char timeIN[100];
     char timeOUT[100];
-    printf("CURRENT LOGGED IN USERS\n");
+    printf("CURRENT PARKED IN VEHICLES\n");
     if(p->next == NULL)
     {
         if(p->status != 0)
@@ -99,6 +99,11 @@ void currLog(log * head)
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
             printf("%s | %s |\n", p->plateNum, p->profileID);
+            return;
+        }
+        else
+        {
+            printf("No Parked in Vehicles as of Now\n\n");
             return;
         }
     }
