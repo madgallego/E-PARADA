@@ -18,6 +18,7 @@ Electronic Parking and Documentation Algorithm
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 #define MAX 100
 #define MAX_ADMINS 5 // Limiting to 5 admins
@@ -110,7 +111,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 int rgstr(Profile ** head, const char *plate[], const char *id[]);
 
 //Main function admin log in and for managing the program
-void Administrator(Profile **head);
+int Administrator(Profile **head);
 
 /*--------------------------------FUNCTIONS DEFINITIONS START HERE!!!!--------------------------------------*/
 int main(){
@@ -122,7 +123,7 @@ int main(){
        return 1; // Exit with error
     }
 
-    int sign_in_result;
+    int sign_in_result, option;
 
     do {
         sign_in_result = SignIn();
@@ -142,13 +143,34 @@ int main(){
     Profile *profile; 
     profile = create_list(inrec); //creating the list
     
-    Administrator(&profile);
+    option = Administrator(&profile);
+
+    if (option == 1) {// End the transaction
+        delay(2);
+        clearTerminal();
+        return 0;
+    } else if (option == 2) {//register new profile
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(36);
+        printf("REGISTER PROFILE\n");
+        space_left(20);
+        printf("================================================\n");
+        space_up(2);
+        space_left(20);
+        printf("Enter ID: ");
+        scanf("%s", id);
+
+        if(rgstr(&p, plate, id)==0){
+            space_up(1);
+            space_left(20);
+            printf("Registered Successfully!\n");
+        }// Register a new profile
+    }
+
     //CODE CONTINUES DOWN HERE - xar;)
-
-    
-
-
-
 
     //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
     /*int car[20] = {0}; //CHANGE SIZE IF NEEDED
@@ -157,12 +179,10 @@ int main(){
     log * head = (log *) (malloc(sizeof(log)));
     head->next = NULL; */ 
 
-
-
-
     fclose(inrec);
     fclose(inlog);
     fclose(indisc);
+    return 0:
 }//main function
 
 Profile *create_list(FILE *inrec) {
@@ -414,21 +434,38 @@ int rgstr(Profile ** head, const char *plate[], const char *id[]){
     space_left(20);
     printf("================================================\n");
     space_up(2);
-    space_left(25);
-    printf("Please indicate vehicle type(A=car, B=motorcycle): ");
+    space_left(20);
+    printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
+    space_left(20);
+    printf("Vehicle Type: ");
     scanf(" %c", &type);
 
-    if(p->nxtPtr == NULL){
+    type = toupper(type);
+    
+    if(p == NULL){
         strcpy(new->plateNum, plate);
         strcpy(new->profileID, id);
         new->type = type;
         new->nxtPtr = NULL;
-        p->nxtPtr = new;
+        p = new;
     }
+
+    /*FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Unable to open '%s' for writing.\n", filename);
+        delay(1);
+        return 1;  // Indicate error
+    }
+
+    for (int i = 0; i < admin_count; i++) {
+        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
+    }
+
+    fclose(file);*/
     return 0;
 }
 
-void Administrator(Profile **head){
+int Administrator(Profile **head){
     Profile *p = *head;
     int option, parkIn;
     char plate[MAX];
@@ -471,34 +508,14 @@ void Administrator(Profile **head){
         printf("Choice: ");
         scanf("%d", &option);
 
-        if(option == 1){ //if Park In
-            printf("Plate No.: ");
-            scanf("%s", plate);
-            printf("Driver ID: ");
-            scanf("%s", id);
-            parkIn = traverseProfile(p, plate);
-            if(parkIn == 0){
-                dscrpncyCheck(p, plate, id);
-            }
-            else if(parkIn == 1){
-                printf("\nPlate number not found\n");
-                printf("\n1. End Transaction\n2. Register Profile\n");
-                scanf("%d", &option);
-                if(option == 1){
-                    printf("\nTransaction Ended");
-                }
-                else if(option == 2){
-                    if(rgstr(p, plate, id)==0){
-                        space_up(1);
-                        space_left(25);
-                        printf("Registered Successfully!");
-                    }
-                }
-            }
+        if(option == 1){
+            return 2;
         }
-        else if(option == 2){ //if Park Out
-            dscrpncyCheck(p, plate, id);
+        else if(option == 2){
+            return 3;
         }
+
+                       
     }          
     else if(option == 2){ //Search Profile Instructions
         clearTerminal();
@@ -543,15 +560,7 @@ void Administrator(Profile **head){
                 printf("Choice: ");
                 scanf("%d", &option);
         
-                if (option == 1) {// End the transaction
-                    delay(2);
-                    clearTerminal();
-                } else if (option == 2) {
-                    if(rgstr(p, plate, id)==0){
-                        space_up(1);
-                        space_left(25);
-                        printf("Registered Successfully!");
-                    }// Register a new profile
+                
                 }
             }
         }              
