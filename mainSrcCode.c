@@ -105,10 +105,10 @@ void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
   FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
   CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
   OPTION FOR LOG IN OR LOG OUT */
-int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
+int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
-int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]);
+int rgstr(Profile ** head, const char *plate[], const char *id[]);
 
 //Main function admin log in and for managing the program
 int Administrator(Profile **head);
@@ -122,12 +122,11 @@ int main(){
        printf("Error opening files.\n");
        return 1; // Exit with error
     }
-    //DECLARATIONS AND INITIALIZATIONS
-    int sign_in_result, option, spot;
-    int car[20] = {0}; //CHANGE SIZE IF NEEDED
-    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
-    //declare logbook
-    log * head = NULL;
+
+    int sign_in_result, option;
+    char id[MAX];
+    char plate[MAX];
+    char type[MAX];
 
     do {
         sign_in_result = SignIn();
@@ -149,9 +148,7 @@ int main(){
     
     option = Administrator(&profile);
     //0: exit program 1: register profile 2: park in 3: park out
-    printf("%d", option);
-
-    /*if (option == 0) {// End the transaction
+    if (option == 0) {// End the transaction
         delay(2);
         clearTerminal();
         return 0;
@@ -169,7 +166,7 @@ int main(){
         printf("Enter ID: ");
         scanf("%s", id);
 
-        if(rgstr(inrec, &p, plate, id)==0){
+        if(rgstr(&profile, plate, id)==0){
             space_up(1);
             space_left(20);
             printf("Registered Successfully!\n");
@@ -177,43 +174,14 @@ int main(){
     }
 
     //CODE CONTINUES DOWN HERE - xar;)
-    
-    
-    //PMS
 
-    else if{option == 2} //PARK IN
-    {
-        clearTerminal();
-        spot = useLog(&head, profile, car, motor, 1);
-        while(spot == 0)
-        {
-            printf("Please resolve the error. Thank you!");
-            spot = useLog(&head, profile, car, motor, 1);
-        }
-        printf("Please proceed to the parking spot pointed...")
-        delay(3);
-        clearTerminal();
-        peterParker(spot, car, motor);
-        printf("Thank you for parking");
-        delay(3);
-        clearTerminal();
-    }
-    else if(option == 3)
-    {
-        do
-        {
-            clearTerminal();
-            spot = useLog(&head, profile, car, motor, 1);
-            delay(3);
-            clearTerminal();
-            printf("Continue Parking out?\n\t1. Yes\n\t2. No\n");
-            scanf("%d", &option);
-            if(option == 2)
-                break;
-        }while(1)
-        
-    }
-    */
+    //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
+    /*int car[20] = {0}; //CHANGE SIZE IF NEEDED
+    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
+    //declare logbook
+    log * head = (log *) (malloc(sizeof(log)));
+    head->next = NULL; */ 
+
     fclose(inrec);
     fclose(inlog);
     fclose(indisc);
@@ -452,7 +420,8 @@ void freeProfile(Profile ** head){
     }
 }
 
-int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]){
+int rgstr(Profile ** head, const char *plate[], const char *id[]){
+    FILE * inrec = fopen("record.txt","a");
     Profile * new, * p;
     char type;
 
@@ -486,6 +455,8 @@ int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]){
         p = new;
     }
 
+    fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
+
     /*FILE *file = fopen(filename, "w");
     if (file == NULL) {
         printf("Error: Unable to open '%s' for writing.\n", filename);
@@ -498,6 +469,7 @@ int rgstr(FILE * file, Profile ** head, const char *plate[], const char *id[]){
     }
 
     fclose(file);*/
+    fclose(inrec);
     return 0;
 }
 
@@ -583,7 +555,6 @@ int Administrator(Profile **head){
             else {
                 p = p->nxtPtr; // Continue to the next node
             }
-
         }
         if (p == NULL) { // Plate number not found
             space_up(1);
@@ -603,9 +574,8 @@ int Administrator(Profile **head){
                 return 1;
             }     
         }
-    }                         
+    }              
 }
-
 
 int traverseProfile(Profile * head, const char *plate[]){
     Profile *p;
