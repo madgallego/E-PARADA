@@ -104,7 +104,7 @@ void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
   FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
   CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
   OPTION FOR LOG IN OR LOG OUT */
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
+int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
 //creates new struct for new profile and store to a.txt file
 int rgstr(Profile ** head, const char *plate[], const char *id[]);
