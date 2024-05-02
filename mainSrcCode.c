@@ -21,7 +21,7 @@ Electronic Parking and Documentation Algorithm
 #include <ctype.h>
 
 #define MAX 100
-#define MAX_ADMINS 5 // Limiting to 5 admins
+#define MAX_ADMINS 5 //Limiting to 5 admins
 #define SECURITY_KEY "12345678" // Example 8-digit security key for resetting password
 
 /*-------------------------------ALL STRUCTURE DEFINITION HERE!!!!--------------------------------------*/
@@ -79,30 +79,32 @@ void delay(int seconds) {
 }
 
 //Resets passkey
-int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
+int resetPasskey(const char *filename, Admin admin[], int admin_count) {
+    
+    char username[MAX];
+    space_up(2);
+    space_left(20);
+    printf("Admin: ");
+    scanf("%s", username); 
     // Check if the username exists in the admin array
     int user_found = 0;
     for (int i = 0; i < admin_count; i++) {
         if (strcmp(admin[i].user, username) == 0) {
             user_found = 1;
-            // Prompt for a new passkey
             char new_passkey[MAX];
-            space_up(2);
-            space_left(20);
+            space_left(20);// Prompt for a new passkey
             printf("Enter a new passkey for user '%s': ", username);
             scanf("%s", new_passkey);
             strcpy(admin[i].passkey, new_passkey);  // Update the passkey
             break;
         }
     }
-
-    if (user_found==0) {
-        space_up(2);
+    if (user_found==0) {//user not found
+        space_up(1);
         space_left(20);
-        printf("Error: User '%s' not found.\n", username);
+        printf("Error: User '%s' not found.\n\n", username);
         return 1;  // Indicate error
     }
-
     // Rewrite the admin data to the file
     FILE *file = fopen(filename, "w");
     if (file == NULL) {
@@ -129,7 +131,7 @@ int SignIn() {
     Admin admin[MAX_ADMINS];
     int admin_count = 0;
 
-    // Read the admin data from the file
+    // Read the admin security details from the file
     while (admin_count < MAX_ADMINS && fscanf(file, "%s %s", admin[admin_count].user, admin[admin_count].passkey) == 2) {
         admin_count++;
     }
@@ -232,19 +234,20 @@ int SignIn() {
             space_left(20);
             printf("================================================\n");
             
-            int reset_result = resetPasskey("passkey.txt", admin, admin_count, entered_user.user);
+            int reset_result = resetPasskey("passkey.txt", admin, admin_count);
             if (reset_result == 0) {
                 return 2;
             } else {
-                space_up(1);
                 space_left(20);
-                printf("Error resetting password.\n\n");
+                printf("Error resetting password.\n");
+                space_left(20);
+                printf("================================================\n");
                 return 1;
             }
         } else {
-            space_up(2);
+            space_up(1);
             space_left(20);
-            printf("Incorrect security key. Exiting program.\n");
+            printf("!Incorrect security key!\n\n");
             return 1;  // Exit program due to incorrect security key
         }
     }
@@ -459,8 +462,7 @@ int Administrator(Profile **head){
                 space_left(20);
                 printf("================================================\n\n");
                 break;
-            }
-            else {
+            }else {
                 p = p->nxtPtr; // Continue to the next node
             }
         }
@@ -475,8 +477,13 @@ int Administrator(Profile **head){
             space_left(25);
             printf("Choice: ");
             scanf("%d", &option);
-
+            space_left(20);
+            printf("================================================\n");
             if(option==1){
+                space_left(20);
+                printf("Exiting program...");
+                delay(3);
+                clearTerminal();
                 return 0;
             }else if(option ==2){
                 return 1;
@@ -1114,11 +1121,13 @@ int main(){
         } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
             space_left(20);
             printf("Exiting program...");
-            delay(3);
+            delay(4);
             clearTerminal();
             return 1;
         }
         space_up(1);// Reset the password using security key
+        space_left(20);
+        printf("================================================\n\n");
         space_left(20);
         printf("Password has been reset successfully.\n");
         delay(2);
@@ -1130,7 +1139,7 @@ int main(){
     struct tm *timeTrack = localtime(&currT);//get current time
 
     //while loop ends with break or when it is 5 PM
-    while(timeTrack->tm_hour < 17 )
+    while(/*timeTrack->tm_hour < 17*/1 )
     {
         currLog(head);
 
@@ -1138,7 +1147,12 @@ int main(){
         //0: exit program 1: register profile 2: park in 3: park out
         if (option == 0) {// End the transaction
             delay(2);
+            space_left(20);
+            printf("Printing Logs for today...\n");
+            delay(2);
             clearTerminal();
+            printLog(head, 0);
+            printLog(head, 1);
             return 0;
         } else if (option == 1) {//register new profile
             clearTerminal();
