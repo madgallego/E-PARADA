@@ -29,26 +29,20 @@ typedef struct { //struct of Admin
 	char user[MAX];
 	char passkey[MAX];
 } Admin;
-struct node { //struct of Profile
-	char plateNum [MAX];
-	char profileID [MAX];
-	char type;//(A:CAR,B:MOTOR)
-    struct node * nxtPtr;
-};// for records linked list
-typedef struct node Profile;
-typedef struct logbook{
+typedef struct Profile {
     char plateNum[MAX];
     char profileID[MAX];
-    //unsure!!
-    //char type;
-
-    //0 for logged out, 1-X for parking designation
-    int status;
-    
+    char type;  // 'A' for cars, 'B' for motorcycles
+    struct Profile *nxtPtr;
+} Profile;
+typedef struct log {
+    char plateNum[MAX];
+    char profileID[MAX];
     struct tm timeIn;
     struct tm timeOut;
-    struct logbook * next;
-}log;
+    int status;
+    struct log *next;
+} log;
 
 /*-------------------------------ALL FUNCTION PROTOTYPES HERE!!!!--------------------------------------*/
 /*-------TERMINAL LAYOUT FUNCTIONS---------*/
@@ -333,56 +327,59 @@ void freeProfile(Profile ** head){
         free(p);
     }
 }
-//Traverses profile to find entered plate. Returns vehicle type or 1 if plate is not found
+//Function to traverse profiles to check plate num and identify vehicle type
 int traverseProfile(Profile * head, const char plate[]){
-    Profile *p;
-
-    p = head;
-    while(p->nxtPtr != NULL){
-        if((strcmp(plate, p->plateNum) == 0)){ //if plate number found
-            if(p->type == 'A') // if car
-                return 2;
-            else if(p->type == 'B') //if motorcycle
-                return 3;
-            else
-                printf("ERROR: No vehicle type identified");
+  Profile *p = head;
+    while (p != NULL) {
+        if (strcmp(p->plateNum, plate) == 0) {
+            if (p->type == 'A') {
+                return 2;  // Car
+            } else if (p->type == 'B') {
+                return 3;  // Motorcycle
+            } else {
+                fprintf(stderr, "Error: Unknown vehicle type for profile %s.\n", plate);
+            }
         }
-        else{
-            p = p->nxtPtr;
-        }
+        p = p->nxtPtr;
     }
-    
-    if(p->nxtPtr == NULL)
-        return 1;
+    return 1;  // Profile not found
 }
 //Checks for profile id of plate num. Archives discrpency if profile id does not match
 void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     FILE * ifp = fopen("discrepancy.txt","a");
-    Profile * p;
+    Profile * p=head;
     int option;
+    int discrepancy_found = 1;
+    // Traverse the linked list to find the matching plate number and profile ID.
+    while (p != NULL) {
+        if (strcmp(plate, p->plateNum) == 0) {
+            if (strcmp(id, p->profileID) == 0) {
+                printf("\nParking Details Complete! Successfully Recorded.\n");
+                discrepancy_found = 0;
+                break;
+            } else {
+                // Discrepancy found: same plate number but different profile ID.
+                printf("Driver Profile does not match in Database.\n");
+                printf("\n1. End Transaction\n2. Archive Transaction to Discrepancy File\n");
+                scanf("%d", &option);
 
-    p = head;
-    while(p->nxtPtr != NULL){
-        if((strcmp(plate, p->plateNum) == 0) && (strcmp(id, p->profileID) == 0)){
-            printf("Parking Details Complete!\nSuccessfully Recorded\n");
-            break;
-        }
-        else if((strcmp(plate, p->plateNum) == 0) && (strcmp(id, p->profileID) != 0)){
-            printf("Driver Profile does not match in Database\n");
-            printf("\n1. End Transaction\n2. Archive Transaction to Discrepancy File\n");
-            scanf("%d", &option);
-            if(option == 1){
-                break;
-            }
-            else if(option == 2){
-                fprintf(ifp, "Plate Number: %s | Profile ID: %s -> Discrepancy: %s\n", p->plateNum, p->profileID, id);
+                if (option == 2) {
+                    fprintf(ifp, "Plate Number: %s | Expected Profile ID: %s | Discrepancy: %s\n", 
+                            plate, p->profileID, id);
+                    printf("Discrepancy archived in 'discrepancy.txt'.\n");
+                }
+                discrepancy_found = 0;
                 break;
             }
         }
-        else{
-            p = p->nxtPtr;
-        }
+
+        p = p->nxtPtr;
     }
+
+    if (discrepancy_found) {
+        printf("No matching plate number found in the profile database.\n");
+    }
+
     fclose(ifp);
 }
 //Main function admin log in and for managing the program
@@ -487,166 +484,133 @@ int Administrator(Profile **head){
     }return 4;//Invalid option or default return 
 }
 //Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
-int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
-{
-    log * p, *q, *new;
+int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option){
+    log *p = *loghead;
+    log *q = NULL;
+    log *new_log;
     char tempNo[MAX];
     char tempID[MAX];
-    int choice, temphr, tempmin;
-
-    p = *head;
+    int choice;
     time_t t;
-    if(option == 1)
-    {
-        printf("PARK IN\nPlate No: ");
+
+    if(option == 1){ //park in
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(40);
+        printf("PARK IN\n");
+        space_left(20);
+        printf("================================================\n\n");
+        space_left(25);
+        printf("Plate No: ");
         scanf("%s", tempNo);
+        space_left(25);
         printf("Driver ID: ");
         scanf("%s", tempID);
-        //ends once profile is registered or transaction is ended
-        if(traverseProfile(pHead, tempNo) == 1)
-        {
+        
+        if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
             printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
             scanf("%d", &choice);
-            if(option == 1)
+            if(choice == 1)
                 return 0;
-            else if(option == 2)
-                rgstr(&pHead, tempNo, tempID);
+            else if(choice == 2)
+                rgstr(&profiles, tempNo, tempID);//register profile to data file
         }
-        dscrpncyCheck(pHead, tempNo, tempID);
-        //making new pointer
-        new = (log *) malloc(sizeof(log));
-        strcpy(new->plateNum, tempNo);
-        strcpy(new->profileID, tempID);
+        // Check for discrepancies
+        dscrpncyCheck(profiles, tempNo, tempID);
+        // Create a new log entry
+        new_log = (log *)malloc(sizeof(log));
+        
+        strcpy(new_log->plateNum, tempNo);
+        strcpy(new_log->profileID, tempID);
         t = time(NULL);
-        new->timeIn = *localtime(&t);
-        new->next = NULL;
-        if(traverseProfile(pHead, tempNo) == 2)
-        {
-            for(int i = 0; i < 20; i++)
-            {
-                //free spot
-                if(car[i] == 0)
-                {
-                    //setup parking spot for return
-                    new->status = i + 1;
+        new_log->timeIn = *localtime(&t);
+        new_log->next = NULL;
+
+        // Assign parking spot based on vehicle type
+        int parking_status = traverseProfile(profiles, tempNo);
+        if (parking_status == 2) {  // Car
+            for (int i = 0; i < 20; i++) {
+                if (car[i] == 0) {  // Free spot found
+                    new_log->status = i + 1;
                     car[i] = 1;
                     break;
                 }
             }
-        }
-        else if(traverseProfile(pHead, tempNo) == 3)
-        {
-            for(int i = 0; i < 20; i++)
-            {
-                //free spot
-                if(motor[i] == 0)
-                {
-                    //setup parking spot for return
-                    new->status = i + 21;
+        } else if (parking_status == 3) {  // Motorcycle
+            for (int i = 0; i < 20; i++) {
+                if (motor[i] == 0) {  // Free spot found
+                    new_log->status = i + 21;
                     motor[i] = 1;
                     break;
                 }
             }
         }
-        if(*head == NULL)
-        {
-            *head = new;
-            return (*head)->status; 
+
+        // Insert the new log entry into the linked list
+        if (*loghead == NULL) {
+            *loghead = new_log;
+        } else {
+            log *current = *loghead;
+            while (current->next != NULL) {
+                current = current->next;
+            }
+            current->next = new_log;
         }
-        //adding park log details
-        while(p->next!= NULL)
-        {
-            p = p->next;
-        }
-        if(p->next == NULL)
-        {
-            p->next = new;
-            //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
-            return new->status;
-        }
-    }
-    else if(option == 2)
-    {
-        do
-        {
+
+        return new_log->status;  // Return the parking spot
+    } 
+    else if (option == 2) {  // Park-out
+        while (1) {
             printf("PARK OUT\nPlate No: ");
             scanf("%s", tempNo);
             printf("Driver ID: ");
             scanf("%s", tempID);
 
-            //CHECKS IF ALREADY PARKED OUT
+            // Reset `p` to the head of the log list
+            p = *loghead;
 
-            if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
-            {
-                q = p->next;
-                while(q != NULL)
-                {
-                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
-                    {
-                        p = q;
+            int found = 0;  // Flag to check if the vehicle is in the list
+
+            // Traverse to find the corresponding plate number
+            while (p != NULL) {
+                if (strcmp(p->plateNum, tempNo) == 0) {
+                    if ((strcmp(p->profileID, tempID) == 0) && (p->status != 0)) {
+                        t = time(NULL);
+                        p->timeOut = *localtime(&t);
+
+                        p->status = 0;  // Mark as parked out
+
+                        // Calculate parking fee (sample rate)
+                        double total_minutes = (p->timeOut.tm_hour * 60 + p->timeOut.tm_min) - 
+                                               (p->timeIn.tm_hour * 60 + p->timeIn.tm_min);
+                        double total_hours = total_minutes / 60.0;
+                        double fee = total_hours * 0.5;  // Example rate: Php 0.5 per hour
+
+                        printf("Total balance is: Php %.2f\n", fee);
+
+                        found = 1;  // Vehicle was found and marked as parked out
+                        break;
                     }
-                    q = q->next;
                 }
-                if((p->status == 0 && q == NULL))
-                {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
+
+                p = p->next;
+            }
+
+            if (!found) {
+                printf("Vehicle not found in the parking log or already parked out.\n");
+                printf("1. End Transaction\n2. Park Out another vehicle\n");
+                scanf("%d", &choice);
+                if (choice == 1) {
                     return 0;
                 }
+            } else {
+                break;  // Vehicle found and successfully parked out
             }
-            else if(p->next == NULL)
-            {
-                 if((p->status == 0 && q == NULL))
-                {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
-                    return 0;
-                }
-            }
-            while((strcmp(p->plateNum, tempNo) != 0) && p->next != NULL)
-            {
-                q = p->next;
-                while(q != NULL)
-                {
-                    if((strcmp(q->plateNum, tempNo) == 0) && q->status != 0)
-                    {
-                        p = q;
-                    }
-                    q = q->next;
-                }
-                if((p->status == 0 && q == NULL))
-                {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
-                    return 0;
-                }
-            }
-            //CHECK FOR DISCREPANCY
-            dscrpncyCheck(pHead, tempNo, tempID);
-            //find platenumber to log out
-            if((strcmp(p->plateNum, tempNo) == 0) && (strcmp(p->profileID, tempID) == 0) && p->status != 0)
-            {             
-                t = time(NULL);
-                p->timeOut = *localtime(&t);
-
-                p->status = 0;
-
-                //calculating balance
-                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)/60) * 0.5);
-
-                return p->status;
-                    
-            }
-            printf("Vehicle not Parked in. \n1. End Transaction\n2. Park Out another vehicle\n");
-            scanf("%d", &choice);
-            if(choice == 1)
-                return 0;
-            else if(choice == 2)
-                ;//DO NOTHING
-                
-
-        //Checks if car was even parked in (prevent security breaches)
-        } while(1);
+        }
     }
-
-
+    return 0;  // Default return value (e.g., if option is invalid)
 }
 /*-----------PARKING ANNIMATION FUNCTIONS-----------------*/
 //Presents lower parking spot for car and occupied spots
@@ -1105,7 +1069,7 @@ int main(){
     int car[20] = {0};//set car parking space to empty
     int motor[20] = {0};//set motor parking space to empty
     Profile *profile;
-    log *head = NULL;
+    log *loghead = NULL;
     time_t currT;
     struct tm *timeTrack;
     
@@ -1139,7 +1103,7 @@ int main(){
             break; // Exit after 5 PM
         }*/
         
-        currLog(head);
+        currLog(loghead);
 
         option = Administrator(&profile); // Get user input for next action
            
@@ -1169,33 +1133,37 @@ int main(){
                 }break;// Register a new profile
             
             case 2: //Park in
-                while(1){
+                while (1) {
                     int spot;
-                    clearTerminal();
-                    if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
-                    {
-                        delay(3);
-                        printf("Please resolve the encountered issue. Thank you...");
+                    // Try to park in, check for errors
+                    spot = useLog(&loghead, profile, car, motor, 1);
+                    if (spot == 0) { // Error encountered
+                        printf("Error: Profile not found or other issue. Please resolve.\n");
                         delay(3);
                         break;
                     }
+                    // If successful, inform the user about the parking spot
                     delay(3);
-                    printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
+                    printf("Thank you for parking with us. Please proceed to parking spot %d. (20+ is for motorcycles only)\n", spot);
                     delay(3);
-                    clearTerminal();
+                    // Proceed with parking
                     peterParker(spot, car, motor);
                     delay(1);
-                    clearTerminal();
-                    break;
-                }
 
-            case 3: //Park out
-                if(useLog(&head, profile, car, motor, 2)); //empty if. No need to store useLog return value so we use a bool to retrieve the value (will end after succesful log out)
+                    break; // Exit the loop after successful park-in
+                }
+                break;
+
+            case 3: // Park out
+                if (useLog(&loghead, profile, car, motor, 2) == 0) { // Park-out error handling
+                    printf("Error: Unable to park out, check details.\n");
+                }
                 delay(3);
                 clearTerminal();
                 break;
 
             default:
+                printf("Invalid option. Please choose 2 for park-in or 3 for park-out.\n");
                 break;
         }
 
@@ -1213,8 +1181,8 @@ int main(){
             printf("Printing Logs for today...\n");
             delay(2);
             clearTerminal();
-            printLog(head, 0);
-            printLog(head, 1);
+            printLog(loghead, 0);
+            printLog(loghead, 1);
             break;
         }
         //Temporary for checking
