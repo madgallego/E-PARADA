@@ -641,7 +641,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     time_t t;
     if(option == 1)
     {
-        printf("PARK IN\nPlate No: ");
+        printf("Log IN\nPlate No: ");
         scanf("%s", tempNo);
         printf("Driver ID: ");
         scanf("%s", tempID);
@@ -696,7 +696,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
             *head = new;
             return (*head)->status + 1; 
         }
-        //adding park log details
+        //adding log details
         while(p->next!= NULL)
         {
             p = p->next;
@@ -712,12 +712,12 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     {
         do
         {
-            printf("PARK OUT\nPlate No: ");
+            printf("Log OUT\nPlate No: ");
             scanf("%s", tempNo);
             printf("Driver ID: ");
             scanf("%s", tempID);
 
-            //CHECKS IF ALREADY PARKED OUT
+            //CHECKS IF ALREADY LOGGED OUT
 
             if((strcmp(p->plateNum, tempNo) == 0) && p->status == 0)
             {
@@ -732,15 +732,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                 }
                 if((p->status == 0 && q == NULL))
                 {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
-                    return 0;
-                }
-            }
-            else if(p->next == NULL)
-            {
-                 if((p->status == 0 && q == NULL))
-                {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
+                    printf("User already logged out. Exiting Log Out.\n");
                     return 0;
                 }
             }
@@ -757,14 +749,14 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                 }
                 if((p->status == 0 && q == NULL))
                 {
-                    printf("Vehicle already Parked out. Exiting Park Out.\n");
+                    printf("User already logged out. Exiting Log Out.\n");
                     return 0;
                 }
             }
             //CHECK FOR DISCREPANCY
             dscrpncyCheck(pHead, tempNo, tempID);
             //find platenumber to log out
-            if((strcmp(p->plateNum, tempNo) == 0) && (strcmp(p->profileID, tempID) == 0) && p->status != 0)
+            if(p->status != 0)
             {             
                 t = time(NULL);
                 p->timeOut = *localtime(&t);
@@ -777,7 +769,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                 return p->status;
                     
             }
-            printf("Vehicle not Parked in. \n1. End Transaction\n2. Park Out another vehicle\n");
+            printf("Driver not logged in. \n1. End Transaction\n2. Log Out another driver\n");
             scanf("%d", &choice);
             if(choice == 1)
                 return 0;
@@ -785,7 +777,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                 ;//DO NOTHING
                 
 
-        //Checks if car was even parked in (prevent security breaches)
+        //Checks if car was even logged in (prevent security breaches)
         } while(1);
     }
 
