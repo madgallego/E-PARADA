@@ -517,9 +517,6 @@ Profile *create_list(FILE *inrec) {
     return head;
 }//creating profile linked list function
 
-//displays data from records.txt(temp function)
-void display(Profile*head);
-
 /*screen layout functions for SignIn()*/
 int SignIn() {
     FILE *file = fopen("passkey.txt", "r");
@@ -982,18 +979,6 @@ int rgstr(Profile ** head, const char *plate[], const char *id[]){
 
     fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
 
-    /*FILE *file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Error: Unable to open '%s' for writing.\n", filename);
-        delay(1);
-        return 1;  // Indicate error
-    }
-
-    for (int i = 0; i < admin_count; i++) {
-        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
-    }
-
-    fclose(file);*/
     fclose(inrec);
     return 0;
 }
@@ -1103,7 +1088,7 @@ int Administrator(Profile **head){
     }              
 }
 
-/*--------------------------------FUNCTIONS DEFINITIONS START HERE!!!!--------------------------------------*/
+/*-------------------------------- PROGRAM EXXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
     FILE *inrec = fopen("records.txt", "r");
     FILE *inlog = fopen("logbook.txt", "r");
@@ -1142,14 +1127,14 @@ int main(){
     profile = create_list(inrec); //creating the list
     
     time_t currT;
-    struct tm timeTrack;
+    struct tm *timeTrack;
     currT = time(NULL);
     //get current time
     timeTrack = localtime(&currT);
 
 
     //while loop ends with break or when it is 5 PM
-    while(timeTrack.tm_hour < 17 )
+    while(timeTrack->tm_hour < 17 )
     {
         currLog(head);
         option = Administrator(&profile);
@@ -1213,7 +1198,7 @@ int main(){
             printf("Printing Logs for today...\n");
             delay(2);
             clearTerminal();
-            printLog(head. 0);
+            printLog(head, 0);
             printLog(head, 1);
         }
         
@@ -1226,5 +1211,3 @@ int main(){
 
     return 0;
 }//main function
-
-
