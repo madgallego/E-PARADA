@@ -310,7 +310,7 @@ int rgstr(Profile ** head, const char *plate[], const char *id[]){
         p = new;
     }
 
-    fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
+    fprintf(inrec, "\n%s %s %c", new->plateNum, new->profileID, type);
 
     fclose(inrec);
     return 0;
@@ -1144,6 +1144,9 @@ int main(){
             space_left(20);
             printf("================================================\n");
             space_up(2);
+            space_left(20);
+            printf("Enter Plate Number: ");
+            scanf("%s", plate);
             space_left(20);
             printf("Enter ID: ");
             scanf("%s", id);
