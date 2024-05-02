@@ -247,7 +247,9 @@ int SignIn() {
         } else {
             space_up(1);
             space_left(20);
-            printf("!Incorrect security key!\n\n");
+            printf("INCORRECT SECURITY KEY\n\n");
+            space_left(20);
+            printf("================================================\n");
             return 1;  // Exit program due to incorrect security key
         }
     }
@@ -458,7 +460,7 @@ int Administrator(Profile **head){
                 printf("Vehicle Type: %c\n\n", p->type);
                 space_left(20);
                 printf("================================================\n\n");
-                return 4;
+                return 4;//default return
             }else {
                 p = p->nxtPtr; // Continue to the next node
             }
@@ -466,11 +468,11 @@ int Administrator(Profile **head){
         if (p == NULL) { // Plate number not found
             space_up(1);
             space_left(25);
-            printf("Plate number not found.\n\n");
+            printf("Plate number not found.\n");
             space_left(25);
             printf("1. End Transaction\n");
             space_left(25);
-            printf("2. Register Profile\n\n\n");
+            printf("2. Register Profile\n\n");
             space_left(25);
             printf("Choice: ");
             scanf("%d", &option);
@@ -1140,7 +1142,7 @@ int main(){
         currLog(head);
 
         option = Administrator(&profile); // Get user input for next action
-
+           
         //0: exit program 1: register profile 2: park in 3: park out
 
         switch (option) {
@@ -1193,20 +1195,6 @@ int main(){
                 clearTerminal();
                 break;
 
-            case 0: // End the transaction
-                space_left(20);
-                printf("Exiting program...");
-                delay(3);
-                clearTerminal();
-                delay(2);
-                space_left(20);
-                printf("Printing Logs for today...\n");
-                delay(2);
-                clearTerminal();
-                printLog(head, 0);
-                printLog(head, 1);
-                break;
-            
             default:
                 break;
         }
@@ -1215,7 +1203,7 @@ int main(){
         space_left(20); 
         printf("Do Another Action?  (1: No, 2: Yes): ");
         scanf("%d", &option);
-        if(option == 1)
+        if(option != 2)
         {
             space_left(20);
             printf("Exiting program...");
@@ -1233,10 +1221,9 @@ int main(){
         printf("\t\t\tAGAIN");
         delay(1);
     }
-
+    //file pointers shoud be passed from main since we opened them here
     fclose(inrec);
     fclose(inlog);
     fclose(indisc);
-
     return 0;
 }//main function
