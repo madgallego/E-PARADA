@@ -275,7 +275,6 @@ Profile *create_list(FILE *inrec) {
     return head;
 }//creating profile linked list function
 //creates new struct for new profile and store to a.txt file
-
 int rgstr(Profile ** head, const char plate[], const char id[]){
     FILE * inrec = fopen("records.txt","a");
     Profile * new, * p;
