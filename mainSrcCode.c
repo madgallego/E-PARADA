@@ -51,7 +51,7 @@ typedef struct logbook{
 }log;
 
 /*-------------------------------ALL FUNCTION PROTOTYPES HERE!!!!--------------------------------------*/
-/*screen layout functions for SignIn()*/
+/*-------TERMINAL LAYOUT FUNCTIONS---------*/
 //Clears Terminal using REGEX string
 void clearTerminal() {
     printf("\e[1;1H\e[2J");
@@ -77,6 +77,7 @@ void delay(int seconds) {
         elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
     } while (elapsed_time < seconds);
 }
+
 //Resets passkey
 int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
     // Check if the username exists in the admin array
@@ -642,7 +643,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
 
 
 }
-
+/*-----------PARKING ANNIMATION FUNCTIONS-----------------*/
 //Presents lower parking spot for car and occupied spots
 void carParkerlower(int car[20])
 {
@@ -674,7 +675,6 @@ void carParkerlower(int car[20])
     printf("|==============================================================|\n");
     printf("|   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---  |\n");
 }
-
 //presents upper parking spot for car and occupied spots
 void carParkerupper(int car[20])
 {
@@ -705,7 +705,6 @@ void carParkerupper(int car[20])
         }
     }
 }
-
 //presents lower parking spot for motor and occupied spots
 void motorParkerlower(int motor[20])
 {
@@ -737,7 +736,6 @@ void motorParkerlower(int motor[20])
     printf("|   --   --   --   --   --   --   --   --   --   --  |\n");
     printf("|====================================================|\n");
 }
-
 //presents upper parking spot for motor and occupied spots
 void motorParkerupper(int motor[20])
 {
@@ -768,7 +766,6 @@ void motorParkerupper(int motor[20])
     }
    
 }
-
 //prints upward arrow
 void arrow(int artype, int designation, int vtype)
 {
@@ -839,7 +836,6 @@ void arrow(int artype, int designation, int vtype)
         }
     }
 }
-
 //prints downward arrow
 void arrowD(int artype, int designation, int vtype)
 {
@@ -917,7 +913,6 @@ void arrowD(int artype, int designation, int vtype)
         }
     }
 }
-
 //Handles parking animation and displau
 void peterParker(int designation, int car[20], int motor[20])
 {
@@ -1005,7 +1000,7 @@ void peterParker(int designation, int car[20], int motor[20])
 void printLog(log * head, int option)
 {
     log * p = head;
-    FILE * ptr = fopen("logboook.txt", "a");
+    FILE * ptr = fopen("logbook.txt", "a");
 
     char timeIN[100];
     char timeOUT[100];
@@ -1042,7 +1037,6 @@ void printLog(log * head, int option)
     fclose(ptr);
     return;
 }
-
 //prints current logged in users. Happens after every termination of useLog function(to update logbook displayed)
 void currLog(log * head)
 {
