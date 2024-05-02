@@ -482,7 +482,7 @@ int Administrator(Profile **head){
                 return 1;
             }     
         }
-    }              
+    }return 4;//Invalid option or default return 
 }
 //Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
 int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
@@ -1086,12 +1086,13 @@ void currLog(log * head)
 
 /*-------------------------------- PROGRAM EXXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
+    // Open necessary files and check for errors
     FILE *inrec = fopen("records.txt", "r");
     FILE *inlog = fopen("logbook.txt", "r");
     FILE *indisc = fopen("discrepancy.txt", "r");
     if (inrec == NULL || inlog == NULL || indisc == NULL) {
        printf("Error opening files.\n");
-       return 1; // Exit with error
+       return 1; // Exit on error
     }
     
     //VARIABLE DECLARATIONS AND INITIALIZATIONS
@@ -1099,13 +1100,13 @@ int main(){
     int option;
     char id[MAX];
     char plate[MAX];
-    char type[MAX];
-    //set parking space to empty
-    int car[20] = {0};
-    int motor[20] = {0};
-    log * head = NULL;
+    int car[20] = {0};//set car parking space to empty
+    int motor[20] = {0};//set motor parking space to empty
+    Profile *profile;
+    log *head = NULL;
+    time_t currT;
+    struct tm *timeTrack;
     
-
     do {
         sign_in_result = SignIn();
         
@@ -1125,88 +1126,94 @@ int main(){
         printf("Password has been reset successfully.\n");
         delay(2);
     } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
-
-    Profile *profile = create_list(inrec); //creating the profile linked list
+    profile = create_list(inrec); //Create a profile list from records file
     
-    time_t currT = time(NULL);
-    struct tm *timeTrack = localtime(&currT);//get current time
-
-    //while loop ends with break or when it is 5 PM
-    while(/*timeTrack->tm_hour < 17*/1 )
+    // Main program loop, ends at 5 PM or by choice
+    while(1)
     {
-        //currLog(head);
+        currT = time(NULL);
+        timeTrack = localtime(&currT);
+        /*if (timeTrack->tm_hour >= 17) {
+            break; // Exit after 5 PM
+        }*/
+        
+        currLog(head);
 
-        option = Administrator(&profile);
+        option = Administrator(&profile); // Get user input for next action
+
         //0: exit program 1: register profile 2: park in 3: park out
-        if (option == 1) {//register new profile
-            clearTerminal();
-            space_up(3);
-            space_left(20);
-            printf("================================================\n");
-            space_left(36);
-            printf("REGISTER PROFILE\n");
-            space_left(20);
-            printf("================================================\n");
-            space_up(2);
-            space_left(20);
-            printf("Enter Plate Number: ");
-            scanf("%s", plate);
-            space_left(20);
-            printf("Enter ID: ");
-            scanf("%s", id);
 
-            if(rgstr(&profile, plate, id)==0){
-                space_up(1);
-                space_left(20);
-                printf("Registered Successfully!\n");
-            }// Register a new profile
-        }
-        //PARK IN
-        else if(option == 2)
-        {
-            while(1)
-            {
-                int spot;
+        switch (option) {
+            case 1: //Register new profile
                 clearTerminal();
-                if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
-                {
+                space_up(3);
+                space_left(20);
+                printf("================================================\n");
+                space_left(36);
+                printf("REGISTER PROFILE\n");
+                space_left(20);
+                printf("================================================\n");
+                space_up(2);
+                space_left(20);
+                printf("Enter Plate Number: ");
+                scanf("%s", plate);
+                space_left(20);
+                printf("Enter ID: ");
+                scanf("%s", id);
+                if(rgstr(&profile, plate, id)==0){
+                    space_up(1);
+                    space_left(20);
+                    printf("Registered Successfully!\n");
+                }break;// Register a new profile
+            
+            case 2: //Park in
+                while(1){
+                    int spot;
+                    clearTerminal();
+                    if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
+                    {
+                        delay(3);
+                        printf("Please resolve the encountered issue. Thank you...");
+                        delay(3);
+                        break;
+                    }
                     delay(3);
-                    printf("Please resolve the encountered issue. Thank you...");
+                    printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
                     delay(3);
+                    clearTerminal();
+                    peterParker(spot, car, motor);
+                    delay(1);
+                    clearTerminal();
                     break;
                 }
+
+            case 3: //Park out
+                if(useLog(&head, profile, car, motor, 2)); //empty if. No need to store useLog return value so we use a bool to retrieve the value (will end after succesful log out)
                 delay(3);
-                printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
-                delay(3);
-                clearTerminal();
-                peterParker(spot, car, motor);
-                delay(1);
                 clearTerminal();
                 break;
-            }
+
+            case 0: // End the transaction
+                space_left(20);
+                printf("Exiting program...");
+                delay(3);
+                clearTerminal();
+                delay(2);
+                space_left(20);
+                printf("Printing Logs for today...\n");
+                delay(2);
+                clearTerminal();
+                printLog(head, 0);
+                printLog(head, 1);
+                break;
+            
+            default:
+                break;
         }
-        //PARKOUT
-        else if(option == 3)
-        {
-            if(useLog(&head, profile, car, motor, 2)); //empty if. No need to store useLog return value so we use a bool to retrieve the value (will end after succesful log out)
-            delay(3);
-            clearTerminal();
-        }
-        else if (option == 0) {// End the transaction
-            space_left(20);
-            printf("Exiting program...");
-            delay(3);
-            clearTerminal();
-            delay(2);
-            space_left(20);
-            printf("Printing Logs for today...\n");
-            delay(2);
-            clearTerminal();
-            printLog(head, 0);
-            printLog(head, 1);
-            return 0;
-        }space_left(20); 
-        printf("Do Another Action?  1. No 2. Yes: ");
+
+        // Check if user wants to perform another action
+        space_left(20); 
+        printf("Do Another Action?  (1: No, 2: Yes): ");
         scanf("%d", &option);
         if(option == 1)
         {
@@ -1222,13 +1229,10 @@ int main(){
             printLog(head, 1);
             break;
         }
-        time_t currT = time(NULL);
-        struct tm *timeTrack = localtime(&currT);//get current time
-        printf("\t\t\tAGAIN");//Temporary for checking
+        //Temporary for checking
+        printf("\t\t\tAGAIN");
         delay(1);
-        
     }
-   
 
     fclose(inrec);
     fclose(inlog);
