@@ -198,11 +198,12 @@ int SignIn() {
     space_left(25);
     printf("1. Exit Program\n");
     space_left(25);
-    printf("2. Reset Password using Security Key\n");
-    space_up(2);
+    printf("2. Reset Password using Security Key\n\n");
     space_left(25);
     printf("Choice: ");
-    scanf("%d", &choice);   
+    scanf("%d", &choice);
+    space_left(20);
+    printf("================================================\n");
 
     if (choice == 1) {
         return 1;  // Exit program
@@ -247,7 +248,9 @@ int SignIn() {
             return 1;  // Exit program due to incorrect security key
         }
     }
-
+    space_left(20);
+    printf("Invalid choice\n");
+    delay(3);
     return 1;  // Default return for unexpected behavior
 }
 //read records.txt to Profile lined list
@@ -1109,6 +1112,10 @@ int main(){
         if (sign_in_result == 0) {// Successful login            
             break;
         } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
+            space_left(20);
+            printf("Exiting program...");
+            delay(3);
+            clearTerminal();
             return 1;
         }
         space_up(1);// Reset the password using security key
