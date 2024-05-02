@@ -275,7 +275,7 @@ Profile *create_list(FILE *inrec) {
     return head;
 }//creating profile linked list function
 //creates new struct for new profile and store to a.txt file
-int rgstr(Profile ** head, const char *plate[], const char *id[]){
+int rgstr(Profile ** head, const char plate[], const char id[]){
     FILE * inrec = fopen("record.txt","a");
     Profile * new, * p;
     char type;
@@ -325,12 +325,12 @@ void freeProfile(Profile ** head){
     }
 }
 //Traverses profile to find entered plate. Returns vehicle type or 1 if plate is not found
-int traverseProfile(Profile * head, const char *plate[]){
+int traverseProfile(Profile * head, const char plate[]){
     Profile *p;
 
     p = head;
     while(p->nxtPtr != NULL){
-        if((strcmp(plate, p->plateNum) != 0)){ //if plate number found
+        if((strcmp(plate, p->plateNum) == 0)){ //if plate number found
             if(p->type == 'A') // if car
                 return 2;
             else if(p->type == 'B') //if motorcycle
@@ -347,7 +347,7 @@ int traverseProfile(Profile * head, const char *plate[]){
         return 1;
 }
 //Checks for profile id of plate num. Archives discrpency if profile id does not match
-void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
+void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     FILE * ifp = fopen("discrepancy.txt","a");
     Profile * p;
     int option;
@@ -542,7 +542,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
                 }
             }
         }
-        if(head == NULL)
+        if(*head == NULL)
         {
             *head = new;
             return (*head)->status + 1; 
@@ -641,90 +641,6 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
     }
 
 
-}
-
-
-//Handles parking animation and displau
-void peterParker(int designation, int car[20], int motor[20])
-{
-    time_t flash;
-    int i = 0;
-    //checks vehicle type
-    if(designation <= 20) //CAR
-    {
-        flash = time(NULL);
-        while(i < 5)
-        {
-            if((time(NULL) - flash) == 1)
-            {
-                //clear terminal
-                printf("\e[1;1H\e[2J");
-                carParkerupper(car);
-                //prints either upward or downward arrow
-                if(designation <= 10)
-                    arrow(0, designation, 0);
-                else
-                    arrowD(0, designation, 0);
-                carParkerlower(car);
-                flash = time(NULL);
-                while(1)
-                {
-                    if((time(NULL) - flash) == 1)
-                    {
-                        //clear terminal
-                        printf("\e[1;1H\e[2J");
-                        carParkerupper(car);
-                        //print upward or downward arrow of type 1
-                        if(designation <= 10)
-                            arrow(1, designation, 0);
-                        else
-                            arrowD(1, designation, 0);
-                        carParkerlower(car);
-                        flash = time(NULL);
-                        break;
-                    }
-                }
-                i++;
-            }
-        }
-    }
-    else
-    {
-        //for motor
-        designation -= 20;
-        flash = time(NULL);
-        while(i < 10)
-        {
-            if((time(NULL) - flash) == 1)
-            {
-                printf("\e[1;1H\e[2J");
-                motorParkerupper(motor);
-                if(designation <=10)
-                    arrow(0, designation, 1);
-                else
-                    arrowD(0, designation, 1);
-                motorParkerlower(motor);
-                flash = time(NULL);
-                while(1)
-                {
-                    if((time(NULL) - flash) == 1)
-                    {
-                        printf("\e[1;1H\e[2J");
-                        motorParkerupper(motor);
-                        if(designation<=10)
-                            arrow(1, designation, 1);
-                        else
-                            arrowD(1, designation, 1);
-                        motorParkerlower(motor);
-                        flash = time(NULL);
-                        break;
-                    }
-                }
-                i++;
-            }
-        }
-
-    }
 }
 
 //Presents lower parking spot for car and occupied spots
@@ -1002,6 +918,91 @@ void arrowD(int artype, int designation, int vtype)
     }
 }
 
+//Handles parking animation and displau
+void peterParker(int designation, int car[20], int motor[20])
+{
+    time_t flash;
+    int i = 0;
+    //checks vehicle type
+    if(designation <= 20) //CAR
+    {
+        flash = time(NULL);
+        while(i < 5)
+        {
+            if((time(NULL) - flash) == 1)
+            {
+                //clear terminal
+                printf("\e[1;1H\e[2J");
+                carParkerupper(car);
+                //prints either upward or downward arrow
+                if(designation <= 10)
+                    arrow(0, designation, 0);
+                else
+                    arrowD(0, designation, 0);
+                carParkerlower(car);
+                flash = time(NULL);
+                while(1)
+                {
+                    if((time(NULL) - flash) == 1)
+                    {
+                        //clear terminal
+                        printf("\e[1;1H\e[2J");
+                        carParkerupper(car);
+                        //print upward or downward arrow of type 1
+                        if(designation <= 10)
+                            arrow(1, designation, 0);
+                        else
+                            arrowD(1, designation, 0);
+                        carParkerlower(car);
+                        flash = time(NULL);
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+    }
+    else
+    {
+        //for motor
+        designation -= 20;
+        flash = time(NULL);
+        while(i < 10)
+        {
+            if((time(NULL) - flash) == 1)
+            {
+                printf("\e[1;1H\e[2J");
+                motorParkerupper(motor);
+                if(designation <=10)
+                    arrow(0, designation, 1);
+                else
+                    arrowD(0, designation, 1);
+                motorParkerlower(motor);
+                flash = time(NULL);
+                while(1)
+                {
+                    if((time(NULL) - flash) == 1)
+                    {
+                        printf("\e[1;1H\e[2J");
+                        motorParkerupper(motor);
+                        if(designation<=10)
+                            arrow(1, designation, 1);
+                        else
+                            arrowD(1, designation, 1);
+                        motorParkerlower(motor);
+                        flash = time(NULL);
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+
+    }
+}
+
+
+
 //prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
 void printLog(log * head, int option)
 {
@@ -1051,7 +1052,12 @@ void currLog(log * head)
     char timeIN[100];
     char timeOUT[100];
     printf("CURRENT PARKED IN VEHICLES\n");
-    if(p->next == NULL)
+    if(p == NULL)
+    {
+        printf("No Vehicles Parked in as of Today\n\n");
+        return;
+    }
+    else if(p->next == NULL)
     {
         if(p->status != 0)
         {
@@ -1127,7 +1133,7 @@ int main(){
     //while loop ends with break or when it is 5 PM
     while(timeTrack->tm_hour < 17 )
     {
-        currLog(profile);
+        currLog(head);
         option = Administrator(&profile);
         //0: exit program 1: register profile 2: park in 3: park out
         if (option == 0) {// End the transaction
@@ -1163,13 +1169,12 @@ int main(){
             {
                 printf("Please resolve the encountered issue. Thank you...");
                 delay(3);
-                break;
             }
             delay(3);
-            printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", &spot);
+            printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
             delay(3);
             clearTerminal();
-            peterParker(spot, car, motor);
+            peterParker(spot - 1, car, motor);
             delay(1);
             clearTerminal();
         }
@@ -1182,7 +1187,7 @@ int main(){
         }
         printf("End Program?\n\t1. Yes\n\t2. No\n");
         scanf("%d", &option);
-        if(option - 1)//becomes 1 if user picked 2
+        if(option == 1)
         {
             clearTerminal();
             printf("Exiting Program...\n");
@@ -1191,7 +1196,10 @@ int main(){
             clearTerminal();
             printLog(head, 0);
             printLog(head, 1);
+            break;
         }
+        time_t currT = time(NULL);
+        struct tm *timeTrack = localtime(&currT);//get current time
         
     }
    
