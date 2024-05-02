@@ -52,143 +52,446 @@ typedef struct logbook{
 
 /*-------------------------------ALL FUNCTION PROTOTYPES HERE!!!!--------------------------------------*/
 
-/*//Handles parking animation depending on return of useLog. Please subtract 1 from designation for array operations
-void peterParker(int designation, int car[20], int motor[20]);
+//Handles parking animation and displau
+void peterParker(int designation, int car[20], int motor[20])
+{
+    time_t flash;
+    int i = 0;
+    //checks vehicle type
+    if(designation <= 20) //CAR
+    {
+        flash = time(NULL);
+        while(i < 5)
+        {
+            if((time(NULL) - flash) == 1)
+            {
+                //clear terminal
+                printf("\e[1;1H\e[2J");
+                carParkerupper(car);
+                //prints either upward or downward arrow
+                if(designation <= 10)
+                    arrow(0, designation, 0);
+                else
+                    arrowD(0, designation, 0);
+                carParkerlower(car);
+                flash = time(NULL);
+                while(1)
+                {
+                    if((time(NULL) - flash) == 1)
+                    {
+                        //clear terminal
+                        printf("\e[1;1H\e[2J");
+                        carParkerupper(car);
+                        //print upward or downward arrow of type 1
+                        if(designation <= 10)
+                            arrow(1, designation, 0);
+                        else
+                            arrowD(1, designation, 0);
+                        carParkerlower(car);
+                        flash = time(NULL);
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+    }
+    else
+    {
+        //for motor
+        designation -= 20;
+        flash = time(NULL);
+        while(i < 10)
+        {
+            if((time(NULL) - flash) == 1)
+            {
+                printf("\e[1;1H\e[2J");
+                motorParkerupper(motor);
+                if(designation <=10)
+                    arrow(0, designation, 1);
+                else
+                    arrowD(0, designation, 1);
+                motorParkerlower(motor);
+                flash = time(NULL);
+                while(1)
+                {
+                    if((time(NULL) - flash) == 1)
+                    {
+                        printf("\e[1;1H\e[2J");
+                        motorParkerupper(motor);
+                        if(designation<=10)
+                            arrow(1, designation, 1);
+                        else
+                            arrowD(1, designation, 1);
+                        motorParkerlower(motor);
+                        flash = time(NULL);
+                        break;
+                    }
+                }
+                i++;
+            }
+        }
+
+    }
+}
 
 //Presents lower parking spot for car and occupied spots
-void carParkerlower(int car[20]);
+void carParkerlower(int car[20])
+{
+    //LOWER PARKING SPOT
+    for(int i = 0; i < 3; i++)
+    {
+        if(i == 0)
+        {
+            printf("|  ");
+            for(int j = 11; j < 21; j++)
+            {
+                printf(" %2d   ", j);
+            }
+            printf("|\n");
+        }
+        else
+        {
+            printf("|  ");
+            for(int j = 10; j < 20; j++)
+            {
+                if(car[j] == 0)
+                    printf("|   | ");
+                else if(car[j] == 1)
+                    printf("|===| ");
+            }
+            printf("|\n");
+        }
+    }
+    printf("|==============================================================|\n");
+    printf("|   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---  |\n");
+}
 
 //presents upper parking spot for car and occupied spots
-void carParkerupper(int car[20]);
+void carParkerupper(int car[20])
+{
+    //UPPER PARKING SPOT
+    printf("|==============================================================|\n");
+    printf("|   ---   ---   ---   ---   ---   ---   ---   ---   ---   ---  |\n");
+
+    for(int i = 0; i<3; i++)
+    {
+        if(i < 2)
+        {
+            printf("|  ");
+            for(int j = 0; j<10; j++)
+            {
+                if(car[j] == 0)
+                    printf("|   | ");
+                else if(car[j] == 1)
+                    printf("|===| ");
+            }
+            printf("|\n");            
+        }
+        else if(i == 2)
+        {
+            printf("|  ");
+            for(int j = 1; j<11; j++)
+                printf(" %2d   ", j);
+            printf("|\n");
+        }
+    }
+}
 
 //presents lower parking spot for motor and occupied spots
-void motorParkerlower(int motor[20]);
+void motorParkerlower(int motor[20])
+{
+    //LOWER PARKING SPOT
+    for(int i = 0; i < 3; i++)
+    {
+        if(i == 0)
+        {
+            printf("|  ");
+            for(int j = 11; j < 21; j++)
+            {
+                printf(" %2d  ", j);
+            }
+            printf("|\n");
+        }
+        else
+        {
+            printf("|  ");
+            for(int j = 10; j < 20; j++)
+            {
+                if(motor[j] == 0)
+                    printf("|  | ");
+                else if(motor[j] == 1)
+                    printf("|==| ");
+            }
+            printf("|\n");
+        }
+    }
+    printf("|   --   --   --   --   --   --   --   --   --   --  |\n");
+    printf("|====================================================|\n");
+}
 
 //presents upper parking spot for motor and occupied spots
-void motorParkerupper(int motor[20]);
+void motorParkerupper(int motor[20])
+{
+    //UPPER PARKING SPOT
+    printf("|====================================================|\n");
+    printf("|   --   --   --   --   --   --   --   --   --   --  |\n");
+    for(int i = 0; i<3; i++)
+    {
+        if(i < 2)
+        {
+            printf("|  ");
+            for(int j = 0; j<10; j++)
+            {
+                if(motor[j] == 0)
+                    printf("|  | ");
+                else if(motor[j] == 1)
+                    printf("|==| ");
+            }
+            printf("|\n");            
+        }
+        else if(i == 2)
+        {
+            printf("|  ");
+            for(int j = 1; j<11; j++)
+                printf(" %2d  ", j);
+            printf("|\n");
+        }
+    }
+   
+}
 
 //prints upward arrow
-void arrow(int artype, int designation, int vtype);
+void arrow(int artype, int designation, int vtype)
+{
+    int spaces = 0;
+    //type 1 of arrow (arrow type printed alternately per sec)
+    if(artype == 0)
+    {
+        //car
+        if(vtype == 0)
+        {
+            spaces = 5 *(designation) + (designation - 1);
+            for(int i = 0; i < spaces; i++)
+                printf(" ");
+            printf("^\n");
+            for(int i = 0; i < spaces - 1; i++)
+                printf(" ");
+            printf("/_\\\n");
+            for(int i = 0; i <spaces/2; i++)
+                printf("=>");
+            printf("=|\n\n\n");
+        }
+        else if(vtype == 1)
+        {
+            spaces = 3 *(designation) + 2 *(designation - 1);
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("/\\\n");
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("||\n");
+            for(int i = 0; i<spaces/2 + 1; i++)
+                printf("=>");
+            printf("=|\n");
+        }
+    }
+    else if(artype == 1)
+    {
+        //car
+        if(vtype == 0)
+        {
+            spaces = 5 *(designation) + (designation - 1);
+            for(int i = 0; i < spaces; i++)
+                printf(" ");
+            printf("A\n");
+            for(int i = 0; i < spaces - 1; i++)
+                printf(" ");
+            printf("/ \\\n");
+            for(int i = 0; i <spaces/2; i++)
+                printf(">=");
+            printf(">!\n\n\n");
+        }
+        else if(vtype == 1)
+        {
+            spaces = 3 *(designation) + 2 *(designation - 1);
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("/\\\n");
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("!!\n");
+            for(int i = 0; i<spaces/2 + 1; i++)
+                printf(">=");
+            printf(">!\n");
+        }
+    }
+}
 
 //prints downward arrow
-void arrowD(int artype, int designation, int vtype);
+void arrowD(int artype, int designation, int vtype)
+{
+    int spaces = 0;
+    designation -= 10;
+    //type 1 of arrow (arrow type printed alternately per sec)
+    if(artype == 0)
+    {
+        //car
+        if(vtype == 0)
+        {
+            spaces = 5 *(designation) + (designation - 1);
+            printf("\n\n\n");
+            for(int i = 0; i <spaces/2; i++)
+                printf("=>");
+            printf("=|\n");
+            for(int i = 0; i < spaces - 1; i++)
+                printf(" ");
+            printf("\\-/\n");
+            for(int i = 0; i < spaces; i++)
+                printf(" ");
+            printf("V\n");
+            
+        }
+        else if(vtype == 1)
+        {
+            spaces = 3 *(designation) + 2 *(designation - 1);
+            printf("\n\n\n");
+            for(int i = 0; i<spaces/2 + 1; i++)
+                printf("=>");
+            printf("|\n");
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("||\n");
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("\\/\n");
+        }
+    }
+    else if(artype == 1)
+    {
+        //car
+        if(vtype == 0)
+        {
+            spaces = 5 *(designation) + (designation - 1);
+            printf("\n\n\n");
+            for(int i = 0; i <spaces/2; i++)
+                printf(">=");
+            printf(">!\n");
+            for(int i = 0; i < spaces - 1; i++)
+                printf(" ");
+            printf("\\-/\n");
+            for(int i = 0; i < spaces; i++)
+                printf(" ");
+            printf("V\n");
+
+        }
+        else if(vtype == 1)
+        {
+            spaces = 3 *(designation) + 2 *(designation - 1);
+            printf("\n\n\n");
+            for(int i = 0; i<spaces/2 + 1; i++)
+                printf(">=");
+            printf("!\n");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf(" ");
+            printf("!!\n");
+            printf(" ");
+            for(int i = 0; i<spaces; i++)
+                printf(" ");
+            printf("\\/\n");
+        }
+    }
+}
 
 //prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
-void printLog(log * head, int option);
+void printLog(log * head, int option)
+{
+    log * p = head;
+    FILE * ptr = fopen("logboook.txt", "a");
+
+    char timeIN[100];
+    char timeOUT[100];
+
+    //p!= NULL because it needs to print until the last log
+    while(p != NULL)
+    {
+        //gets date of timeIn
+        strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
+        //runs if option is 1
+        if(option)
+        {
+            fprintf(ptr, "| %s | ", timeIN);
+            fprintf(ptr, "%s | %s ", p->plateNum, p->profileID);
+            //gets hour of time in
+            //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
+            strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
+            strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
+            fprintf(ptr, "| %s | %7s |\n", timeIN, timeOUT);
+        }
+        else
+        {
+            printf("| %s | ", timeIN);
+            printf("%s | %s ", p->plateNum, p->profileID);
+            //gets hour of time in
+            //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
+            strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
+            strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
+            printf("| %s | %7s |\n", timeIN, timeOUT);
+        }
+
+        p = p->next;
+    }
+    fclose(ptr);
+    return;
+}
 
 //prints current logged in users. Happens after every termination of useLog function(to update logbook displayed)
-void currLog(log * head);*/
+void currLog(log * head)
+{
+    log * p = head;
+    char timeIN[100];
+    char timeOUT[100];
+    printf("CURRENT PARKED IN VEHICLES\n");
+    if(p->next == NULL)
+    {
+        if(p->status != 0)
+        {
+            //gets date of timeIn
+            strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
+            printf("| %s | ", timeIN);
+            printf("%s | %s |\n", p->plateNum, p->profileID);
+            return;
+        }
+        else
+        {
+            printf("No Parked in Vehicles as of Now\n\n");
+            return;
+        }
+    }
+    while(p->next != NULL)
+    {
+        if(p->status != 0)
+        {
+            //gets date of timeIn
+            strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
+            printf("| %s | ", timeIN);
+            printf("%s | %s |\n", p->plateNum, p->profileID);
+            printf("\n");
+        }
+
+        p = p->next;
+    }
+    return;
+}
 
 //read records.txt to Profile lined list
-Profile *create_list(FILE*inrec);
-
-//displays data from records.txt(temp function)
-void display(Profile*head);
-
-/*screen layout functions for SignIn()*/
-int SignIn(); //return 0 for successful login, 1 if not
-int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username);
-void clearTerminal();//cears terminal
-void space_up(int lines);//adds lines
-void space_left(int spaces);//adds n spaces 
-void delay(int seconds);//delays execution of next line for n seconds
-
-//free the allocated space in linked list
-void freeProfile(Profile ** head);
-
-//void Administrator(Profile **head);
-int traverseProfile(Profile * head, const char *plate[]);
-
-//return int 0 for no prob; 1 for no Plate Num
-void dscrpncyCheck(Profile * profile, const char *plate[],const char *id[]);
-/*RETURNS PARKING DESIGNATION 
-  FOR USING: KEEP TRACK OF LOG HEAD AND PROFILE HEAD
-  CAR ARRAY IN MAIN (SIZE 20) PASS AS IS, SAME WITH MOTOR (SIZE 20)
-  OPTION FOR LOG IN OR LOG OUT */
-int useLog(log *head, Profile * pHead, int * car, int * motor, int option);
-
-//creates new struct for new profile and store to a.txt file
-int rgstr(Profile ** head, const char *plate[], const char *id[]);
-
-//Main function admin log in and for managing the program
-int Administrator(Profile **head);
-
-/*--------------------------------FUNCTIONS DEFINITIONS START HERE!!!!--------------------------------------*/
-int main(){
-    FILE *inrec = fopen("records.txt", "r");
-    FILE *inlog = fopen("logbook.txt", "r");
-    FILE *indisc = fopen("discrepancy.txt", "r");
-    if (inrec == NULL || inlog == NULL || indisc == NULL) {
-       printf("Error opening files.\n");
-       return 1; // Exit with error
-    }
-
-    int sign_in_result, option;
-    char id[MAX];
-    char plate[MAX];
-    char type[MAX];
-
-    do {
-        sign_in_result = SignIn();
-        
-        if (sign_in_result == 0) {// Successful login            
-            break;
-        } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
-            return 1;
-        }// Reset the password using security key
-        space_up(1);
-        space_left(20);
-        printf("Password has been reset successfully.\n");
-        delay(2);
-        
-    } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
-
-    Profile *profile; 
-    profile = create_list(inrec); //creating the list
-    
-    option = Administrator(&profile);
-    //0: exit program 1: register profile 2: park in 3: park out
-    if (option == 0) {// End the transaction
-        delay(2);
-        clearTerminal();
-        return 0;
-    } else if (option == 1) {//register new profile
-        clearTerminal();
-        space_up(3);
-        space_left(20);
-        printf("================================================\n");
-        space_left(36);
-        printf("REGISTER PROFILE\n");
-        space_left(20);
-        printf("================================================\n");
-        space_up(2);
-        space_left(20);
-        printf("Enter ID: ");
-        scanf("%s", id);
-
-        if(rgstr(&profile, plate, id)==0){
-            space_up(1);
-            space_left(20);
-            printf("Registered Successfully!\n");
-        }// Register a new profile
-    }
-
-    //CODE CONTINUES DOWN HERE - xar;)
-
-    //ARRAYS TO BE USED FOR CHECKING MAX CAP AND FOR PRINTING
-    /*int car[20] = {0}; //CHANGE SIZE IF NEEDED
-    int motor[20] = {0}; //CHANGE SIZE IF NEEDED
-    //declare logbook
-    log * head = (log *) (malloc(sizeof(log)));
-    head->next = NULL; */ 
-
-    fclose(inrec);
-    fclose(inlog);
-    fclose(indisc);
-
-    return 0;
-}//main function
-
 Profile *create_list(FILE *inrec) {
     Profile *head = NULL;
     Profile *p = NULL;
@@ -214,6 +517,10 @@ Profile *create_list(FILE *inrec) {
     return head;
 }//creating profile linked list function
 
+//displays data from records.txt(temp function)
+void display(Profile*head);
+
+/*screen layout functions for SignIn()*/
 int SignIn() {
     FILE *file = fopen("passkey.txt", "r");
     if (file == NULL) {
@@ -345,7 +652,7 @@ int SignIn() {
 
     return 1;  // Default return for unexpected behavior
 }
-
+//Resets passkey
 int resetPasskey(const char *filename, Admin admin[], int admin_count, const char *username) {
     // Check if the username exists in the admin array
     int user_found = 0;
@@ -385,21 +692,21 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count, const cha
     fclose(file);
     return 0;  // Indicate success
 }
-
+//Clears Terminal using REGEX string
 void clearTerminal() {
     printf("\e[1;1H\e[2J");
 }
-
+//Adds new lines
 void space_up(int lines) {
     for (int i = 0; i < lines; i++)
         printf("\n");
 }
-
+//Adds n spaces
 void space_left(int spaces) {
     for (int i = 0; i < spaces; i++)
         printf(" ");
 }
-
+//Delays execution of next code for n seconds
 void delay(int seconds) {
     clock_t start_time = clock();
     clock_t current_time;
@@ -411,6 +718,7 @@ void delay(int seconds) {
     } while (elapsed_time < seconds);
 }
 
+//free the allocated space in linked list
 void freeProfile(Profile ** head){
     Profile * p;
     while(*head != NULL){
@@ -420,163 +728,7 @@ void freeProfile(Profile ** head){
     }
 }
 
-int rgstr(Profile ** head, const char *plate[], const char *id[]){
-    FILE * inrec = fopen("record.txt","a");
-    Profile * new, * p;
-    char type;
-
-    p = *head;
-    new = (Profile*)malloc(sizeof(Profile));
-    while(p != NULL){
-        p = p->nxtPtr;
-    }
-    clearTerminal();
-    space_up(3);
-    space_left(20);
-    printf("================================================\n");
-    space_left(36);
-    printf("REGISTER PROFILE\n");
-    space_left(20);
-    printf("================================================\n");
-    space_up(2);
-    space_left(20);
-    printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
-    space_left(20);
-    printf("Vehicle Type: ");
-    scanf(" %c", &type);
-
-    type = toupper(type);
-    
-    if(p == NULL){
-        strcpy(new->plateNum, plate);
-        strcpy(new->profileID, id);
-        new->type = type;
-        new->nxtPtr = NULL;
-        p = new;
-    }
-
-    fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
-
-    /*FILE *file = fopen(filename, "w");
-    if (file == NULL) {
-        printf("Error: Unable to open '%s' for writing.\n", filename);
-        delay(1);
-        return 1;  // Indicate error
-    }
-
-    for (int i = 0; i < admin_count; i++) {
-        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
-    }
-
-    fclose(file);*/
-    fclose(inrec);
-    return 0;
-}
-
-int Administrator(Profile **head){
-    Profile *p = *head;
-    int option, parkIn;
-    char plate[MAX];
-    char id[MAX];
-    char type[MAX];
-    
-    space_up(3);
-    space_left(20);
-    printf("================================================\n");
-    space_left(40);
-    printf("E-PARADA\n");
-    space_left(20);
-    printf("================================================\n");
-    space_up(2);
-    space_left(25);
-    printf("1. PMS\n");
-    space_left(25);
-    printf("2. Search Profile\n");
-    space_up(2);
-    space_left(25);
-    printf("Choice: ");
-    scanf("%d", &option);
-
-    if(option == 1){ //PMS instructions
-        clearTerminal();
-        space_up(3);
-        space_left(20);
-        printf("================================================\n");
-        space_left(36);
-        printf("PARKING (PMS)\n");
-        space_left(20);
-        printf("================================================\n");
-        space_up(2);
-        space_left(25);
-        printf("1. Park In\n");
-        space_left(25);
-        printf("2. Park Out\n");
-        space_up(2);
-        space_left(25);
-        printf("Choice: ");
-        scanf("%d", &option);
-
-        if(option == 1){
-            return 2;
-        }
-        else if(option == 2){
-            return 3;
-        }                       
-    }          
-    else if(option == 2){ //Search Profile Instructions
-        clearTerminal();
-        space_up(3);
-        space_left(20);
-        printf("================================================\n");
-        space_left(36);
-        printf("SEARCH PROFILE\n");
-        space_left(20);
-        printf("================================================");
-        space_up(3);
-        space_left(25);
-        printf("Enter Plate Number: ");
-        scanf("%s", plate);
-
-        while (p != NULL) { // Traverse the linked list
-            if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
-                space_up(1);
-                space_left(25);
-                printf("Search Result\n\n");
-                space_left(25);
-                printf("Plate Number: %s\n", p->plateNum);
-                space_left(25);
-                printf("ID: %s\n", p->profileID);
-                space_left(25);
-                printf("Vehicle Type: %c\n\n", p->type);
-                space_left(20);
-                printf("================================================\n\n");
-                break;
-            }
-            else {
-                p = p->nxtPtr; // Continue to the next node
-            }
-        }
-        if (p == NULL) { // Plate number not found
-            space_up(1);
-            space_left(25);
-            printf("Plate number not found.\n\n");
-            space_left(25);
-            printf("1. End Transaction\n");
-            space_left(25);
-            printf("2. Register Profile\n\n\n");
-            space_left(25);
-            printf("Choice: ");
-            scanf("%d", &option);
-
-            if(option==1){
-                return 0;
-            }else if(option ==2){
-                return 1;
-            }     
-        }
-    }              
-}
-
+//Traverses profile to find entered plate. Returns vehicle type or 1 if plate is not found
 int traverseProfile(Profile * head, const char *plate[]){
     Profile *p;
 
@@ -599,6 +751,7 @@ int traverseProfile(Profile * head, const char *plate[]){
         return 1;
 }
 
+//Checks for profile id of plate num. Archives discrpency if profile id does not match
 void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     FILE * ifp = fopen("discrepancy.txt","a");
     Profile * p;
@@ -628,14 +781,13 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     }
     fclose(ifp);
 }
-
-//option if log in (1) or log out (2)
-/*int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
+//Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
+int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
 {
     log * p, *q, *new;
     char tempNo[MAX];
     char tempID[MAX];
-    int choice, temphr, tempmin, outNotFound = 0;
+    int choice, temphr, tempmin;
 
     p = *head;
     time_t t;
@@ -772,7 +924,7 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
                 p->status = 0;
 
                 //calculating balance
-                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)/60) * 0.5 //rate);
+                printf("Total balance is: Php %.2f", (((p->timeOut.tm_hour*60 + p->timeOut.tm_min)/60) - (p->timeIn.tm_hour*60 + p->timeIn.tm_min)/60) * 0.5);
 
                 return p->status;
                     
@@ -790,4 +942,289 @@ void dscrpncyCheck(Profile * head, const char *plate[], const char *id[]){
     }
 
 
-}*/
+}
+
+//creates new struct for new profile and store to a.txt file
+int rgstr(Profile ** head, const char *plate[], const char *id[]){
+    FILE * inrec = fopen("record.txt","a");
+    Profile * new, * p;
+    char type;
+
+    p = *head;
+    new = (Profile*)malloc(sizeof(Profile));
+    while(p != NULL){
+        p = p->nxtPtr;
+    }
+    clearTerminal();
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(36);
+    printf("REGISTER PROFILE\n");
+    space_left(20);
+    printf("================================================\n");
+    space_up(2);
+    space_left(20);
+    printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
+    space_left(20);
+    printf("Vehicle Type: ");
+    scanf(" %c", &type);
+
+    type = toupper(type);
+    
+    if(p == NULL){
+        strcpy(new->plateNum, plate);
+        strcpy(new->profileID, id);
+        new->type = type;
+        new->nxtPtr = NULL;
+        p = new;
+    }
+
+    fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
+
+    /*FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error: Unable to open '%s' for writing.\n", filename);
+        delay(1);
+        return 1;  // Indicate error
+    }
+
+    for (int i = 0; i < admin_count; i++) {
+        fprintf(file, "%s %s\n", admin[i].user, admin[i].passkey);
+    }
+
+    fclose(file);*/
+    fclose(inrec);
+    return 0;
+}
+
+//Main function admin log in and for managing the program
+int Administrator(Profile **head){
+    Profile *p = *head;
+    int option, parkIn;
+    char plate[MAX];
+    char id[MAX];
+    char type[MAX];
+    
+    space_up(3);
+    space_left(20);
+    printf("================================================\n");
+    space_left(40);
+    printf("E-PARADA\n");
+    space_left(20);
+    printf("================================================\n");
+    space_up(2);
+    space_left(25);
+    printf("1. PMS\n");
+    space_left(25);
+    printf("2. Search Profile\n");
+    space_up(2);
+    space_left(25);
+    printf("Choice: ");
+    scanf("%d", &option);
+
+    if(option == 1){ //PMS instructions
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(36);
+        printf("PARKING (PMS)\n");
+        space_left(20);
+        printf("================================================\n");
+        space_up(2);
+        space_left(25);
+        printf("1. Park In\n");
+        space_left(25);
+        printf("2. Park Out\n");
+        space_up(2);
+        space_left(25);
+        printf("Choice: ");
+        scanf("%d", &option);
+
+        if(option == 1){
+            return 2;
+        }
+        else if(option == 2){
+            return 3;
+        }                       
+    }          
+    else if(option == 2){ //Search Profile Instructions
+        clearTerminal();
+        space_up(3);
+        space_left(20);
+        printf("================================================\n");
+        space_left(36);
+        printf("SEARCH PROFILE\n");
+        space_left(20);
+        printf("================================================");
+        space_up(3);
+        space_left(25);
+        printf("Enter Plate Number: ");
+        scanf("%s", plate);
+
+        while (p != NULL) { // Traverse the linked list
+            if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
+                space_up(1);
+                space_left(25);
+                printf("Search Result\n\n");
+                space_left(25);
+                printf("Plate Number: %s\n", p->plateNum);
+                space_left(25);
+                printf("ID: %s\n", p->profileID);
+                space_left(25);
+                printf("Vehicle Type: %c\n\n", p->type);
+                space_left(20);
+                printf("================================================\n\n");
+                break;
+            }
+            else {
+                p = p->nxtPtr; // Continue to the next node
+            }
+        }
+        if (p == NULL) { // Plate number not found
+            space_up(1);
+            space_left(25);
+            printf("Plate number not found.\n\n");
+            space_left(25);
+            printf("1. End Transaction\n");
+            space_left(25);
+            printf("2. Register Profile\n\n\n");
+            space_left(25);
+            printf("Choice: ");
+            scanf("%d", &option);
+
+            if(option==1){
+                return 0;
+            }else if(option ==2){
+                return 1;
+            }     
+        }
+    }              
+}
+
+/*--------------------------------FUNCTIONS DEFINITIONS START HERE!!!!--------------------------------------*/
+int main(){
+    FILE *inrec = fopen("records.txt", "r");
+    FILE *inlog = fopen("logbook.txt", "r");
+    FILE *indisc = fopen("discrepancy.txt", "r");
+    if (inrec == NULL || inlog == NULL || indisc == NULL) {
+       printf("Error opening files.\n");
+       return 1; // Exit with error
+    }
+    
+    //VARIABLE DECLARATIONS AND INITIALIZATIONS
+    int sign_in_result, option;
+    //set parking space to empty
+    int car[20] = {0};
+    int motor[20] = {0};
+    log * head = NULL;
+    char id[MAX];
+    char plate[MAX];
+    char type[MAX];
+
+    do {
+        sign_in_result = SignIn();
+        
+        if (sign_in_result == 0) {// Successful login            
+            break;
+        } else if (sign_in_result == 1) {// Exit program due to unsuccessful login or incorrect security key            
+            return 1;
+        }// Reset the password using security key
+        space_up(1);
+        space_left(20);
+        printf("Password has been reset successfully.\n");
+        delay(2);
+        
+    } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
+
+    Profile *profile; 
+    profile = create_list(inrec); //creating the list
+    
+    time_t currT;
+    struct tm timeTrack;
+    currT = time(NULL);
+    //get current time
+    timeTrack = localtime(&currT);
+
+
+    //while loop ends with break or when it is 5 PM
+    while(timeTrack.tm_hour < 17 )
+    {
+        currLog(head);
+        option = Administrator(&profile);
+        //0: exit program 1: register profile 2: park in 3: park out
+        if (option == 0) {// End the transaction
+            delay(2);
+            clearTerminal();
+            return 0;
+        } else if (option == 1) {//register new profile
+            clearTerminal();
+            space_up(3);
+            space_left(20);
+            printf("================================================\n");
+            space_left(36);
+            printf("REGISTER PROFILE\n");
+            space_left(20);
+            printf("================================================\n");
+            space_up(2);
+            space_left(20);
+            printf("Enter ID: ");
+            scanf("%s", id);
+
+            if(rgstr(&profile, plate, id)==0){
+                space_up(1);
+                space_left(20);
+                printf("Registered Successfully!\n");
+            }// Register a new profile
+        }
+        //PARK IN
+        else if(option == 2)
+        {
+            int spot;
+            clearTerminal();
+            if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
+            {
+                printf("Please resolve the encountered issue. Thank you...");
+                delay(3);
+                break;
+            }
+            delay(3);
+            printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", &spot);
+            delay(3);
+            clearTerminal();
+            peterParker(spot, car, motor);
+            delay(1);
+            clearTerminal();
+        }
+        //PARKOUT
+        else if(option == 3)
+        {
+            if(useLog(&head, profile, car, motor, 2)); //empty if. No need to store useLog return value so we use a bool to retrieve the value (will end after succesful log out)
+            delay(3);
+            clearTerminal();
+        }
+        printf("End Program?\n\t1. Yes\n\t2. No\n");
+        scanf("%d", &option);
+        if(option - 1)//becomes 1 if user picked 2
+        {
+            clearTerminal();
+            printf("Exiting Program...\n");
+            printf("Printing Logs for today...\n");
+            delay(2);
+            clearTerminal();
+            printLog(head. 0);
+            printLog(head, 1);
+        }
+        
+    }
+   
+
+    fclose(inrec);
+    fclose(inlog);
+    fclose(indisc);
+
+    return 0;
+}//main function
+
+
