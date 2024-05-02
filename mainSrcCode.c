@@ -355,7 +355,7 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     p = head;
     while(p->nxtPtr != NULL){
         if((strcmp(plate, p->plateNum) == 0) && (strcmp(id, p->profileID) == 0)){
-            printf("Parking Details Complete!\nSuccessfully Recorded");
+            printf("Parking Details Complete!\nSuccessfully Recorded\n");
             break;
         }
         else if((strcmp(plate, p->plateNum) == 0) && (strcmp(id, p->profileID) != 0)){
@@ -545,7 +545,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
         if(*head == NULL)
         {
             *head = new;
-            return (*head)->status + 1; 
+            return (*head)->status; 
         }
         //adding park log details
         while(p->next!= NULL)
@@ -556,7 +556,7 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
         {
             p->next = new;
             //RETURNS PARKING SPOT. 1 IS LOWEST. RETURN 0 IS LOG OUT 
-            return p->status + 1;
+            return new->status;
         }
     }
     else if(option == 2)
@@ -1071,7 +1071,7 @@ void currLog(log * head)
             return;
         }
     }
-    while(p->next != NULL)
+    while(p != NULL)
     {
         if(p->status != 0)
         {
@@ -1081,8 +1081,8 @@ void currLog(log * head)
             printf("%s | %s |\n", p->plateNum, p->profileID);
             printf("\n");
         }
-
         p = p->next;
+
     }
     return;
 }
@@ -1165,20 +1165,26 @@ int main(){
         //PARK IN
         else if(option == 2)
         {
-            int spot;
-            clearTerminal();
-            if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
+            while(1)
             {
-                printf("Please resolve the encountered issue. Thank you...");
+                int spot;
+                clearTerminal();
+                if((spot = useLog(&head, profile, car, motor, 1)) == 0)//DRIVER NOT FOUND IN PROFILE
+                {
+                    delay(3);
+                    printf("Please resolve the encountered issue. Thank you...");
+                    delay(3);
+                    break;
+                }
                 delay(3);
+                printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
+                delay(3);
+                clearTerminal();
+                peterParker(spot, car, motor);
+                delay(1);
+                clearTerminal();
+                break;
             }
-            delay(3);
-            printf("Thank you for Parking with Us. Please Proceed to Parking spot %d (20+ is for motorcycles only)", spot);
-            delay(3);
-            clearTerminal();
-            peterParker(spot - 1, car, motor);
-            delay(1);
-            clearTerminal();
         }
         //PARKOUT
         else if(option == 3)
