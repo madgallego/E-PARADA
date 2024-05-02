@@ -390,7 +390,7 @@ int Administrator(Profile **head){
     char plate[MAX];
     char id[MAX];
     char type[MAX];
-    
+    clearTerminal();
     space_up(3);
     space_left(20);
     printf("================================================\n");
@@ -450,18 +450,15 @@ int Administrator(Profile **head){
 
         while (p != NULL) { // Traverse the linked list
             if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
-                space_up(1);
                 space_left(25);
-                printf("Search Result\n\n");
-                space_left(25);
-                printf("Plate Number: %s\n", p->plateNum);
+                printf("Search Result for Plate Num. %s\n\n", p->plateNum);
                 space_left(25);
                 printf("ID: %s\n", p->profileID);
                 space_left(25);
                 printf("Vehicle Type: %c\n\n", p->type);
                 space_left(20);
                 printf("================================================\n\n");
-                break;
+                return 4;
             }else {
                 p = p->nxtPtr; // Continue to the next node
             }
@@ -480,10 +477,6 @@ int Administrator(Profile **head){
             space_left(20);
             printf("================================================\n");
             if(option==1){
-                space_left(20);
-                printf("Exiting program...");
-                delay(3);
-                clearTerminal();
                 return 0;
             }else if(option ==2){
                 return 1;
@@ -1141,20 +1134,11 @@ int main(){
     //while loop ends with break or when it is 5 PM
     while(/*timeTrack->tm_hour < 17*/1 )
     {
-        currLog(head);
+        //currLog(head);
 
         option = Administrator(&profile);
         //0: exit program 1: register profile 2: park in 3: park out
-        if (option == 0) {// End the transaction
-            delay(2);
-            space_left(20);
-            printf("Printing Logs for today...\n");
-            delay(2);
-            clearTerminal();
-            printLog(head, 0);
-            printLog(head, 1);
-            return 0;
-        } else if (option == 1) {//register new profile
+        if (option == 1) {//register new profile
             clearTerminal();
             space_up(3);
             space_left(20);
@@ -1208,12 +1192,29 @@ int main(){
             delay(3);
             clearTerminal();
         }
-        printf("End Program?\n\t1. Yes\n\t2. No\n");
+        else if (option == 0) {// End the transaction
+            space_left(20);
+            printf("Exiting program...");
+            delay(3);
+            clearTerminal();
+            delay(2);
+            space_left(20);
+            printf("Printing Logs for today...\n");
+            delay(2);
+            clearTerminal();
+            printLog(head, 0);
+            printLog(head, 1);
+            return 0;
+        }space_left(20); 
+        printf("Do Another Action?  1. No 2. Yes: ");
         scanf("%d", &option);
         if(option == 1)
         {
+            space_left(20);
+            printf("Exiting program...");
+            delay(3);
             clearTerminal();
-            printf("Exiting Program...\n");
+            space_left(20);
             printf("Printing Logs for today...\n");
             delay(2);
             clearTerminal();
@@ -1223,6 +1224,8 @@ int main(){
         }
         time_t currT = time(NULL);
         struct tm *timeTrack = localtime(&currT);//get current time
+        printf("\t\t\tAGAIN");//Temporary for checking
+        delay(1);
         
     }
    
