@@ -275,6 +275,7 @@ Profile *create_list(FILE *inrec) {
     return head;
 }//creating profile linked list function
 //creates new struct for new profile and store to a.txt file
+
 int rgstr(Profile ** head, const char plate[], const char id[]){
     FILE * inrec = fopen("record.txt","a");
     Profile * new, * p;
@@ -310,7 +311,7 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
         p = new;
     }
 
-    fprintf(inrec, "%s %s %c", new->plateNum, new->profileID, type);
+    fprintf(inrec, "\n%s %s %c", new->plateNum, new->profileID, type);
 
     fclose(inrec);
     return 0;
@@ -1125,7 +1126,7 @@ int main(){
         delay(2);
     } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
 
-    Profile *profile = create_list(inrec); //creating the list
+    Profile *profile = create_list(inrec); //creating the profile linked list
     
     time_t currT = time(NULL);
     struct tm *timeTrack = localtime(&currT);//get current time
@@ -1134,6 +1135,7 @@ int main(){
     while(timeTrack->tm_hour < 17 )
     {
         currLog(head);
+
         option = Administrator(&profile);
         //0: exit program 1: register profile 2: park in 3: park out
         if (option == 0) {// End the transaction
@@ -1150,6 +1152,9 @@ int main(){
             space_left(20);
             printf("================================================\n");
             space_up(2);
+            space_left(20);
+            printf("Enter Plate Number: ");
+            scanf("%s", plate);
             space_left(20);
             printf("Enter ID: ");
             scanf("%s", id);
