@@ -72,6 +72,15 @@ void delay(int seconds) {
     } while (elapsed_time < seconds);
 }
 
+void convert_to_uppercase(char *str) {
+    size_t len = strlen(str);
+    if (len > 0 && str[len - 1] == '\n') {// Replace newline with null-terminator
+        str[len - 1] = '\0';}
+    while (*str) {
+        *str = toupper((unsigned char) *str); // Convert character to uppercase
+        str++; // Move to the next character
+    }
+}
 //Resets passkey
 int resetPasskey(const char *filename, Admin admin[], int admin_count) {
     
@@ -302,7 +311,6 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
     space_left(20);
     printf("Vehicle Type: ");
     scanf(" %c", &type);
-
     type = toupper(type);
     
     if(p == NULL){
@@ -446,6 +454,7 @@ int Administrator(Profile **head){
         space_left(25);
         printf("Enter Plate Number: ");
         scanf("%s", plate);
+        convert_to_uppercase(plate);
 
         while (p != NULL) { // Traverse the linked list
             if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
@@ -505,9 +514,11 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
         space_left(25);
         printf("Plate No: ");
         scanf("%s", tempNo);
+        convert_to_uppercase(tempNo);
         space_left(25);
         printf("Driver ID: ");
         scanf("%s", tempID);
+        convert_to_uppercase(tempID);
         
         if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
             printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
@@ -1080,7 +1091,9 @@ void freeLog(log * head)
 int main(){
     // Open necessary files and check for errors
     FILE *inrec = fopen("records.txt", "r");
-    FILE *inlog = fopen("logbook.txt", "w");
+
+    FILE *inlog = fopen("logbook.txt", "a");
+
     FILE *indisc = fopen("discrepancy.txt", "a");
     if (inrec == NULL || inlog == NULL || indisc == NULL) {
        printf("Error opening files.\n");
@@ -1149,9 +1162,11 @@ int main(){
                 space_left(20);
                 printf("Enter Plate Number: ");
                 scanf("%s", plate);
+                convert_to_uppercase(plate);
                 space_left(20);
                 printf("Enter ID: ");
                 scanf("%s", id);
+                convert_to_uppercase(id);
                 if(rgstr(&profile, plate, id)==0){
                     space_up(1);
                     space_left(20);
@@ -1224,5 +1239,6 @@ int main(){
 
     fclose(inlog);
     fclose(indisc);
+    freeProfile(&profile);
     return 0;
 }//main function
