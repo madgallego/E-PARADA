@@ -490,7 +490,7 @@ int Administrator(Profile **head){
                 return 1;
             }     
         }
-    }return 4;//Invalid option or default return 
+    }return 5;//Invalid option or default return 
 }
 //Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
 int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option){
@@ -503,31 +503,35 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
     time_t t;
 
     if(option == 1){ //park in
-        clearTerminal();
-        space_up(3);
-        space_left(20);
-        printf("================================================\n");
-        space_left(40);
-        printf("PARK IN\n");
-        space_left(20);
-        printf("================================================\n\n");
-        space_left(25);
-        printf("Plate No: ");
-        scanf("%s", tempNo);
-        convert_to_uppercase(tempNo);
+        do{
+            clearTerminal();
+            space_up(3);
+            space_left(20);
+            printf("================================================\n");
+            space_left(40);
+            printf("PARK IN\n");
+            space_left(20);
+            printf("================================================\n\n");
+            space_left(25);
+            printf("Plate No: ");
+            scanf("%s", tempNo);
+            convert_to_uppercase(tempNo);
+            if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
+                space_left(25);
+                printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
+                scanf("%d", &choice);
+                if(choice == 1)
+                    return 0;
+                else if(choice == 2)
+                    rgstr(&profiles, tempNo, tempID);//register profile to data file
+            }
+        }while(traverseProfile(profiles, tempNo) == 1);
+        
         space_left(25);
         printf("Driver ID: ");
         scanf("%s", tempID);
         convert_to_uppercase(tempID);
         
-        if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
-            printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
-            scanf("%d", &choice);
-            if(choice == 1)
-                return 0;
-            else if(choice == 2)
-                rgstr(&profiles, tempNo, tempID);//register profile to data file
-        }
         // Check for discrepancies
         dscrpncyCheck(profiles, tempNo, tempID);
         // Create a new log entry
@@ -1202,7 +1206,8 @@ int main(){
                 delay(3);
                 clearTerminal();
                 break;
-
+            case 4: //search profile
+                break;
             default:
                 printf("Invalid option. Please choose 2 for park-in or 3 for park-out.\n");
                 break;
