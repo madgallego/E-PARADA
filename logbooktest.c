@@ -30,6 +30,10 @@ typedef struct node Profile;
 //OPTION FOR LOG IN OR LOG OUT
 int useLog(log **head, Profile * pHead, int * car, int * motor, int option);
 
+//deletes all log to prevent memory leak. happens in main before return 0;
+void freeLog(log * head);
+
+
 void rgstr(Profile ** head, char plate[], char id[]);
 
 //FUNCTION REQUIREMENTS
@@ -220,4 +224,17 @@ int useLog(log **head, Profile * pHead, int * car, int * motor, int option)
     }
 
 
+}
+
+void freeLog(log * head)
+{
+    log * p, tmp;
+    p = head;
+    while(p != NULL)
+    {
+        tmp = p;
+        p = p->next;
+        free(tmp);
+    }
+    return;
 }
