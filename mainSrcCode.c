@@ -397,7 +397,6 @@ int Administrator(Profile **head){
     char plate[MAX];
     char id[MAX];
     char type[MAX];
-    clearTerminal();
     space_up(3);
     space_left(20);
     printf("================================================\n");
@@ -526,7 +525,7 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
                     rgstr(&profiles, tempNo, tempID);//register profile to data file
             }
         }while(traverseProfile(profiles, tempNo) == 1);
-        
+
         space_left(25);
         printf("Driver ID: ");
         scanf("%s", tempID);
