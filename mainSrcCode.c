@@ -1067,7 +1067,7 @@ void archiveProf(Profile * head)
     while(p != NULL)
     {
         fprintf(rec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
-        p = p->next;
+        p = p->nxtPtr;
     }
 
     fclose(rec);
@@ -1076,7 +1076,7 @@ void archiveProf(Profile * head)
 //frees log linked list to prevent memory leak
 void freeLog(log * head)
 {
-    log * p, tmp;
+    log * p, * tmp;
     p = head;
     while(p != NULL)
     {
@@ -1222,8 +1222,8 @@ int main(){
             printf("Printing Logs for today...\n");
             delay(2);
             clearTerminal();
-            printLog(loghead, 0);
-            printLog(loghead, 1);
+            printLog(loghead, 0, inlog);
+            printLog(loghead, 1, inlog);
             break;
         }
         //Temporary for checking
