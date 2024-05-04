@@ -966,10 +966,9 @@ void peterParker(int designation, int car[20], int motor[20])
 }
 
 //prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
-void printLog(log * head, int option)
+void printLog(log * head, int option, FILE * ptr)
 {
     log * p = head;
-    FILE * ptr = fopen("logbook.txt", "a");
 
     char timeIN[100];
     char timeOUT[100];
@@ -1003,7 +1002,6 @@ void printLog(log * head, int option)
 
         p = p->next;
     }
-    fclose(ptr);
     return;
 }
 //prints current logged in users. Happens after every termination of useLog function(to update logbook displayed)
@@ -1049,13 +1047,41 @@ void currLog(log * head)
     }
     return;
 }
+//prints profile back to records.txt for updating. Called at the end of program before freeProfile
+void archiveProf(Profile * head)
+{
+    //reopen records.txt for rewriting (saving profiles)
+    FILE * rec = fopen("records.txt", "w");
+    Profile * p = head;
+    while(p != NULL)
+    {
+        fprintf(rec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
+        p = p->next;
+    }
+
+    fclose(rec);
+    return;
+}
+//frees log linked list to prevent memory leak
+void freeLog(log * head)
+{
+    log * p, tmp;
+    p = head;
+    while(p != NULL)
+    {
+        tmp = p;
+        p = p->next;
+        free(tmp);
+    }
+    return;
+}
 
 /*-------------------------------- PROGRAM EXXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
     // Open necessary files and check for errors
     FILE *inrec = fopen("records.txt", "r");
-    FILE *inlog = fopen("logbook.txt", "r");
-    FILE *indisc = fopen("discrepancy.txt", "r");
+    FILE *inlog = fopen("logbook.txt", "w");
+    FILE *indisc = fopen("discrepancy.txt", "a");
     if (inrec == NULL || inlog == NULL || indisc == NULL) {
        printf("Error opening files.\n");
        return 1; // Exit on error
@@ -1093,7 +1119,7 @@ int main(){
         delay(2);
     } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
     profile = create_list(inrec); //Create a profile list from records file
-    
+    fclose(inrec);
     // Main program loop, ends at 5 PM or by choice
     while(1)
     {
@@ -1190,7 +1216,12 @@ int main(){
         delay(1);
     }
     //file pointers shoud be passed from main since we opened them here
-    fclose(inrec);
+
+    printLog(loghead, 1, inlog);
+    archiveProf(profile);
+    freeLog(loghead);
+    freeProfile(&profile);
+
     fclose(inlog);
     fclose(indisc);
     return 0;
