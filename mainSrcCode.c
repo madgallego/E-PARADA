@@ -1238,12 +1238,14 @@ int main(){
     //file pointers shoud be passed from main since we opened them here
 
     printLog(loghead, 1, inlog);
+
     archiveProf(profile);
+
     freeLog(loghead);
     freeProfile(&profile);
 
     fclose(inlog);
     fclose(indisc);
-    freeProfile(&profile);
+    
     return 0;
 }//main function
