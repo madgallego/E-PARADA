@@ -494,7 +494,6 @@ int Administrator(Profile **head){
 //Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
 int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option){
     log *p = *loghead;
-    log *q = NULL;
     log *new_log;
     char tempNo[MAX];
     char tempID[MAX];
@@ -517,12 +516,13 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
             convert_to_uppercase(tempNo);
             if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
                 space_left(25);
-                printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n");
+                printf("Plate Number is not in our data base.\n\t1. End Transaction\n\t2. Register Profile\n\t3. Try Again\n");
                 scanf("%d", &choice);
                 if(choice == 1)
                     return 0;
                 else if(choice == 2)
                     rgstr(&profiles, tempNo, tempID);//register profile to data file
+                else if(choice == 3); //try again
             }
         }while(traverseProfile(profiles, tempNo) == 1);
 
@@ -566,11 +566,10 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
         if (*loghead == NULL) {
             *loghead = new_log;
         } else {
-            log *current = *loghead;
-            while (current->next != NULL) {
-                current = current->next;
+            while (p->next != NULL) {
+                p = p->next;
             }
-            current->next = new_log;
+            p->next = new_log;
         }
 
         return new_log->status;  // Return the parking spot
@@ -593,7 +592,10 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
                     if ((strcmp(p->profileID, tempID) == 0) && (p->status != 0)) {
                         t = time(NULL);
                         p->timeOut = *localtime(&t);
-
+                        if(p->status <= 20) //checks if it is car
+                            car[p->status - 1] = 0; //reset parking spot to 0 (empty)
+                        else//motor
+                            motor[p->status - 1] = 0;
                         p->status = 0;  // Mark as parked out
 
                         // Calculate parking fee (sample rate)
@@ -1024,9 +1026,13 @@ void currLog(log * head)
     log * p = head;
     char timeIN[100];
     char timeOUT[100];
+    space_left(31);
     printf("CURRENT PARKED IN VEHICLES\n");
+    space_left(20);
+    printf("================================================\n\n");
     if(p == NULL)
     {
+        space_left(27);
         printf("No Vehicles Parked in as of Today\n\n");
         return;
     }
@@ -1035,6 +1041,7 @@ void currLog(log * head)
         if(p->status != 0)
         {
             //gets date of timeIn
+            space_left(30);
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
             printf("%s | %s |\n", p->plateNum, p->profileID);
@@ -1042,6 +1049,7 @@ void currLog(log * head)
         }
         else
         {
+            space_left(27);
             printf("No Parked in Vehicles as of Now\n\n");
             return;
         }
@@ -1050,11 +1058,11 @@ void currLog(log * head)
     {
         if(p->status != 0)
         {
+            space_left(30);
             //gets date of timeIn
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
             printf("%s | %s |\n", p->plateNum, p->profileID);
-            printf("\n");
         }
         p = p->next;
 
@@ -1199,9 +1207,7 @@ int main(){
                 break;
 
             case 3: // Park out
-                if (useLog(&loghead, profile, car, motor, 2) == 0) { // Park-out error handling
-                    printf("Error: Unable to park out, check details.\n");
-                }
+                if (useLog(&loghead, profile, car, motor, 2) == 0);
                 delay(3);
                 clearTerminal();
                 break;
@@ -1233,6 +1239,7 @@ int main(){
         //Temporary for checking
         printf("\t\t\tAGAIN");
         delay(1);
+        clearTerminal();
     }
     //file pointers shoud be passed from main since we opened them here
 
