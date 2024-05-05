@@ -599,7 +599,7 @@ int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option
                         p->status = 0;  // Mark as parked out
 
                         // Calculate parking fee (sample rate)
-                        double total_minutes = (p->timeOut.tm_hour * 60 + p->timeOut.tm_min) - 
+                        double total_minutes = ((((p->timeOut.tm_mday - p->timeIn.tm_mday) * 24) + p->timeOut.tm_hour )* 60 + p->timeOut.tm_min) - 
                                                (p->timeIn.tm_hour * 60 + p->timeIn.tm_min);
                         double total_hours = total_minutes / 60.0;
                         double fee = total_hours * 0.5;  // Example rate: Php 0.5 per hour
@@ -1003,6 +1003,8 @@ void printLog(log * head, int option, FILE * ptr)
             //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
             strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
             strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
+            if(p->status != 0)
+                fprintf(ptr, "| %s | NA |\n", timeIN);
             fprintf(ptr, "| %s | %7s |\n", timeIN, timeOUT);
         }
         else
