@@ -48,7 +48,7 @@ typedef struct log {
 /*-------TERMINAL LAYOUT FUNCTIONS---------*/
 //Clears Terminal using REGEX string
 void clearTerminal() {
-    printf("\e[1;1H\e[2J");
+    printf("\e[1;1H\e[2J\e[3J");
 }
 //Adds new lines
 void space_up(int lines) {
