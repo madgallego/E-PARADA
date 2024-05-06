@@ -68,7 +68,7 @@ void delay(int seconds) {
 
     do {
         current_time = clock();
-        elapsed_time = (1.0)(current_time - start_time) / CLOCKS_PER_SEC;
+        elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
     } while (elapsed_time < seconds);
 }
 //Converts letters to uppercase
@@ -1153,7 +1153,7 @@ void peterParker(int designation, int car[20], int motor[20]){
             else
                 arrowD(0, designation, 0);
             carParkerlower(car);
-            delay(1)
+            delay(1);
             //clear terminal
             clearTerminal();
             carParkerupper(car);
@@ -1183,7 +1183,7 @@ void peterParker(int designation, int car[20], int motor[20]){
             else
                 arrowD(0, designation, 1);
             motorParkerlower(motor);
-            delay(1)
+            delay(1);
             //clear terminal
             clearTerminal();
             motorParkerupper(motor);
