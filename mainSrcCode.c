@@ -1504,33 +1504,66 @@ int main(){
                 break;
 
             case 5:
-                clearTerminal();
-                space_left(20);
-                printf("================================================\n");
-                space_left(36);
-                printf("DELETE PROFILE\n");
-                space_left(20);
-                printf("================================================\n");
-                space_up(2);
-                space_left(25);
-                printf("Enter Plate Number: ");
-                scanf("%s", plate);
-                convert_to_uppercase(plate);
-                FILE * inrec = fopen("records.txt","w");
-                deleteProfile(inrec, &profile, plate);
-                space_up(2);
-                space_left(25);
-                printf("Deleting Profile...");
-                delay(3);
-                space_up(2);
-                space_left(25);
-                printf("Successfully Deleted!\n");
-                space_up(2);
-                space_left(20);
-                printf("================================================\n");
-                fclose(inrec);
+                while(1){
+                    clearTerminal();
+                    space_left(20);
+                    printf("================================================\n");
+                    space_left(36);
+                    printf("DELETE PROFILE\n");
+                    space_left(20);
+                    printf("================================================\n");
+                    space_up(2);
+                    space_left(25);
+                    printf("Enter Plate Number: ");
+                    scanf("%s", plate);
+                    convert_to_uppercase(plate);
+                    FILE * inrec = fopen("records.txt","w");
+                    int delResult = 0;
+                    delResult = deleteProfile(inrec, &profile, plate);
+                    space_up(2);
+                    space_left(25);
+                    printf("Deleting Profile...");
+                    delay(3);
+                    if (delResult == 0){
+                        space_up(2);
+                        space_left(25);
+                        printf("Profile Not Found");
+                        space_up(2);
+                        space_left(25);
+                        printf("1. End Delete\n");
+                        space_left(25);
+                        printf("2. Try Again\n");
+                        space_up(2);
+                        space_left(25);
+                        printf("Choice: ");
+                        scanf("%d", &option);
+                        if(option == 1){
+                            space_up(2);
+                            space_left(20);
+                            printf("================================================\n");
+                            fclose(inrec);
+                            break;
+                        }
+                        else if(option == 2){
+                            space_up(2);
+                            space_left(25);
+                            printf("Please Wait...");
+                            delay(1);
+                            continue;
+                        }
+                    }
+                    else if(delResult == 1){
+                        space_up(2);
+                        space_left(25);
+                        printf("Successfully Deleted!\n");
+                        space_up(2);
+                        space_left(20);
+                        printf("================================================\n");
+                        fclose(inrec);
+                        break;
+                    }
+                }
                 break;
-
             case 6: //prints all the logs
                 printLog(loghead, 0, inlog);
                 break;
