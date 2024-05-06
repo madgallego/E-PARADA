@@ -390,6 +390,37 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
 
     fclose(ifp);
 }
+
+int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
+    Profile * p, * q;
+    p = *head;
+
+    if(strcmp(p->plateNum, plate) == 0){
+        *head = p->nxtPtr;
+        free(p);
+    }
+    else{
+        while(p != NULL && strcmp(p->plateNum, plate) != 0){
+            q = p;
+            p = p->nxtPtr;
+        }
+        if(p == NULL){
+            return 0;
+        }
+        else if(strcmp(p->plateNum, plate) == 0){
+            q->nxtPtr = p->nxtPtr;
+            free(p);
+        }
+    }
+
+    p = *head;
+    while(p != NULL){
+        fprintf(ifp, "%s %s %c\n", p->plateNum, p->profileID, p->type);
+        p = p->nxtPtr;
+    }
+    return 1;
+}
+
 //Main function admin log in and for managing the program
 int Administrator(Profile **head){
     Profile *p = *head;
@@ -411,6 +442,10 @@ int Administrator(Profile **head){
     printf("2. Search Profile\n");
     space_left(25);
     printf("3. Check Logs\n");
+    space_up(2);
+    space_left(25);
+    printf("4. Delete Profile\n");
+    space_up(2);
     space_left(25);
     printf("Choice: ");
     scanf(" %c", &option);
@@ -474,7 +509,55 @@ int Administrator(Profile **head){
                 printf("Vehicle Type: %c\n\n", p->type);
                 space_left(20);
                 printf("================================================\n\n");
-                return 4;//default return
+                space_left(25);
+                printf("1. End Search\n");
+                space_left(25);
+                printf("2. Delete Profile\n");
+                space_up(2);
+                space_left(25);
+                printf("Choice: ");
+                scanf("%d", &option);
+                if (option == 1)
+                    return 4;//default return
+                else if(option == 2){
+                    space_up(2);
+                    space_left(25);
+                    printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
+                    scanf("%d", &option);
+                    if (option == 1)
+                        return 4;//default return
+                    else if (option == 2){
+                        FILE * inrec = fopen("records.txt","w");
+                        deleteProfile(inrec, head, plate);
+                        clearTerminal();
+                        space_left(20);
+                        printf("================================================\n");
+                        space_left(36);
+                        printf("DELETE PROFILE\n");
+                        space_left(20);
+                        printf("================================================\n");
+                        space_up(2);
+                        space_left(25);
+                        printf("Deleting Profile...");
+                        delay(3);
+                        space_up(2);
+                        space_left(25);
+                        printf("Successfully Deleted!\n");                     
+                        space_up(2);
+                        space_left(20);
+                        printf("================================================\n");
+                        fclose(inrec);
+                        return 4;//default return
+                    }
+                    else{
+                        printf("Invalid Option\n");
+                        return 4;//default return
+                    }
+                }
+                else{
+                    printf("Invalid Option\n");
+                    return 4;//default return
+                }
             }else {
                 p = p->nxtPtr; // Continue to the next node
             }
@@ -507,6 +590,11 @@ int Administrator(Profile **head){
         delay(3);
         clearTerminal();
         return 6;
+    }
+    else if(option == '4')
+    {
+      return 5;
+    
     }
     space_left(25);
     printf("Invalid Option. Please try again. Thank you.\n");
@@ -1183,6 +1271,7 @@ void archiveProf(Profile * head)
     fclose(rec);
     return;
 }
+
 //frees log linked list to prevent memory leak
 void freeLog(log * head)
 {
@@ -1197,7 +1286,7 @@ void freeLog(log * head)
     return;
 }
 
-/*-------------------------------- PROGRAM EXXECUTIONS START HERE!!!!--------------------------------------*/
+/*-------------------------------- PROGRAM EXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
     // Open necessary files and check for errors
     FILE *inrec = fopen("records.txt", "r");
@@ -1310,9 +1399,38 @@ int main(){
                 break;
             case 4: //search profile
                 break;
+
+            case 5:
+                clearTerminal();
+                space_left(20);
+                printf("================================================\n");
+                space_left(36);
+                printf("DELETE PROFILE\n");
+                space_left(20);
+                printf("================================================\n");
+                space_up(2);
+                space_left(25);
+                printf("Enter Plate Number: ");
+                scanf("%s", plate);
+                convert_to_uppercase(plate);
+                FILE * inrec = fopen("records.txt","w");
+                deleteProfile(inrec, head, plate);
+                space_up(2);
+                space_left(25);
+                printf("Deleting Profile...");
+                delay(3);
+                space_up(2);
+                space_left(25);
+                printf("Successfully Deleted!\n");
+                space_up(2);
+                space_left(20);
+                printf("================================================\n");
+                fclose(inrec);
+                break;
+
             case 6: //prints all the logs
                 printLog(loghead, 0, inlog);
-                break;
+
             default:
                 printf("Invalid option. Please choose 2 for park-in or 3 for park-out.\n");
                 break;
