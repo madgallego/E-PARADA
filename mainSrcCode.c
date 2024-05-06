@@ -444,8 +444,7 @@ int Administrator(Profile **head){
     Profile *p = *head;
     char option;
     char plate[MAX];
-    char id[MAX];
-    char type[MAX];
+
     space_up(3);
     space_left(20);
     printf("================================================\n");
@@ -597,7 +596,7 @@ int Administrator(Profile **head){
             space_left(20);
             printf("================================================\n");
             if(option=='1'){
-                return 0;
+                return 4;
             }else if(option == '2'){
                 return 1;
             }     
@@ -627,7 +626,7 @@ int Administrator(Profile **head){
     printf("Invalid Option. Please try again. Thank you.\n");
     delay(2);
     clearTerminal();
-    return 7;//Invalid option or default return 
+    return 7;//Invalid option 
 }
 //Handles all park ins and park outs. Returns parking spot for park ins or 0 for park out and error
 int usePark(log **loghead, Profile * profiles, int * car, int * motor, int option){
@@ -1161,81 +1160,64 @@ void arrowD(int artype, int designation, int vtype)
 //Handles parking animation and display
 void peterParker(int designation, int car[20], int motor[20])
 {
-    time_t flash;
     int i = 0;
     //checks vehicle type
     if(designation <= 20) //CAR
     {
-        flash = time(NULL);
         while(i < 5)
         {
-            if((time(NULL) - flash) == 1)
-            {
-                //clear terminal
-                clearTerminal();
-                carParkerupper(car);
-                //prints either upward or downward arrow
-                if(designation <= 10)
-                    arrow(0, designation, 0);
-                else
-                    arrowD(0, designation, 0);
-                carParkerlower(car);
-                flash = time(NULL);
-                while(1)
-                {
-                    if((time(NULL) - flash) == 1)
-                    {
-                        //clear terminal
-                        clearTerminal();
-                        carParkerupper(car);
-                        //print upward or downward arrow of type 1
-                        if(designation <= 10)
-                            arrow(1, designation, 0);
-                        else
-                            arrowD(1, designation, 0);
-                        carParkerlower(car);
-                        flash = time(NULL);
-                        break;
-                    }
-                }
-                i++;
-            }
+            delay(1);
+            //clear terminal
+            clearTerminal();
+            carParkerupper(car);
+            //prints either upward or downward arrow
+            if(designation <= 10)
+                arrow(0, designation, 0);
+            else
+                arrowD(0, designation, 0);
+            carParkerlower(car);
+            delay(1)
+            //clear terminal
+            clearTerminal();
+            carParkerupper(car);
+            //print upward or downward arrow of type 1
+            if(designation <= 10)
+                arrow(1, designation, 0);
+            else
+                arrowD(1, designation, 0);
+            carParkerlower(car);
+            i++;
+            
         }
     }
     else
     {
         //for motor
         designation -= 20;
-        flash = time(NULL);
-        while(i < 10)
+        while(i < 5)
         {
-            if((time(NULL) - flash) == 1)
-            {
-                clearTerminal();
-                motorParkerupper(motor);
-                if(designation <=10)
-                    arrow(0, designation, 1);
-                else
-                    arrowD(0, designation, 1);
-                motorParkerlower(motor);
-                flash = time(NULL);
-                while(1)
-                {
-                    if((time(NULL) - flash) == 1)
-                    {
-                        clearTerminal();
-                        motorParkerupper(motor);
-                        if(designation<=10)
-                            arrow(1, designation, 1);
-                        else
-                            arrowD(1, designation, 1);
-                        motorParkerlower(motor);
-                        flash = time(NULL);
-                        break;
-                    }
-                }
-                i++;
-            }
+            delay(1);
+            //clear terminal
+            clearTerminal();
+            motorParkerupper(motor);
+            //prints either upward or downward arrow
+            if(designation <= 10)
+                arrow(0, designation, 1);
+            else
+                arrowD(0, designation, 1);
+            motorParkerlower(motor);
+            delay(1)
+            //clear terminal
+            clearTerminal();
+            motorParkerupper(motor);
+            //print upward or downward arrow of type 1
+            if(designation <= 10)
+                arrow(1, designation, 1);
+            else
+                arrowD(1, designation, 1);
+            motorParkerlower(motor);
+            i++;
+            
         }
 
     }
@@ -1445,8 +1427,6 @@ int main(){
         switch (option) {
             case -1:
                 break;
-            case 0:
-                break;
             case 1: //Register new profile
                 clearTerminal();
                 space_up(3);
@@ -1569,7 +1549,7 @@ int main(){
                 break;
 
             default:
-                printf("Invalid option. Please choose 2 for park-in or 3 for park-out.\n");
+                printf("Invalid option.\n");
                 break;
         }
 
