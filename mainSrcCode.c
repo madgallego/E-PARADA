@@ -1263,9 +1263,8 @@ void printLog(log * head, int option, FILE * ptr)
         if(option)
         {
             fprintf(ptr, "| %s | ", timeIN);
-            fprintf(ptr, "%s | %s ", p->plateNum, p->profileID);
+            fprintf(ptr, "%-10s | %-15s ", p->plateNum, p->profileID);
             //gets hour of time in
-            //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
             strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
             strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
             if(p->status != 0)
@@ -1279,11 +1278,10 @@ void printLog(log * head, int option, FILE * ptr)
             printf("LOGS FOR TODAY\n");
             space_left(20);
             printf("================================================\n\n");
-            space_left(20);
+            space_left(12);
             printf("| %s | ", timeIN);
-            printf("%s | %s ", p->plateNum, p->profileID);
+            printf("%-10s | %-15s ", p->plateNum, p->profileID);
             //gets hour of time in
-            //DI KO ALAM BAKIT PULA YUNG FORMAT SPECIFIER PERO NAGA WORK YAN I TESTED IT
             strftime(timeIN, sizeof(timeIN), "%I:%M%p", &p->timeIn);
             strftime(timeOUT, sizeof(timeOUT), "%I:%M%p", &p->timeOut);
             if(p->status != 0)
@@ -1306,8 +1304,8 @@ void currLog(log * head)
     printf("CURRENT PARKED IN VEHICLES\n");
     space_left(20);
     printf("================================================\n");
-    space_left(30);
-    printf("    DATE     PLATE     ID   \n");
+    space_left(23);
+    printf("  DATE       PLATE        ID   \n");
 
     if(p == NULL)
     {
@@ -1320,10 +1318,10 @@ void currLog(log * head)
         if(p->status != 0)
         {
             //gets date of timeIn
-            space_left(30);
+            space_left(23);
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
-            printf("%s | %s |\n", p->plateNum, p->profileID);
+            printf("%-10s | %-15s |\n", p->plateNum, p->profileID);
             return;
         }
         else
@@ -1337,10 +1335,11 @@ void currLog(log * head)
     {
         if(p->status != 0)
         {
-            space_left(30); //gets date of timeIn            
+            space_left(23); 
+            //gets date of timeIn            
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
-            printf("%s | %s |\n", p->plateNum, p->profileID);
+            printf("%-10s | %-15s |\n", p->plateNum, p->profileID);
         }
         p = p->next;
 
