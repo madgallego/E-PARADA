@@ -998,12 +998,10 @@ void arrow(int artype, int designation, int vtype)
         {
             space_left(20);
             spaces = 5 *(designation) + (designation - 1);
-            for(int i = 0; i < spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("^\n");
             space_left(20);
-            for(int i = 0; i < spaces - 1; i++)
-                printf(" ");
+            space_left(spaces - 1);
             printf("/_\\\n");
             space_left(20);
             for(int i = 0; i <spaces/2; i++)
@@ -1015,13 +1013,11 @@ void arrow(int artype, int designation, int vtype)
             spaces = 3 *(designation) + 2 *(designation - 1);
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("/\\\n");
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("||\n");
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
@@ -1036,12 +1032,10 @@ void arrow(int artype, int designation, int vtype)
         {
             spaces = 5 *(designation) + (designation - 1);
             space_left(20);
-            for(int i = 0; i < spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("A\n");
             space_left(20);
-            for(int i = 0; i < spaces - 1; i++)
-                printf(" ");
+            space_left(spaces - 1);
             printf("/ \\\n");
             space_left(20);
             for(int i = 0; i <spaces/2; i++)
@@ -1053,13 +1047,11 @@ void arrow(int artype, int designation, int vtype)
             spaces = 3 *(designation) + 2 *(designation - 1);
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("/\\\n");
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("!!\n");
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
@@ -1086,12 +1078,10 @@ void arrowD(int artype, int designation, int vtype)
                 printf("=>");
             printf("=|\n");
             space_left(20);
-            for(int i = 0; i < spaces - 1; i++)
-                printf(" ");
+            space_left(spaces - 1);
             printf("\\-/\n");
             space_left(20);
-            for(int i = 0; i < spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("V\n");
             
         }
@@ -1105,13 +1095,11 @@ void arrowD(int artype, int designation, int vtype)
             printf("|\n");
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("||\n");
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+           space_left(spaces);
             printf("\\/\n");
         }
     }
@@ -1127,12 +1115,10 @@ void arrowD(int artype, int designation, int vtype)
                 printf(">=");
             printf(">!\n");
             space_left(20);
-            for(int i = 0; i < spaces - 1; i++)
-                printf(" ");
+            space_left(spaces - 1);
             printf("\\-/\n");
             space_left(20);
-            for(int i = 0; i < spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("V\n");
 
         }
@@ -1145,14 +1131,12 @@ void arrowD(int artype, int designation, int vtype)
                 printf(">=");
             printf("!\n");
             space_left(20);
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf(" ");
             printf("!!\n");
             space_left(20);
             printf(" ");
-            for(int i = 0; i<spaces; i++)
-                printf(" ");
+            space_left(spaces);
             printf("\\/\n");
         }
     }
