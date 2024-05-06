@@ -384,6 +384,7 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                     if (option == '2') {
                         fprintf(ifp, "Plate Number: %s | Expected Profile ID: %s | Discrepancy: %s\n", 
                                 plate, p->profileID, id);
+                        space_left(20);
                         printf("Discrepancy archived in 'discrepancy.txt'.\n");
                         break;
                     }
@@ -1260,7 +1261,7 @@ void printLog(log * head, int option, FILE * ptr)
         //gets date of timeIn
         strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
         //runs if option is 1
-        if(option)
+        if(option == 1)
         {
             fprintf(ptr, "| %s | ", timeIN);
             fprintf(ptr, "%-10s | %-15s ", p->plateNum, p->profileID);
@@ -1614,8 +1615,6 @@ int main(){
             break;
     }
     //file pointers shoud be passed from main since we opened them here
-
-    printLog(loghead, 1, inlog);
 
     archiveProf(profile);
 
