@@ -71,7 +71,7 @@ void delay(int seconds) {
         elapsed_time = (double)(current_time - start_time) / CLOCKS_PER_SEC;
     } while (elapsed_time < seconds);
 }
-
+//Converts letters to uppercase
 void convert_to_uppercase(char *str) {
     size_t len = strlen(str);
     if (len > 0 && str[len - 1] == '\n') {// Replace newline with null-terminator
@@ -123,7 +123,7 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count) {
     fclose(file);
     return 0;  // Indicate success
 }
-//security feature
+//Security feature; Sign in with passwords or security key
 int SignIn() {
     FILE *file = fopen("passkey.txt", "r");
     if (file == NULL) {
@@ -261,7 +261,7 @@ int SignIn() {
     delay(3);
     return 1;  // Default return for unexpected behavior
 }
-//read records.txt to Profile lined list
+//Read records.txt to Profile linked list
 Profile *create_list(FILE *inrec) {
     Profile *head = NULL;
     Profile *p = NULL;
@@ -286,7 +286,7 @@ Profile *create_list(FILE *inrec) {
     }
     return head;
 }//creating profile linked list function
-//creates new struct for new profile
+//creates new struct for new profile (records.txt file appended)
 int rgstr(Profile ** head, const char plate[], const char id[]){
     FILE * inrec = fopen("records.txt","a");
     Profile * new, * p;
@@ -325,15 +325,6 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
 
     fclose(inrec);
     return 0;
-}
-//free the allocated space in linked list
-void freeProfile(Profile ** head){
-    Profile * p;
-    while(*head != NULL){
-        p = *head;
-        *head = (*head)->nxtPtr;
-        free(p);
-    }
 }
 //Function to traverse profiles to check plate num and identify vehicle type
 int traverseProfile(Profile * head, const char plate[]){
@@ -390,7 +381,7 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
 
     fclose(ifp);
 }
-
+//Function to delete a specified profile in records
 int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
     Profile * p, * q;
     p = *head;
@@ -412,7 +403,6 @@ int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete 
             free(p);
         }
     }
-
     p = *head;
     while(p != NULL){
         fprintf(ifp, "%s %s %c\n", p->plateNum, p->profileID, p->type);
@@ -420,8 +410,7 @@ int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete 
     }
     return 1;
 }
-
-//Main function admin log in and for managing the program
+//Function for directing through the rest of the program features
 int Administrator(Profile **head){
     Profile *p = *head;
     char option;
@@ -442,7 +431,6 @@ int Administrator(Profile **head){
     printf("2. Search Profile\n");
     space_left(25);
     printf("3. Check Logs\n");
-    space_up(2);
     space_left(25);
     printf("4. Delete Profile\n");
     space_up(2);
@@ -602,8 +590,8 @@ int Administrator(Profile **head){
     clearTerminal();
     return 7;//Invalid option or default return 
 }
-//Handles all log ins and log outs. Returns parking spot for log ins or 0 for log out and error
-int useLog(log **loghead, Profile * profiles, int * car, int * motor, int option){
+//Handles all park ins and park outs. Returns parking spot for park ins or 0 for park out and error
+int usePark(log **loghead, Profile * profiles, int * car, int * motor, int option){
     log *p = *loghead;
     log *new_log;
     char tempNo[MAX];
@@ -990,7 +978,7 @@ void arrowD(int artype, int designation, int vtype)
         if(vtype == 0)
         {
             spaces = 5 *(designation) + (designation - 1);
-            printf("\n\n\n");
+            space_up(3);
             space_left(20);
             for(int i = 0; i <spaces/2; i++)
                 printf("=>");
@@ -1008,7 +996,7 @@ void arrowD(int artype, int designation, int vtype)
         else if(vtype == 1)
         {
             spaces = 3 *(designation) + 2 *(designation - 1);
-            printf("\n\n\n");
+            space_up(3);
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
                 printf("=>");
@@ -1031,7 +1019,7 @@ void arrowD(int artype, int designation, int vtype)
         if(vtype == 0)
         {
             spaces = 5 *(designation) + (designation - 1);
-            printf("\n\n\n");
+            space_up(3);
             space_left(20);
             for(int i = 0; i <spaces/2; i++)
                 printf(">=");
@@ -1049,7 +1037,7 @@ void arrowD(int artype, int designation, int vtype)
         else if(vtype == 1)
         {
             spaces = 3 *(designation) + 2 *(designation - 1);
-            printf("\n\n\n");
+            space_up(3);
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
                 printf(">=");
@@ -1081,7 +1069,7 @@ void peterParker(int designation, int car[20], int motor[20])
             if((time(NULL) - flash) == 1)
             {
                 //clear terminal
-                printf("\e[1;1H\e[2J");
+                clearTerminal();
                 carParkerupper(car);
                 //prints either upward or downward arrow
                 if(designation <= 10)
@@ -1095,7 +1083,7 @@ void peterParker(int designation, int car[20], int motor[20])
                     if((time(NULL) - flash) == 1)
                     {
                         //clear terminal
-                        printf("\e[1;1H\e[2J");
+                        clearTerminal();
                         carParkerupper(car);
                         //print upward or downward arrow of type 1
                         if(designation <= 10)
@@ -1120,7 +1108,7 @@ void peterParker(int designation, int car[20], int motor[20])
         {
             if((time(NULL) - flash) == 1)
             {
-                printf("\e[1;1H\e[2J");
+                clearTerminal();
                 motorParkerupper(motor);
                 if(designation <=10)
                     arrow(0, designation, 1);
@@ -1132,7 +1120,7 @@ void peterParker(int designation, int car[20], int motor[20])
                 {
                     if((time(NULL) - flash) == 1)
                     {
-                        printf("\e[1;1H\e[2J");
+                        clearTerminal();
                         motorParkerupper(motor);
                         if(designation<=10)
                             arrow(1, designation, 1);
@@ -1149,7 +1137,6 @@ void peterParker(int designation, int car[20], int motor[20])
 
     }
 }
-
 //prints logbook. Option 0 for print to screen(search logs for today), 1 for print to logbook.txt(end of execution)
 void printLog(log * head, int option, FILE * ptr)
 {
@@ -1164,7 +1151,6 @@ void printLog(log * head, int option, FILE * ptr)
         space_left(31);
         printf("No logs for today.\n");
     }
-
     //p!= NULL because it needs to print until the last log
     while(p != NULL)
     {
@@ -1245,8 +1231,7 @@ void currLog(log * head)
     {
         if(p->status != 0)
         {
-            space_left(30);
-            //gets date of timeIn
+            space_left(30); //gets date of timeIn            
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
             printf("%s | %s |\n", p->plateNum, p->profileID);
@@ -1256,7 +1241,7 @@ void currLog(log * head)
     }
     return;
 }
-//prints profile back to records.txt for updating. Called at the end of program before freeProfile
+//prints profile linked list back to records.txt. Called at the end of program before freeProfile.
 void archiveProf(Profile * head)
 {
     //reopen records.txt for rewriting (saving profiles)
@@ -1271,7 +1256,15 @@ void archiveProf(Profile * head)
     fclose(rec);
     return;
 }
-
+//free the allocated space in linked list
+void freeProfile(Profile ** head){
+    Profile * p;
+    while(*head != NULL){
+        p = *head;
+        *head = (*head)->nxtPtr;
+        free(p);
+    }
+}
 //frees log linked list to prevent memory leak
 void freeLog(log * head)
 {
@@ -1374,7 +1367,7 @@ int main(){
                 while (1) {
                     int spot;
                     // Try to park in, check for errors
-                    spot = useLog(&loghead, profile, car, motor, 1);
+                    spot = usePark(&loghead, profile, car, motor, 1);
                     if (spot == 0) { // Error encountered
                         printf("Error: Profile not found or other issue. Please resolve.\n");
                         delay(3);
@@ -1393,7 +1386,7 @@ int main(){
                 break;
 
             case 3: // Park out
-                if (useLog(&loghead, profile, car, motor, 2) == 0);
+                if (usePark(&loghead, profile, car, motor, 2) == 0);
                 delay(3);
                 clearTerminal();
                 break;
@@ -1414,7 +1407,7 @@ int main(){
                 scanf("%s", plate);
                 convert_to_uppercase(plate);
                 FILE * inrec = fopen("records.txt","w");
-                deleteProfile(inrec, head, plate);
+                deleteProfile(inrec, &profile, plate);
                 space_up(2);
                 space_left(25);
                 printf("Deleting Profile...");
