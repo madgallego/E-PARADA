@@ -1266,7 +1266,6 @@ void currLog(log * head)
 {
     log * p = head;
     char timeIN[100];
-    char timeOUT[100];
     space_left(31);
     printf("CURRENT PARKED IN VEHICLES\n");
     space_left(20);
