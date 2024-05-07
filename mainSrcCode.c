@@ -572,7 +572,7 @@ int Administrator(Profile **head){
                         return 4;//default return
                     }
                     else{
-                        printf("Invalid Option\n");
+                        printf("\nInvalid Option\n");
                         return 4;//default return
                     }
                 }
