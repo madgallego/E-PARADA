@@ -1213,6 +1213,13 @@ void printLog(log * head, int option, FILE * ptr)
         printf("No logs for today.\n");
         space_up(3);
     }
+    else if(option == 0)
+    {
+        space_left(35);
+        printf("LOGS FOR TODAY\n");
+        space_left(20);
+        printf("================================================\n\n");
+    }
     //p!= NULL because it needs to print until the last log
     while(p != NULL)
     {
@@ -1233,10 +1240,6 @@ void printLog(log * head, int option, FILE * ptr)
         }
         else
         {
-            space_left(35);
-            printf("LOGS FOR TODAY\n");
-            space_left(20);
-            printf("================================================\n\n");
             space_left(12);
             printf("| %s | ", timeIN);
             printf("%-10s | %-15s ", p->plateNum, p->profileID);
