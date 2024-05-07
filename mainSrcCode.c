@@ -148,6 +148,21 @@ int SignIn() {
 
     while (attempts < 3) {
         clearTerminal();
+        space_left(15);
+        printf(" ______     ____     ___     ____     ___     ____     ___\n");
+        space_left(15);
+        printf("|  ____|   |  _ \\   / _ \\   |  _ \\   / _ \\   |  _ \\   / _ \\ \n");
+        space_left(15);
+        printf("| |___     | [_] | / /_\\ \\  | [_] | / /_\\ \\  | | | | / /_\\ \\ \n");
+        space_left(15);
+        printf("|  ___| [] |  __/  | ___  | |   _/  | ___  | | | | | | ___  |  \n");
+        space_left(15);
+        printf("| |____    | |     | |  | | | |\\ \\  | |  | | | |_/ / | |  | | \n");
+        space_left(15);
+        printf("|______|   |_|     |_|  |_| |_| \\_\\ |_|  |_| |___ /  |_|  |_|\n");
+        space_up(1);
+        space_left(22);
+        printf("Electronic Parking and Documentation Algorithm\n");
         space_up(3);
         space_left(20);
         printf("================================================\n");
