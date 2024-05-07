@@ -1529,7 +1529,6 @@ int main(){
 
             default:
                 printf("Invalid option.\n");
-                break;
         }
         // Check if user wants to perform another action
         while(option != -1)
