@@ -554,16 +554,16 @@ int Administrator(Profile **head){
                 space_left(25);
                 printf("Choice: ");
                 scanf("%c", &option);
-                if (option == 1)
+                if (option == '1')
                     return 4;//default return
-                else if(option == 2){
+                else if(option == '2'){
                     space_up(2);
                     space_left(25);
                     printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
-                    scanf("%c", &option);
-                    if (option == 1)
+                    scanf(" %c", &option);
+                    if (option == '1')
                         return 4;//default return
-                    else if (option == 2){
+                    else if (option == '2'){
                         FILE * inrec = fopen("records.txt","w");
                         deleteProfile(inrec, head, plate);
                         clearTerminal();
