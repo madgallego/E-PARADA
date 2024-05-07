@@ -622,7 +622,7 @@ int Administrator(Profile **head){
         clearTerminal();
         return 6;
     }
-    else if(option == '6');
+    else if(option == '6')
         return -1;
     space_left(25);
     printf("Invalid Option. Please try again. Thank you.\n");
@@ -1529,7 +1529,6 @@ int main(){
 
             default:
                 printf("Invalid option.\n");
-                break;
         }
         // Check if user wants to perform another action
         while(option != -1)
