@@ -1213,6 +1213,13 @@ void printLog(log * head, int option, FILE * ptr)
         printf("No logs for today.\n");
         space_up(3);
     }
+    else if(option == 0)
+    {
+        space_left(35);
+        printf("LOGS FOR TODAY\n");
+        space_left(20);
+        printf("================================================\n\n");
+    }
     //p!= NULL because it needs to print until the last log
     while(p != NULL)
     {
@@ -1233,10 +1240,6 @@ void printLog(log * head, int option, FILE * ptr)
         }
         else
         {
-            space_left(35);
-            printf("LOGS FOR TODAY\n");
-            space_left(20);
-            printf("================================================\n\n");
             space_left(12);
             printf("| %s | ", timeIN);
             printf("%-10s | %-15s ", p->plateNum, p->profileID);
@@ -1261,11 +1264,11 @@ void currLog(log * head)
     printf("CURRENT PARKED IN VEHICLES\n");
     space_left(20);
     printf("================================================\n");
-    space_left(23);
-    printf("  DATE       PLATE        ID   \n");
+    
 
     if(p == NULL)
     {
+        space_up(1);
         space_left(27);
         printf("No Vehicles Parked in as of Today\n\n");
         return;
@@ -1275,6 +1278,8 @@ void currLog(log * head)
         if(p->status != 0)
         {
             //gets date of timeIn
+            space_left(23);
+            printf("  DATE       PLATE        ID   \n");
             space_left(23);
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
@@ -1288,6 +1293,8 @@ void currLog(log * head)
             return;
         }
     }
+    space_left(23);
+    printf("  DATE       PLATE        ID   \n");
     while(p != NULL)
     {
         if(p->status != 0)
