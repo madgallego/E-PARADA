@@ -622,7 +622,7 @@ int Administrator(Profile **head){
         clearTerminal();
         return 6;
     }
-    else if(option == '6');
+    else if(option == '6')
         return -1;
     space_left(25);
     printf("Invalid Option. Please try again. Thank you.\n");
