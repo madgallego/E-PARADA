@@ -382,7 +382,7 @@ int traverseProfile(Profile * head, const char plate[]){
     return 1;  // Profile not found
 }
 //Checks for profile id of plate num. Archives discrpency if profile id does not match
-void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
+int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     FILE * ifp = fopen("discrepancy.txt","a");
     Profile * p=head;
     char option;
@@ -410,6 +410,8 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                     space_left(20);
                     printf("2. Archive Transaction to Discrepancy File\n");
                     space_left(20);
+                    printf("3. Try again\n");
+                    space_left(20);
                     printf("Choice: ");
                     scanf(" %c", &option);
 
@@ -419,27 +421,39 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                         space_up(1);
                         space_left(20);
                         printf("Discrepancy archived in 'discrepancy.txt'.\n");
+                        discrepancy_found = 0;
                         break;
                     }
                     else if(option == '1')
+                    {
+                        discrepancy_found = 2;
                         break;
+                    }
+                    else if(option == '3')
+                    {
+                        discrepancy_found = -1;
+                        break;
+                    }
                     else
                     {
                         space_left(20);
                         printf("Option not recognized\n");
+                        delay(1);
+                        clearTerminal();
                         //break;
                     }                    
                 }
-                discrepancy_found = 0;
                 break;                
             }
         }
         p = p->nxtPtr;
     }
-    if (discrepancy_found) {
+    if (discrepancy_found == 1) {
         printf("No matching plate number found in the profile database.\n");
     }
+    
     fclose(ifp);
+    return discrepancy_found;
 }
 //Function to delete a specified profile in records
 int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
@@ -534,57 +548,66 @@ int Administrator(Profile **head){
 
         while (p != NULL) { // Traverse the linked list
             if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
-                space_left(25);
-                printf("Search Result for Plate Num. %s\n\n", p->plateNum);
-                space_left(25);
-                printf("ID: %s\n", p->profileID);
-                space_left(25);
-                printf("Vehicle Type: %c\n\n", p->type);
-                space_left(20);
-                printf("================================================\n\n");
-                space_left(25);
-                printf("1. End Search\n");
-                space_left(25);
-                printf("2. Delete Profile\n");
-                space_up(2);
-                space_left(25);
-                printf("Choice: ");
-                scanf("%c", &option);
-                if (option == '1')
-                    return 4;//default return
-                else if(option == '2'){
+                while(1)
+                {
+                    space_left(25);
+                    printf("Search Result for Plate Num. %s\n\n", p->plateNum);
+                    space_left(25);
+                    printf("ID: %s\n", p->profileID);
+                    space_left(25);
+                    printf("Vehicle Type: %c\n\n", p->type);
+                    space_left(20);
+                    printf("================================================\n\n");
+                    space_left(25);
+                    printf("1. End Search\n");
+                    space_left(25);
+                    printf("2. Delete Profile\n");
                     space_up(2);
                     space_left(25);
-                    printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
-                    scanf(" %c", &option);
+                    printf("Choice: ");
+                    scanf("%c", &option);
                     if (option == '1')
                         return 4;//default return
-                    else if (option == '2'){
-                        FILE * inrec = fopen("records.txt","w");
-                        deleteProfile(inrec, head, plate);
-                        clearTerminal();
-                        char title[MAX]={"DELETE PROFILE"};
-                        header(title, 96, 116);
-                        space_left(25);
-                        printf("Deleting Profile...");
-                        delay(3);
-                        space_up(2);
-                        space_left(25);
-                        printf("Successfully Deleted!\n");                     
-                        space_up(2);
-                        space_left(20);
-                        printf("================================================\n");
-                        fclose(inrec);
-                        return 4;//default return
+                    else if(option == '2'){
+                        while(1)
+                        {
+                            space_up(2);
+                            space_left(25);
+                            printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
+                            scanf(" %c", &option);
+                            if (option == '1')
+                                return 4;//default return
+                            else if (option == '2'){
+                                FILE * inrec = fopen("records.txt","w");
+                                deleteProfile(inrec, head, plate);
+                                clearTerminal();
+                                char title[MAX]={"DELETE PROFILE"};
+                                header(title, 96, 116);
+                                space_left(25);
+                                printf("Deleting Profile...");
+                                delay(3);
+                                space_up(2);
+                                space_left(25);
+                                printf("Successfully Deleted!\n");                     
+                                space_up(2);
+                                space_left(20);
+                                printf("================================================\n");
+                                fclose(inrec);
+                                return 4;//default return
+                            }
+                            else{
+                                space_up(1);
+                                space_left(20);
+                                printf("Invalid Option. Try again\n");
+                                delay(2);
+                            }
+                        }
                     }
                     else{
-                        printf("\nInvalid Option\n");
-                        return 4;//default return
+                        printf("Invalid Option. Try again\n");
+                        delay(2);
+                        clearTerminal();
                     }
-                }
-                else{
-                    printf("Invalid Option\n");
-                    return 4;//default return
                 }
             }else {
                 p = p->nxtPtr; // Continue to the next node
@@ -644,6 +667,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
     char tempNo[MAX];
     char tempID[MAX];
     char choice;
+    int check;
     int found = 0;  // Flag to check if the vehicle is in the list
     time_t t;
 
@@ -701,13 +725,29 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
 
         if(rgsterd == 0) //this section of the code will be skipped if the user registed a new profile to park in
         {
-            space_left(25);
-            printf("Enter Driver ID: ");
-            scanf("%s", tempID);
-            convert_to_uppercase(tempID);
+            while(1)
+            {
+                space_left(25);
+                printf("Enter Driver ID: ");
+                scanf("%s", tempID);
+                convert_to_uppercase(tempID);
+                // Check for discrepancies
+                check = dscrpncyCheck(profiles, tempNo, tempID);
+                if(check == 0)
+                    break;
+                else if(check == 1 || check == 2)
+                    return 0;
+                else
+                {
+                    space_up(1);
+                    space_left(20);
+                    printf("Trying again...\n\n");
+                    delay(1);
+                } //try again
+            }
         }
         // Check for discrepancies
-        dscrpncyCheck(profiles, tempNo, tempID);
+
         // Create a new log entry
         new_log = (log *)malloc(sizeof(log));
         
