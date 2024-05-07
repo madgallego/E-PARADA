@@ -410,6 +410,8 @@ int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                     space_left(20);
                     printf("2. Archive Transaction to Discrepancy File\n");
                     space_left(20);
+                    printf("3. Try again\n");
+                    space_left(20);
                     printf("Choice: ");
                     scanf(" %c", &option);
 
@@ -425,6 +427,11 @@ int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                     else if(option == '1')
                     {
                         discrepancy_found = 2;
+                        break;
+                    }
+                    else if(option == '3')
+                    {
+                        discrepancy_found = -1;
                         break;
                     }
                     else
@@ -660,6 +667,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
     char tempNo[MAX];
     char tempID[MAX];
     char choice;
+    int check;
     int found = 0;  // Flag to check if the vehicle is in the list
     time_t t;
 
@@ -717,14 +725,29 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
 
         if(rgsterd == 0) //this section of the code will be skipped if the user registed a new profile to park in
         {
-            space_left(25);
-            printf("Enter Driver ID: ");
-            scanf("%s", tempID);
-            convert_to_uppercase(tempID);
+            while(1)
+            {
+                space_left(25);
+                printf("Enter Driver ID: ");
+                scanf("%s", tempID);
+                convert_to_uppercase(tempID);
+                // Check for discrepancies
+                check = dscrpncyCheck(profiles, tempNo, tempID);
+                if(check == 0)
+                    break;
+                else if(check == 1 || check == 2)
+                    return 0;
+                else
+                {
+                    space_up(1);
+                    space_left(20);
+                    printf("Trying again...\n\n");
+                    delay(1);
+                } //try again
+            }
         }
         // Check for discrepancies
-        if(dscrpncyCheck(profiles, tempNo, tempID) != 0)
-            return 0;
+
         // Create a new log entry
         new_log = (log *)malloc(sizeof(log));
         
