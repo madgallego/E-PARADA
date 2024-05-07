@@ -148,6 +148,21 @@ int SignIn() {
 
     while (attempts < 3) {
         clearTerminal();
+        space_left(15);
+        printf(" ______     ____     ___     ____     ___     ____     ___\n");
+        space_left(15);
+        printf("|  ____|   |  _ \\   / _ \\   |  _ \\   / _ \\   |  _ \\   / _ \\ \n");
+        space_left(15);
+        printf("| |___     | [_] | / /_\\ \\  | [_] | / /_\\ \\  | | | | / /_\\ \\ \n");
+        space_left(15);
+        printf("|  ___| [] |  __/  | ___  | |   _/  | ___  | | | | | | ___  |  \n");
+        space_left(15);
+        printf("| |____    | |     | |  | | | |\\ \\  | |  | | | |_/ / | |  | | \n");
+        space_left(15);
+        printf("|______|   |_|     |_|  |_| |_| \\_\\ |_|  |_| |___ /  |_|  |_|\n");
+        space_up(1);
+        space_left(22);
+        printf("Electronic Parking and Documentation Algorithm\n");
         space_up(3);
         space_left(20);
         printf("================================================\n");
@@ -538,14 +553,14 @@ int Administrator(Profile **head){
                 space_up(2);
                 space_left(25);
                 printf("Choice: ");
-                scanf("%d", &option);
+                scanf("%c", &option);
                 if (option == 1)
                     return 4;//default return
                 else if(option == 2){
                     space_up(2);
                     space_left(25);
                     printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
-                    scanf("%d", &option);
+                    scanf("%c", &option);
                     if (option == 1)
                         return 4;//default return
                     else if (option == 2){
