@@ -390,8 +390,11 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                 // Discrepancy found: same plate number but different profile ID.
                 while(1)
                 {
+                    space_up(1);
                     space_left(20);
                     printf("Driver Profile does not match in Database.\n");
+                    space_left(20);
+                    printf("================================================\n");
                     space_left(20);
                     printf("1. End Transaction\n");
                     space_left(20);
@@ -403,6 +406,7 @@ void dscrpncyCheck(Profile * head, const char plate[], const char id[]){
                     if (option == '2') {
                         fprintf(ifp, "Plate Number: %s | Expected Profile ID: %s | Discrepancy: %s\n", 
                                 plate, p->profileID, id);
+                        space_up(1);
                         space_left(20);
                         printf("Discrepancy archived in 'discrepancy.txt'.\n");
                         break;
@@ -496,8 +500,7 @@ int Administrator(Profile **head){
             space_left(36);
             printf("PARKING (PMS)\n");
             space_left(20);
-            printf("================================================\n");
-            space_up(2);
+            printf("================================================\n\n");
             space_left(25);
             printf("1. Park In\n");
             space_left(25);
@@ -673,15 +676,18 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
                 while(1)
                 {
-                    space_left(25);
+                    space_up(1);
+                    space_left(20);
                     printf("Plate Number is not in our data base.\n");
-                    space_left(30);
+                    space_left(20);
+                    printf("================================================\n");
+                    space_left(20);
                     printf("1. End Transaction\n");
-                    space_left(30);
+                    space_left(20);
                     printf("2. Register Profile\n");
-                    space_left(30);
+                    space_left(20);
                     printf("3. Try Again\n");
-                    space_left(25);
+                    space_left(20);
                     printf("Choice: ");
                     scanf(" %c", &choice);
                     if(choice == '1')
@@ -1450,13 +1456,15 @@ int main(){
                     // Try to park in, check for errors
                     spot = usePark(&loghead, profile, car, motor, 1);
                     if (spot == 0) { // Error encountered
+                        space_up(1);
                         space_left(20);
-                        printf("Error: Profile not found or other issue. Please resolve.\n");
+                        printf("ERROR: Profile not found or other issue. Please resolve.\n");
                         delay(3);
                         break;
                     }
                     // If successful, inform the user about the parking spot
                     delay(3);
+                    space_up(1);
                     space_left(20);
                     printf("Thank you for parking with us. Please proceed to parking spot %d. (20+ is for motorcycles only)\n", spot);
                     delay(3);
@@ -1548,7 +1556,7 @@ int main(){
         // Check if user wants to perform another action
         while(option != -1)
         {
-            space_up(3);
+            space_up(1);
             space_left(20); 
             printf("Do Another Action?  (1: No, 2: Yes): ");
             scanf(" %c", &choice);
