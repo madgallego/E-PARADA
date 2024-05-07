@@ -1160,7 +1160,7 @@ void peterParker(int designation, int car[20], int motor[20])
             else
                 arrowD(0, designation, 0);
             carParkerlower(car);
-            delay(1)
+            delay(1);
             //clear terminal
             clearTerminal();
             carParkerupper(car);
@@ -1190,7 +1190,7 @@ void peterParker(int designation, int car[20], int motor[20])
             else
                 arrowD(0, designation, 1);
             motorParkerlower(motor);
-            delay(1)
+            delay(1);
             //clear terminal
             clearTerminal();
             motorParkerupper(motor);
@@ -1270,11 +1270,11 @@ void currLog(log * head)
     printf("CURRENT PARKED IN VEHICLES\n");
     space_left(20);
     printf("================================================\n");
-    space_left(23);
-    printf("  DATE       PLATE        ID   \n");
+    
 
     if(p == NULL)
     {
+        space_up(1);
         space_left(27);
         printf("No Vehicles Parked in as of Today\n\n");
         return;
@@ -1284,6 +1284,8 @@ void currLog(log * head)
         if(p->status != 0)
         {
             //gets date of timeIn
+            space_left(23);
+            printf("  DATE       PLATE        ID   \n");
             space_left(23);
             strftime(timeIN, sizeof(timeIN), "%x", &p->timeIn);
             printf("| %s | ", timeIN);
@@ -1297,6 +1299,8 @@ void currLog(log * head)
             return;
         }
     }
+    space_left(23);
+    printf("  DATE       PLATE        ID   \n");
     while(p != NULL)
     {
         if(p->status != 0)
