@@ -17,8 +17,8 @@ Electronic Parking and Documentation Algorithm
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <ctype.h>
+#include <time.h>
 
 #define MAX 100
 #define MAX_ADMINS 5 //Limiting to 5 admins
@@ -99,7 +99,7 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count) {
     char new_passkey[MAX];
 
     space_up(2);
-    space_left(20);
+    space_left(85);
     printf("Admin: ");
     scanf("%s", username); 
     // Check if the username exists in the admin array
@@ -107,7 +107,7 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count) {
     for (int i = 0; i < admin_count; i++) {
         if (strcmp(admin[i].user, username) == 0) {
             user_found = 1;
-            space_left(20);// Prompt for a new passkey
+            space_left(85);// Prompt for a new passkey
             printf("Enter a new passkey for user '%s': ", username);
             scanf("%s", new_passkey);
             strcpy(admin[i].passkey, new_passkey);  // Update the passkey
@@ -117,7 +117,7 @@ int resetPasskey(const char *filename, Admin admin[], int admin_count) {
 
     if (user_found==0) {//user not found
         space_up(1);
-        space_left(20);
+        space_left(85);
         printf("Error: User '%s' not found.\n\n", username);
         return 1;  // Indicate error
     }
@@ -151,7 +151,8 @@ int SignIn() {
     int authenticated = 0;
     int reset_result;
     char choice;
-    char security_key[9]; 
+    char security_key[9];
+    char title[MAX];
     // Read the admin security details from the file
     while (admin_count < MAX_ADMINS && fscanf(file, "%s %s", admin[admin_count].user, admin[admin_count].passkey) == 2) {
         admin_count++;
@@ -161,37 +162,31 @@ int SignIn() {
     while (attempts < 3) {
         clearTerminal();
         space_up(4);
-        space_left(90);
+        space_left(80);
         printf(" ______     ____     ___     ____     ___     ____     ___\n");
-        space_left(90);
+        space_left(80);
         printf("|  ____|   |  _ \\   / _ \\   |  _ \\   / _ \\   |  _ \\   / _ \\ \n");
-        space_left(90);
+        space_left(80);
         printf("| |___     | [_] | / /_\\ \\  | [_] | / /_\\ \\  | | | | / /_\\ \\ \n");
-        space_left(90);
+        space_left(80);
         printf("|  ___| [] |  __/  | ___  | |   _/  | ___  | | | | | | ___  |  \n");
-        space_left(90);
+        space_left(80);
         printf("| |____    | |     | |  | | | |\\ \\  | |  | | | |_/ / | |  | | \n");
-        space_left(90);
+        space_left(80);
         printf("|______|   |_|     |_|  |_| |_| \\_\\ |_|  |_| |___ /  |_|  |_|\n");
         space_up(1);
-        space_left(97);
+        space_left(87);
         printf("Electronic Parking and Documentation Algorithm\n");
-        space_up(3);
-        space_left(96);
-        printf("================================================\n");
-        space_left(116);
-        printf("LOGIN\n");
-        space_left(96);
-        printf("================================================\n");
-        space_up(1);
-        space_left(96);
+        title[MAX]={"LOGIN"};
+        header(title, 85, 107);
+        space_left(85);
         printf("Admin: ");
         scanf("%s", entered_user.user);
-        space_left(96);
+        space_left(85);
         printf("Password: ");
         scanf("%s", entered_user.passkey);
         space_up(1);
-        space_left(96);
+        space_left(85);
         printf("================================================\n");
 
         for (int i = 0; i < admin_count; i++) {
@@ -202,14 +197,14 @@ int SignIn() {
         }
 
         if (authenticated==1) {        
-            space_left(96);
+            space_left(85);
             printf("Login successful.\n");
             delay(3);
             clearTerminal();
             return 0;  // Successful login
         } else {
             attempts++;
-            space_left(96);
+            space_left(85);
             printf("Invalid username or password. Attempts left: %d\n", 3 - attempts);
             delay(2);
         }
@@ -218,51 +213,35 @@ int SignIn() {
     while(1)
     {
         clearTerminal();
-        space_up(4);
-        space_left(96);
-        printf("================================================\n");
-        space_left(96);
-        printf("LOGIN FAILED\n");
-        space_left(96);
-        printf("================================================\n");
-        space_left(96);
+        title[MAX]={"LOGIN FAILED"};
+        header(title, 85, 107);
+        space_left(85);
         printf("Too many failed attempts. Would you like to:\n");
         space_up(2);
-        space_left(96);
+        space_left(85);
         printf("1. Exit Program\n");
-        space_left(96);
+        space_left(85);
         printf("2. Reset Password using Security Key\n\n");
-        space_left(96);
+        space_left(85);
         printf("Choice: ");
         scanf(" %c", &choice);
-        space_left(96);
+        space_left(85);
         printf("================================================\n");
 
         if (choice == '1') {
             return 1;  // Exit program
         } else if (choice == '2') {
             clearTerminal();
-            space_up(3);
-            space_left(96);
-            printf("================================================\n");
-            space_left(116);
-            printf("RESET PASSWORD\n");
-            space_left(96);
-            printf("================================================\n");
-            space_up(2);
-            space_left(96);
+            title[MAX]={"RESET PASSWORD"};
+            header(title, 85, 107);
+            space_left(85);
             printf("Enter the 8-digit security key: ");
             scanf("%s", security_key);
 
             if (strcmp(security_key, SECURITY_KEY) == 0) {//security passkey matches
                 clearTerminal();
-                space_up(3);
-                space_left(20);
-                printf("================================================\n");
-                space_left(37);
-                printf("RESET PASSWORD\n");
-                space_left(20);
-                printf("================================================\n");
+                title[MAX]={"RESET PASSWORD"};
+                header(title, 85, 107);
                 
                 reset_result = resetPasskey("passkey.txt", admin, admin_count);
                 if (reset_result == 0) {
@@ -335,14 +314,8 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
     }
 
     clearTerminal();
-    space_up(3);
-    space_left(20);
-    printf("================================================\n");
-    space_left(36);
-    printf("REGISTER PROFILE\n");
-    space_left(20);
-    printf("================================================\n");
-    space_up(2);
+    char title[MAX]={"E-PARADA"};
+    header(title, 96, 116);
     space_left(20);
     printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
     space_left(20);
@@ -490,21 +463,15 @@ int Administrator(Profile **head){
     char option;
     char plate[MAX];
 
+    clearTerminal();
     char title[MAX]={"E-PARADA"};
     header(title, 96, 116);
     space_left(25);
-    printf("1. PMS\n");
+    printf("1. PMS\t\t\t4. Delete Profile\n");
     space_left(25);
-    printf("2. Search Profile\n");
+    printf("2. Search Profile\t5. Check Logs\n");
     space_left(25);
-    printf("3. Register Profile\n");
-    space_left(25);
-    printf("4. Delete Profile\n");
-    space_left(25);
-    printf("5. Check Logs\n");
-    space_left(25);
-    printf("6. Exit\n");
-    space_up(2);
+    printf("3. Register Profile\t6. Exit\n");
     space_left(25);
     printf("Choice: ");
     scanf(" %c", &option);
@@ -1293,16 +1260,15 @@ void currLog(log * head)
 {
     log * p = head;
     char timeIN[100];
-    space_left(31);
-    printf("CURRENT PARKED IN VEHICLES\n");
-    space_left(20);
-    printf("================================================\n");
-    
+
+    clearTerminal();
+    char title[MAX]={"CURRENTLY PARKED VEHICLES"};
+    header(title, 96, 110);
 
     if(p == NULL)
     {
         space_up(1);
-        space_left(27);
+        space_left(96);
         printf("No Vehicles Parked in as of Today\n\n");
         return;
     }
@@ -1427,9 +1393,9 @@ int main(){
     // Main program loop, ends at 5 PM or by choice
     while(1)
     {
-        do
-        {
+        do{
             currLog(loghead);
+            delay(3);
             option = Administrator(&profile); // Get user input for next action
         } while (option == 7);
                   
