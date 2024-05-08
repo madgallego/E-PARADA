@@ -430,32 +430,35 @@ int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
 }
 //Function to delete a specified profile in records
 int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
-    Profile * p, * q;
-    p = *head;
+    if (head == NULL || *head == NULL) {
+        return 0;// return failure (0)
+    }// If the head is NULL, the list is empty
 
-    if(strcmp(p->plateNum, plate) == 0){
-        *head = p->nxtPtr;
-        free(p);
-    }
-    else{
-        while(p != NULL && strcmp(p->plateNum, plate) != 0){
-            q = p;
+    Profile* p = *head; // Start from the head
+    Profile* q = NULL;  // Previous node pointer
+
+    // Check if the first node matches the plate number
+    if (strcmp(p->plateNum, plate) == 0) {
+        *head = p->nxtPtr; 
+        free(p);         
+    } 
+    else {
+        // Traverse the list until end
+        while (p != NULL && strcmp(p->plateNum, plate) != 0) {
+            q = p; // Store the previous node
             p = p->nxtPtr;
         }
-        if(p == NULL){
-            return 0;
+        // If not
+        if (p == NULL) {
+            return 0; // Return failure
         }
-        else if(strcmp(p->plateNum, plate) == 0){
-            q->nxtPtr = p->nxtPtr;
-            free(p);
+        // If the node is found, unlink it from the list
+        if (q != NULL && strcmp(p->plateNum, plate) == 0) {
+            q->nxtPtr = p->nxtPtr; // Set the previous node's next pointer to skip the current node
+            free(p);               // Free the deleted node
         }
     }
-    p = *head;
-    while(p != NULL){
-        fprintf(ifp, "%s %s %c\n", p->plateNum, p->profileID, p->type);
-        p = p->nxtPtr;
-    }
-    return 1;
+    return 1; // Return success
 }
 //Function for directing through the rest of the program features
 int Administrator(Profile **head){
@@ -1358,8 +1361,7 @@ int main(){
     } while (sign_in_result == 2);  
     
     profile = create_list(inrec); //Create a profile list from records file
-    fclose(inrec);
-    
+        
     while(1){ // Main program loop, ends at 5 PM or by choice
         
         currLog(loghead);//show presently parked vehicles
@@ -1451,14 +1453,10 @@ int main(){
                         space_up(2);
                         space_left(85);
                         printf("Deleting Profile...\n");
-
-                        FILE * inrec = fopen("records.txt","w");
-
+                       
                         int delResult = 0;
                         delResult = deleteProfile(inrec, &profile, plate); //delete function
-                    
-                        fclose(inrec);
-                                              
+                                                                 
                         if (delResult == 0){
                             while(1){
                                 space_left(85);
@@ -1561,13 +1559,12 @@ int main(){
         }
 
         if(option==-1||choice=='1'){//Close Program
-            printf("Exiting Program...");
-            delay(3);
+            printf("Exiting Program...");            
             break;
         }
     }
     //file pointers shoud be passed from main since we opened them here
-
+    fclose(inrec);
     archiveProf(profile);
 
     freeLog(loghead);
@@ -1575,6 +1572,9 @@ int main(){
 
     fclose(inlog);
     fclose(indisc);
+
+    delay(2);
+    clearTerminal();
     
     return 0;
 }//main function
