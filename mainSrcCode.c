@@ -1452,7 +1452,6 @@ int main(){
                        
                         int delResult = 0;
                         delResult = deleteProfile(&profile, plate); //delete function
-                        fclose(inrec);
                         archiveProf(inrec,profile);
                                                                  
                         if (delResult == 0){
@@ -1565,7 +1564,8 @@ int main(){
     
     freeLog(loghead);
     freeProfile(&profile);
-
+    
+    fclose(inrec);
     fclose(inlog);
     fclose(indisc);
 
