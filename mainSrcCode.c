@@ -429,186 +429,182 @@ int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     return discrepancy_found;
 }
 //Function to delete a specified profile in records
-int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
-    Profile * p, * q;
-    p = *head;
+int deleteProfile(Profile**head, char plate[]){//function to delete profile in records
+    if (head == NULL || *head == NULL) {
+        return 0;// return failure (0)
+    }// If the head is NULL, the list is empty
 
-    if(strcmp(p->plateNum, plate) == 0){
-        *head = p->nxtPtr;
-        free(p);
-    }
-    else{
-        while(p != NULL && strcmp(p->plateNum, plate) != 0){
-            q = p;
+    Profile* p = *head; // Start from the head
+    Profile* q = NULL;  // Previous node pointer
+
+    // Check if the first node matches the plate number
+    if (strcmp(p->plateNum, plate) == 0) {
+        *head = p->nxtPtr; 
+        free(p);         
+    } 
+    else {
+        // Traverse the list until end
+        while (p != NULL && strcmp(p->plateNum, plate) != 0) {
+            q = p; // Store the previous node
             p = p->nxtPtr;
         }
-        if(p == NULL){
-            return 0;
+        // If not
+        if (p == NULL) {
+            return 0; // Return failure
         }
-        else if(strcmp(p->plateNum, plate) == 0){
-            q->nxtPtr = p->nxtPtr;
-            free(p);
+        // If the node is found, unlink it from the list
+        if (q != NULL && strcmp(p->plateNum, plate) == 0) {
+            q->nxtPtr = p->nxtPtr; // Set the previous node's next pointer to skip the current node
+            free(p);               // Free the deleted node
         }
     }
-    p = *head;
-    while(p != NULL){
-        fprintf(ifp, "%s %s %c\n", p->plateNum, p->profileID, p->type);
-        p = p->nxtPtr;
-    }
-    return 1;
+    return 1; // Return success
 }
 //Function for directing through the rest of the program features
-int Administrator(Profile **head){
-    Profile *p = *head;
+int Administrator(Profile *head){
+    Profile *p = head;
     char option;
     char plate[MAX];
+    char title[MAX];
 
-    clearTerminal();
-    char title[MAX]={"E-PARADA"};
-    header(title, 85, 105);
-    space_left(85);
-    printf("1. PMS             \t4. Delete Profile\n");
-    space_left(85);
-    printf("2. Search Profile  \t5. Check Logs\n");
-    space_left(85);
-    printf("3. Register Profile\t6. Exit\n\n");
-    space_left(85);
-    printf("Choice: ");
-    scanf(" %c", &option);
+    while(1){                       
+    
+        clearTerminal();
+        strcpy(title,"E-PARADA");
+        header(title, 85, 105);
+        space_left(85);
+        printf("1. PMS             \t4. Delete Profile\n");
+        space_left(85);
+        printf("2. Search Profile  \t5. Check Logs\n");
+        space_left(85);
+        printf("3. Register Profile\t6. Exit\n\n");
+        space_left(85);
+        printf("Choice: ");
+        scanf(" %c", &option);
+    
+        if(option == '1'){ //PMS instructions
+            while(1){
+                clearTerminal();
+                strcpy(title,"PMS");
+                header(title, 85, 107);
+                space_left(85);
+                printf("1. Park In\n");
+                space_left(85);
+                printf("2. Park Out\n");
+                space_up(2);
+                space_left(85);
+                printf("Choice: ");
+                scanf(" %c", &option);
 
-    if(option == '1'){ //PMS instructions
-        while(1){
+                if(option == '1'){
+                    return 0; // park in return
+                }
+                else if(option == '2'){
+                    return 1; // park out return
+                }
+                else{
+                    space_left(85);
+                    printf("Input not recognized. Please try again. Thank you!");
+                    delay(2);
+                }         
+            }
+        }          
+        else if(option == '2'){ //Search Profile Instructions
+            
             clearTerminal();
-            char title[MAX]={"PMS"};
+            strcpy(title,"SEARCH PROFILE");
             header(title, 85, 107);
             space_left(85);
-            printf("1. Park In\n");
-            space_left(85);
-            printf("2. Park Out\n");
-            space_up(2);
-            space_left(85);
-            printf("Choice: ");
-            scanf(" %c", &option);
+            printf("Enter Plate Number: ");
+            scanf("%s", plate);
+            convert_to_uppercase(plate);
 
-            if(option == '1'){
-                return 2;
-            }
-            else if(option == '2'){
-                return 3;
-            }
-            else
-            {
-                space_left(85);
-                printf("Input not recognized. Please try again. Thank you");
-                delay(1);
-            }         
-        }
-    }          
-    else if(option == '2'){ //Search Profile Instructions
-        clearTerminal();
-        char title[MAX]={"SEARCH PROFILE"};
-        header(title, 85, 107);
-        space_left(85);
-        printf("Enter Plate Number: ");
-        scanf("%s", plate);
-        convert_to_uppercase(plate);
-
-        while (p != NULL) { // Traverse the linked list
-            if (strcmp(plate, p->plateNum) == 0) { // If plate number is found
-                while(1)
-                {
-                    space_left(85);
-                    printf("Search Result for Plate Num. %s\n\n", p->plateNum);
-                    space_left(85);
-                    printf("ID: %s\n", p->profileID);
-                    space_left(85);
-                    printf("Vehicle Type: %c\n\n", p->type);
-                    space_left(85);
-                    printf("================================================\n\n");
-                    space_left(85);
-                    printf("1. End Search\n");
-                    space_left(85);
-                    printf("2. Delete Profile\n");
-                    space_up(2);
-                    space_left(85);
-                    printf("Choice: ");
-                    scanf("%c", &option);
-                    if (option == '1')
-                        return 4;//default return
-                    else if(option == '2'){
-                        while(1)
-                        {
-                            space_up(2);
-                            space_left(85);
-                            printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
-                            scanf(" %c", &option);
-                            if (option == '1')
-                                return 4;//default return
-                            else if (option == '2'){
-                                return 5;//for deleting
-                            }
-                            else{
-                                space_up(1);
-                                space_left(85);
-                                printf("Invalid Option. Try again\n");
-                                delay(2);
-                            }
-                        }
-                    }
-                    else{
-                        printf("Invalid Option. Try again\n");
-                        delay(2);
+            while (p != NULL) { // Traverse the linked list to find plate number
+                if (strcmp(plate, p->plateNum) == 0) { 
+                    while(1){ // If plate number is found
                         clearTerminal();
-                    }
+                        strcpy(title,"SEARCH PROFILE");
+                        header(title, 85, 107);
+                        space_left(85); //display info
+                        printf("Search Result for Plate Num. %s\n\n", p->plateNum);
+                        space_left(85);
+                        printf("ID: %s\n", p->profileID);
+                        space_left(85);
+                        printf("Vehicle Type: %c\n\n", p->type);
+                        space_left(85);
+                        printf("================================================\n\n"); 
+
+                        space_left(85); // options
+                        printf("1. End Search\n");
+                        space_left(85);
+                        printf("2. Delete Profile\n");
+                        space_up(2);
+                        space_left(85);
+                        printf("Choice: ");
+                        scanf("%c", &option);
+
+                        if (option == '1'){
+                            return 2; // end search return
+                        }                        
+                        else if(option == '2'){
+                            return 4; //delete profile return                     
+                        }
+                        else{ // unexpected inputs
+                            space_left(85);
+                            printf("Input not recognized. Please try again. Thank you!");
+                            delay(2);                            
+                        }
+                    }//loop
                 }
-            }else {
-                p = p->nxtPtr; // Continue to the next node
+                else {
+                    p = p->nxtPtr;
+                } // Continue to the next node
+            }
+            while(1){ //End of list, plateNo not found
+                clearTerminal();
+                strcpy(title,"SEARCH PROFILE");
+                header(title, 85, 107);
+                space_left(85);
+                printf("Plate number not found.\n");
+                space_left(85);
+                printf("1. End Search\n");
+                space_left(85);
+                printf("2. Register Profile\n\n");
+                space_left(85);
+                printf("Choice: ");
+                scanf(" %c", &option);
+                
+                if(option=='1'){
+                    return 2; // end search return
+                }else if(option == '2'){
+                    return 3; // register profile return
+                }else{
+                    space_left(85);
+                    printf("Input not recognized. Please try again. Thank you!");
+                    delay(2);
+                }     
             }
         }
-        while(1){ // Plate number not found
-            space_up(1);
-            space_left(85);
-            printf("Plate number not found.\n");
-            space_left(85);
-            printf("1. End Transaction\n");
-            space_left(85);
-            printf("2. Register Profile\n\n");
-            space_left(85);
-            printf("Choice: ");
-            scanf(" %c", &option);
-            space_left(85);
-            printf("================================================\n");
-            if(option=='1'){
-                return 4;//default return
-            }else if(option == '2'){
-                return 1;//register profile
-            }else{
-                space_left(85);
-                printf("Invalid Option. Try Again\n");
-                delay(2);
-            }     
+        else if(option == '3'){
+            return 3; // register profile return
         }
-    }
-    else if(option == '3'){
-        return 1;//register profile
-    }
-    else if(option == '4'){
-      return 5;//delete profile
-    }
-    else if(option == '5'){
+        else if(option == '4'){
+            return 4; // delete profile return
+        }
+        else if(option == '5'){            
+            return 5; //check logs
+        }
+        else if(option == '6'){
+            return -1; // exit/close program
+        }
+        // unexpected inputs    
         space_left(85);
-        printf("Printing logs for today...");
-        delay(3);
-        clearTerminal();
-        return 6; //check logs
-    }
-    else if(option == '6')
-        return -1;
-    space_left(85);
-    printf("Invalid Option. Please try again. Thank you.\n");
-    delay(2);
-    clearTerminal();
-    return 7;//Invalid option 
+        printf("Invalid Option. Please try again. Thank you.\n");
+        delay(2);     
+
+    }//Admin function loop
+
+    return -1; // default close program  
 }
 //Handles all park ins and park outs. Returns parking spot for park ins or 0 for park out and error
 int usePark(log **loghead, Profile * profiles, int * car, int * motor, int option){
@@ -1284,18 +1280,14 @@ void currLog(log * head){
     return;
 }
 //prints profile linked list back to records.txt. Called at the end of program before freeProfile.
-void archiveProf(Profile * head){
-    //reopen records.txt for rewriting (saving profiles)
-    FILE * rec = fopen("records.txt", "w");
+void archiveProf(FILE*inrec, Profile * head){      
     Profile * p = head;
     
     while(p != NULL)
     {
-        fprintf(rec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
+        fprintf(inrec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
         p = p->nxtPtr;
     }
-    fclose(rec);
-
     return;
 }
 //free the allocated space in linked list
@@ -1324,7 +1316,7 @@ void freeLog(log * head){
 /*-------------------------------- PROGRAM EXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
     // Open necessary files and check for errors
-    FILE *inrec = fopen("records.txt", "r");
+    FILE *inrec = fopen("records.txt", "r+");
     FILE *inlog = fopen("logbook.txt", "a");
     FILE *indisc = fopen("discrepancy.txt", "a");
     if (inrec == NULL || inlog == NULL || indisc == NULL) {
@@ -1341,8 +1333,9 @@ int main(){
     char choice;
     char id[MAX];
     char plate[MAX];
+    char title[MAX];
         
-    do {
+    do { // Loop for sign un or if password reset was successful
         sign_in_result = SignIn();
         
         if (sign_in_result == 0) {// Successful login            
@@ -1361,43 +1354,24 @@ int main(){
         printf("Password has been reset successfully.\n");
         delay(2);
 
-    } while (sign_in_result == 2);  // Continue if password reset was successful and retry login
+    } while (sign_in_result == 2);  
     
     profile = create_list(inrec); //Create a profile list from records file
-    fclose(inrec);
-    // Main program loop, ends at 5 PM or by choice
-    while(1)
-    {
-        do{
-            currLog(loghead);
-            delay(4);
-            option = Administrator(&profile); // Get user input for next action
-        } while (option == 7);
-                  
-        //0: exit program 1: register profile 2: park in 3: park out
-        switch (option) {
-            case -1:
+        
+    while(1){ // Main program loop, ends at 5 PM or by choice
+        
+        currLog(loghead);//show presently parked vehicles
+        delay(4);
+        
+        // Get user input for program action
+        option = Administrator(profile);                
+    
+        switch (option){ // PROGRAM ACTIONS
+            
+            case -1: // Exit program
                 break;
 
-            case 1: //Register new profile
-                clearTerminal();
-                char title[MAX]={"REGISTER PROFILE"};
-                header(title, 96, 116);
-                space_left(20);
-                printf("Enter Plate Number: ");
-                scanf("%s", plate);
-                convert_to_uppercase(plate);
-                space_left(20);
-                printf("Enter ID: ");
-                scanf("%s", id);
-                convert_to_uppercase(id);
-                if(rgstr(&profile, plate, id)==0){
-                    space_up(1);
-                    space_left(20);
-                    printf("Registered Successfully!\n");
-                }break;// Register a new profile
-            
-            case 2: //Park in
+            case 0: //Park in
                 while (1) {
                     int spot;
                     // Try to park in, check for errors
@@ -1422,93 +1396,144 @@ int main(){
                     break; // Exit the loop after successful park-in
                 }
                 break;
-
-            case 3: // Park out
+            
+            case 1: // Park out
                 if (usePark(&loghead, profile, car, motor, 2) == 0);
                 delay(3);
                 clearTerminal();
                 break;
 
-            case 4: //search profile
+            case 2: //successful search profile
                 break;
 
-            case 5:
+            case 3: //Register a new profile
+                clearTerminal();
+                strcpy(title,"REGISTER PROFILE");
+                header(title, 85, 107);
+                space_left(85);
+                printf("Enter Plate Number: ");
+                scanf("%s", plate);
+                convert_to_uppercase(plate);
+                space_left(85);
+                printf("Enter ID: ");
+                scanf("%s", id);
+                convert_to_uppercase(id);
+
+                if(rgstr(&profile, plate, id)==0){
+                    space_up(1);
+                    space_left(85);
+                    printf("Registered Successfully!\n");
+                }
+                break;
+
+            case 4: //delete a profile                
                 while(1){
                     clearTerminal();
-                    char title[MAX]={"DELETE PROFILE"};
-                    header(title, 96, 116);
-                    space_left(25);
+                    strcpy(title,"DELETE PROFILE");
+                    header(title, 85, 96);
+                    space_left(85);
                     printf("Enter Plate Number: ");
                     scanf("%s", plate);
                     convert_to_uppercase(plate);
-                    FILE * inrec = fopen("records.txt","w");
-                    int delResult = 0;
-                    delResult = deleteProfile(inrec, &profile, plate);
-                    space_up(2);
-                    space_left(25);
-                    printf("Deleting Profile...");
-                    delay(3);
-                    if (delResult == 0){
+
+                    space_up(1);
+                    space_left(85);
+                    printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
+                    scanf(" %c", &option);
+                        
+                    if (option=='1'){ //No, don't delete 
+                        option=4; //back to 4                    
+                        break;
+                    }                            
+                    else if (option == '2'){ //Yes, delete
                         space_up(2);
-                        space_left(25);
-                        printf("Profile Not Found");
-                        space_up(2);
-                        space_left(25);
-                        printf("1. End Delete\n");
-                        space_left(25);
-                        printf("2. Try Again\n");
-                        space_up(2);
-                        space_left(25);
-                        printf("Choice: ");
-                        scanf("%d", &option);
-                        if(option == 1){
+                        space_left(85);
+                        printf("Deleting Profile...\n");
+                       
+                        int delResult = 0;
+                        delResult = deleteProfile(&profile, plate); //delete function
+                        fclose(inrec);
+                        archiveProf(inrec,profile);
+                                                                 
+                        if (delResult == 0){
+                            while(1){
+                                space_left(85);
+                                printf("================================================\n");
+                                space_up(2);
+                                space_left(85);
+                                printf("Profile Not Found");
+                                space_up(2);
+                                space_left(85);
+                                printf("1. End Delete\n");
+                                space_left(85);
+                                printf("2. Try Again\n");
+                                space_up(2);
+                                space_left(85);
+                                printf("Choice: ");
+                                scanf(" %c", &choice);
+                                
+                                if(choice == '1'){
+                                    option=4; //back to 4
+                                    break;
+                                }
+                                else if(choice == '2'){
+                                    space_up(2);
+                                    space_left(85);
+                                    printf("Please Wait...");
+                                    delay(1);
+                                    break;                                    
+                                }
+                                else{
+                                    space_up(2);
+                                    space_left(85);
+                                    printf("Invalid choice, Try Again\n");
+                                    space_up(1);
+                                    space_left(85);
+                                    delay(1);
+                                    clearTerminal();
+                                }
+                            }
+                            if(choice=='2'){
+                                break;
+                            }                           
+                        }
+                        else if(delResult == 1){
                             space_up(2);
-                            space_left(20);
+                            space_left(85);
+                            printf("Successfully Deleted!\n");
+                            space_up(2);
+                            space_left(85);
                             printf("================================================\n");
-                            fclose(inrec);
                             break;
                         }
-                        else if(option == 2){
-                            space_up(2);
-                            space_left(25);
-                            printf("Please Wait...");
-                            delay(1);
-                            continue;
-                        }
                     }
-                    else if(delResult == 1){
-                        space_up(2);
-                        space_left(25);
-                        printf("Successfully Deleted!\n");
-                        space_up(2);
-                        space_left(20);
-                        printf("================================================\n");
-                        fclose(inrec);
-                        break;
-                    }
+                    else{
+                        space_up(1);
+                        space_left(85);
+                        printf("Invalid Option. Please try again. Thank you.\n");
+                        delay(2);
+                    }       
                 }
-                break;
-            case 6: //prints all the logs
-                printLog(loghead, 0, inlog);
-                break;
-
-            default:
-                printf("Invalid option.\n");
-        }
-        // Check if user wants to perform another action
-        while(option != -1)
-        {
-            space_up(1);
-            space_left(20); 
-            printf("Do Another Action?  (1: No, 2: Yes): ");
-            scanf(" %c", &choice);
-            if(choice == '1')
-            {
-                space_left(20);
-                printf("Exiting program...");
+                break;        
+            
+            case 5: // Log prints
+                space_left(85);
+                printf("Printing logs for today...");
                 delay(3);
                 clearTerminal();
-                space_left(20);
+                printLog(loghead, 0, inlog);
+                break;
+        }//Switch-Case
+        
+        while(option != -1){ // Check if user wants to perform another action
+            space_up(1);
+            space_left(85); 
+            printf("Do Another Action?  (1: No, 2: Yes): ");
+            scanf(" %c", &choice);
+
+            if(choice == '1'){
+                clearTerminal();
+                space_left(85);
                 printf("Printing Logs for today...\n");
                 delay(2);
                 clearTerminal();
@@ -1516,35 +1541,36 @@ int main(){
                 printLog(loghead, 1, inlog);
                 break;
             }
-            //Temporary for checking
-            else if(choice == '2')
-            {
+            else if(choice == '2'){ //return to E-PARADA options
                 space_up(1);
-                space_left(20);
+                space_left(85);
                 printf("Returning to Main Menu...");
                 delay(3);
                 clearTerminal();
                 break;
             }
-            else
-            {
-                space_left(20);
-                printf("Input not recognized. Try again");
+            else{ //loop when incorrect input
+                space_left(85);
+                printf("Input not recognized. Please try again. Thank you!\n");
                 delay(1);
             }
         }
-        if(choice == '1' || option == -1)//Program exits
+
+        if(option==-1||choice=='1'){//Close Program
+            printf("Exiting Program...");            
             break;
+        }
     }
     //file pointers shoud be passed from main since we opened them here
-
-    archiveProf(profile);
-
+    
     freeLog(loghead);
     freeProfile(&profile);
 
     fclose(inlog);
     fclose(indisc);
+
+    delay(2);
+    clearTerminal();
     
     return 0;
 }//main function
