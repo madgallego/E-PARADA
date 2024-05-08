@@ -462,7 +462,7 @@ int deleteProfile(Profile**head, char plate[]){//function to delete profile in r
 }
 //Function for directing through the rest of the program features
 int Administrator(Profile *head){
-    Profile *p = *head;
+    Profile *p = head;
     char option;
     char plate[MAX];
     char title[MAX];
