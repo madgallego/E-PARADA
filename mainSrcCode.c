@@ -429,7 +429,7 @@ int dscrpncyCheck(Profile * head, const char plate[], const char id[]){
     return discrepancy_found;
 }
 //Function to delete a specified profile in records
-int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete profile in records
+int deleteProfile(Profile**head, char plate[]){//function to delete profile in records
     if (head == NULL || *head == NULL) {
         return 0;// return failure (0)
     }// If the head is NULL, the list is empty
@@ -461,7 +461,7 @@ int deleteProfile(FILE * ifp, Profile**head, char plate[]){//function to delete 
     return 1; // Return success
 }
 //Function for directing through the rest of the program features
-int Administrator(Profile **head){
+int Administrator(Profile *head){
     Profile *p = *head;
     char option;
     char plate[MAX];
@@ -1280,18 +1280,14 @@ void currLog(log * head){
     return;
 }
 //prints profile linked list back to records.txt. Called at the end of program before freeProfile.
-void archiveProf(Profile * head){
-    //reopen records.txt for rewriting (saving profiles)
-    FILE * rec = fopen("records.txt", "w");
+void archiveProf(FILE*inrec, Profile * head){      
     Profile * p = head;
     
     while(p != NULL)
     {
-        fprintf(rec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
+        fprintf(inrec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
         p = p->nxtPtr;
     }
-    fclose(rec);
-
     return;
 }
 //free the allocated space in linked list
@@ -1320,7 +1316,7 @@ void freeLog(log * head){
 /*-------------------------------- PROGRAM EXECUTIONS START HERE!!!!--------------------------------------*/
 int main(){
     // Open necessary files and check for errors
-    FILE *inrec = fopen("records.txt", "r");
+    FILE *inrec = fopen("records.txt", "r+");
     FILE *inlog = fopen("logbook.txt", "a");
     FILE *indisc = fopen("discrepancy.txt", "a");
     if (inrec == NULL || inlog == NULL || indisc == NULL) {
@@ -1368,7 +1364,7 @@ int main(){
         delay(4);
         
         // Get user input for program action
-        option = Administrator(&profile);                
+        option = Administrator(profile);                
     
         switch (option){ // PROGRAM ACTIONS
             
@@ -1455,7 +1451,9 @@ int main(){
                         printf("Deleting Profile...\n");
                        
                         int delResult = 0;
-                        delResult = deleteProfile(inrec, &profile, plate); //delete function
+                        delResult = deleteProfile(&profile, plate); //delete function
+                        fclose(inrec);
+                        archiveProf(inrec,profile);
                                                                  
                         if (delResult == 0){
                             while(1){
@@ -1564,9 +1562,7 @@ int main(){
         }
     }
     //file pointers shoud be passed from main since we opened them here
-    fclose(inrec);
-    archiveProf(profile);
-
+    
     freeLog(loghead);
     freeProfile(&profile);
 
