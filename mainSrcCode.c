@@ -611,12 +611,9 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
     log *p = *loghead;
     log *new_log;
     int rgsterd = 0;
-    int carCap = 20;
-    int motorCap = 20;
     char tempNo[MAX];
     char tempID[MAX];
     char choice;
-    int parking_status;
     int check;
     int found = 0;  // Flag to check if the vehicle is in the list
     time_t t;
@@ -625,47 +622,8 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         do{
             clearTerminal();
             char title[MAX]={"PARK IN"};
-
-            header(title, 65, 85);
-
-            //check for capacity
-            for(int i = 0; i<20; i++)
-            {
-                if(car[i] == 1)
-                    carCap--;
-            }
-            for(int i = 0; i<20; i++)
-            {
-                if(motor[i] == 1)
-                    motorCap--;
-            }
-            if(motorCap == 0 && carCap == 0)
-            {
-                space_up(1);
-                space_left(65);
-                printf("Sorry, we are fully occupied. Ending transaction\n");
-                delay(1);
-                return 0;
-            }
-            if(carCap == 0)
-            {
-                space_up(1);
-                space_left(65);
-                printf("Car Parking Capacity is Full\n");
-            }
-            if(motorCap == 0)
-            {
-                space_up(1);
-                space_left(65);
-                printf("Motor Parking Capacity is Full\n");
-            }
-
-            space_up(1);
-            space_left(65);
-
             header(title, 65, 85);
             space_left(65);
-
             printf("Plate No: ");
             scanf("%s", tempNo);
             convert_to_uppercase(tempNo);
