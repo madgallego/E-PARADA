@@ -1248,15 +1248,15 @@ void printLog(log * head, int option, FILE * ptr)
     if(p == NULL && option == 0)
     {
         space_up(3);
-        space_left(31);
+        space_left(71);
         printf("No logs for today.\n");
         space_up(3);
     }
     else if(option == 0)
     {
-        space_left(35);
+        space_left(75);
         printf("LOGS FOR TODAY\n");
-        space_left(20);
+        space_left(60);
         printf("================================================\n\n");
     }
     //p!= NULL because it needs to print until the last log
@@ -1279,7 +1279,7 @@ void printLog(log * head, int option, FILE * ptr)
         }
         else
         {
-            space_left(12);
+            space_left(52);
             printf("| %s | ", timeIN);
             printf("%-10s | %-15s ", p->plateNum, p->profileID);
             //gets hour of time in
@@ -1490,7 +1490,7 @@ int main(){
                 while(1){
                     clearTerminal();
                     strcpy(title,"DELETE PROFILE");
-                    header(title, 65, 76);
+                    header(title, 65, 80);
                     space_left(65);
                     printf("Enter Plate Number: ");
                     scanf("%s", plate);
@@ -1557,7 +1557,7 @@ int main(){
                                 }
                             }
                             if(choice=='2'){
-                                break;
+                                continue;
                             }                           
                         }
                         else if(delResult == 1){
@@ -1620,12 +1620,18 @@ int main(){
         }
 
         if(option==-1||choice=='1'){//Close Program
+            space_up(1);
+            space_left(65);
             printf("Exiting Program...");            
             break;
         }
     }
     //file pointers shoud be passed from main since we opened them here
     
+    fclose(inrec);
+    inrec = fopen("records.txt", "w");
+    archiveProf(inrec,profile);
+
     freeLog(loghead);
     freeProfile(&profile);
     
