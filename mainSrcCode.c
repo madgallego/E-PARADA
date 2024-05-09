@@ -1490,7 +1490,7 @@ int main(){
                 while(1){
                     clearTerminal();
                     strcpy(title,"DELETE PROFILE");
-                    header(title, 65, 76);
+                    header(title, 65, 80);
                     space_left(65);
                     printf("Enter Plate Number: ");
                     scanf("%s", plate);
