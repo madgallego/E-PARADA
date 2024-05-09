@@ -626,7 +626,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             clearTerminal();
             char title[MAX]={"PARK IN"};
 
-            header(title, 85, 107);
+            header(title, 65, 87);
 
             //check for capacity
             for(int i = 0; i<20; i++)
@@ -642,7 +642,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             if(motorCap == 0 && carCap == 0)
             {
                 space_up(1);
-                space_left(85);
+                space_left(65);
                 printf("Sorry, we are fully occupied. Ending transaction\n");
                 delay(1);
                 return 0;
@@ -650,18 +650,18 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             if(carCap == 0)
             {
                 space_up(1);
-                space_left(85);
+                space_left(65);
                 printf("Car Parking Capacity is Full\n");
             }
             if(motorCap == 0)
             {
                 space_up(1);
-                space_left(85);
+                space_left(65);
                 printf("Motor Parking Capacity is Full\n");
             }
 
             space_up(1);
-            space_left(85);
+            space_left(65);
 
             printf("Plate No: ");
             scanf("%s", tempNo);
