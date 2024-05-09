@@ -162,31 +162,31 @@ int SignIn() {
     while (attempts < 3) {
         clearTerminal();
         space_up(4);
-        space_left(80);
+        space_left(60);
         printf(" ______     ____     ___     ____     ___     ____     ___\n");
-        space_left(80);
+        space_left(60);
         printf("|  ____|   |  _ \\   / _ \\   |  _ \\   / _ \\   |  _ \\   / _ \\ \n");
-        space_left(80);
+        space_left(60);
         printf("| |___     | [_] | / /_\\ \\  | [_] | / /_\\ \\  | | | | / /_\\ \\ \n");
-        space_left(80);
+        space_left(60);
         printf("|  ___| [] |  __/  | ___  | |   _/  | ___  | | | | | | ___  |  \n");
-        space_left(80);
+        space_left(60);
         printf("| |____    | |     | |  | | | |\\ \\  | |  | | | |_/ / | |  | | \n");
-        space_left(80);
+        space_left(60);
         printf("|______|   |_|     |_|  |_| |_| \\_\\ |_|  |_| |___ /  |_|  |_|\n");
         space_up(1);
-        space_left(87);
+        space_left(67);
         printf("Electronic Parking and Documentation Algorithm\n");
         strcpy(title,"LOGIN");
-        header(title, 85, 107);
-        space_left(85);
+        header(title, 65, 87);
+        space_left(65);
         printf("Admin: ");
         scanf("%s", entered_user.user);
-        space_left(85);
+        space_left(65);
         printf("Password: ");
         scanf("%s", entered_user.passkey);
         space_up(1);
-        space_left(85);
+        space_left(65);
         printf("================================================\n");
 
         for (int i = 0; i < admin_count; i++) {
