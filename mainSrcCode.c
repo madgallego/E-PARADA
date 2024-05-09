@@ -541,7 +541,7 @@ int Administrator(Profile *head){
                         space_up(2);
                         space_left(65);
                         printf("Choice: ");
-                        scanf("%c", &option);
+                        scanf(" %c", &option);
 
                         if (option == '1'){
                             return 2; // end search return
@@ -666,7 +666,8 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             printf("Plate No: ");
             scanf("%s", tempNo);
             convert_to_uppercase(tempNo);
-            if(traverseProfile(profiles, tempNo) == 1){ //Profile not found
+            parking_status = traverseProfile(profiles, tempNo);
+            if(parking_status == 1){ //Profile not found
                 while(1)
                 {
                     space_up(1);
@@ -696,6 +697,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
                         convert_to_uppercase(tempID);
                         rgstr(&profiles, tempNo, tempID);//register profile to data file
                         rgsterd = 1;
+                        parking_status = traverseProfile(profiles, tempNo); //recheck if profile is not registered
                         break;
                     }
                     else if(choice == '3')
@@ -707,7 +709,26 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
                     }
                 }
             }
-        }while(traverseProfile(profiles, tempNo) == 1);
+        }while(parking_status == 1);
+
+        //check if there is still space
+        if(parking_status == 2 && carCap == 0)
+        {
+            space_up(1);
+            space_left(85);
+            printf("No Parking Spots Available. Exiting Transaction\n");
+            delay(1);
+            return 0;
+        }
+        else if(parking_status == 3 && motorCap == 0)
+        {
+            space_up(1);
+            space_left(85);
+            printf("No Parking Spots Available. Exiting Transaction\n");
+            delay(1);
+            return 0;
+        }
+
 
         if(rgsterd == 0) //this section of the code will be skipped if the user registed a new profile to park in
         {
@@ -744,7 +765,6 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         new_log->next = NULL;
 
         // Assign parking spot based on vehicle type
-        int parking_status = traverseProfile(profiles, tempNo);
         if (parking_status == 2) {  // Car
             for (int i = 0; i < 20; i++) {
                 if (car[i] == 0) {  // Free spot found
@@ -1425,6 +1445,7 @@ int main(){
                     // If successful, inform the user about the parking spot
                     delay(3);
                     space_up(1);
+
                     space_left(65);
                     printf("Thank you for parking with us. Please proceed to parking spot %d. (20+ is for motorcycles only)\n", spot);
                     delay(3);
@@ -1478,20 +1499,24 @@ int main(){
                     space_up(1);
                     space_left(65);
                     printf("Are you sure you want to delete this profile? (1: No, 2: Yes): ");
-                    scanf(" %c", &option);
+                    scanf(" %c", &choice);
                         
-                    if (option=='1'){ //No, don't delete 
+                    if (choice=='1'){ //No, don't delete 
                         option=4; //back to 4                    
                         break;
                     }                            
-                    else if (option == '2'){ //Yes, delete
+                    else if (choice == '2'){ //Yes, delete
                         space_up(2);
                         space_left(65);
                         printf("Deleting Profile...\n");
                        
                         int delResult = 0;
                         delResult = deleteProfile(&profile, plate); //delete function
+                        fclose(inrec);
+                        inrec = fopen("records.txt", "w");
                         archiveProf(inrec,profile);
+                        fclose(inrec);
+                        inrec = fopen("records.txt", "r+");
                                                                  
                         if (delResult == 0){
                             while(1){
