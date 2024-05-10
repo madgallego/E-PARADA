@@ -486,7 +486,7 @@ int Administrator(Profile *head){
             while(1){
                 clearTerminal();
                 strcpy(title,"PMS");
-                header(title, 65, 87);
+                header(title, 65, 80);
                 space_left(65);
                 printf("1. Park In\n");
                 space_left(65);
@@ -513,7 +513,7 @@ int Administrator(Profile *head){
             
             clearTerminal();
             strcpy(title,"SEARCH PROFILE");
-            header(title, 65, 87);
+            header(title, 65, 80);
             space_left(65);
             printf("Enter Plate Number: ");
             scanf("%s", plate);
@@ -524,7 +524,7 @@ int Administrator(Profile *head){
                     while(1){ // If plate number is found
                         clearTerminal();
                         strcpy(title,"SEARCH PROFILE");
-                        header(title, 65, 87);
+                        header(title, 65, 80);
                         space_left(65); //display info
                         printf("Search Result for Plate Num. %s\n\n", p->plateNum);
                         space_left(65);
