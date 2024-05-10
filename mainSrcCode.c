@@ -1416,6 +1416,7 @@ int main(){
     
     profile = create_list(inrec); //Create a profile list from records file|
     fclose(inrec);//premature closing of inrec for archive function
+    fclose(indisc);//prematuer closing of indisc for discrepancy check
     while(1){ // Main program loop, ends at 5 PM or by choice
         
         currLog(loghead);//show presently parked vehicles
