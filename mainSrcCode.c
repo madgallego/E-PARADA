@@ -468,7 +468,7 @@ int Administrator(Profile *head){
     
         clearTerminal();
         strcpy(title,"E-PARADA");
-        header(title, 65, 80);
+        header(title, 65, 84);
         space_left(65);
         printf("1. PMS             \t4. Delete Profile\n");
         space_left(65);
@@ -483,7 +483,7 @@ int Administrator(Profile *head){
             while(1){
                 clearTerminal();
                 strcpy(title,"PMS");
-                header(title, 65, 80);
+                header(title, 65, 87);
                 space_left(65);
                 printf("1. Park In\n");
                 space_left(65);
@@ -622,8 +622,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         do{
             clearTerminal();
             char title[MAX]={"PARK IN"};
-
-            header(title, 65, 80);
+            header(title, 65, 85);
 
             //check for capacity
             for(int i = 0; i<20; i++)
@@ -709,7 +708,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         }while(parking_status == 1);
 
         //check if there is still space
-        if(parking_status == 2 && carCap == 0)
+        if((parking_status == 2 && carCap == 0) || (parking_status == 3 && motorCap == 0))
         {
             space_up(1);
             space_left(85);
@@ -717,16 +716,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             delay(1);
             return 0;
         }
-        else if(parking_status == 3 && motorCap == 0)
-        {
-            space_up(1);
-            space_left(85);
-            printf("No Parking Spots Available. Exiting Transaction\n");
-            delay(1);
-            return 0;
-        }
-
-
+       
         if(rgsterd == 0) //this section of the code will be skipped if the user registed a new profile to park in
         {
             while(1)
@@ -796,7 +786,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         while (1) {
             clearTerminal();
             char title[MAX]={"PARK OUT"};
-            header(title, 65, 80);
+            header(title, 65, 84);
             space_left(65);
             printf("Plate No: ");
             scanf("%s", tempNo);
@@ -1239,22 +1229,21 @@ void peterParker(int designation, int car[20], int motor[20]){
 void printLog(log * head, int option, FILE * ptr)
 {
     log * p = head;
-    char timeIN[100];
-    char timeOUT[100];
+    char timeIN[MAX];
+    char timeOUT[MAX];
+    char title[MAX];
 
     if(p == NULL && option == 0)
     {
-        space_up(3);
+        space_up(4);
         space_left(71);
         printf("No logs for today.\n");
         space_up(3);
     }
     else if(option == 0)
     {
-        space_left(75);
-        printf("LOGS FOR TODAY\n");
-        space_left(60);
-        printf("================================================\n\n");
+        strcpy(title,"LOGS FOR TODAY");
+        header(title, 65, 83);
     }
     //p!= NULL because it needs to print until the last log
     while(p != NULL)
@@ -1276,7 +1265,7 @@ void printLog(log * head, int option, FILE * ptr)
         }
         else
         {
-            space_left(52);
+            space_left(59);
             printf("| %s | ", timeIN);
             printf("%-10s | %-15s ", p->plateNum, p->profileID);
             //gets hour of time in
@@ -1460,7 +1449,6 @@ int main(){
             case 1: // Park out
                 if (usePark(&loghead, profile, car, motor, 2) == 0);
                 delay(2);
-                clearTerminal();
                 break;
 
             case 2: //successful search profile
