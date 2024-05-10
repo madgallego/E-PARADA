@@ -302,7 +302,6 @@ Profile *create_list(FILE *inrec) {
 }//creating profile linked list function
 //creates new struct for new profile (records.txt file appended)
 int rgstr(Profile ** head, const char plate[], const char id[]){
-    FILE * inrec = fopen("records.txt","a");
     Profile * new, * p;
     char type;
 
@@ -331,8 +330,6 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
         p->nxtPtr = new;
     }
 
-    fprintf(inrec, "\n%s %s %c", new->plateNum, new->profileID, type);
-    fclose(inrec);
 
     return 0;
 }
@@ -1058,7 +1055,7 @@ void arrow(int artype, int designation, int vtype){
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
                 printf("=>");
-            printf("=|\n");
+            printf("=|\n\n\n");
         }
     }
     else if(artype == 1)
@@ -1092,7 +1089,7 @@ void arrow(int artype, int designation, int vtype){
             space_left(20);
             for(int i = 0; i<spaces/2 + 1; i++)
                 printf(">=");
-            printf(">!\n");
+            printf(">!\n\n\n");
         }
     }
 }
@@ -1248,15 +1245,15 @@ void printLog(log * head, int option, FILE * ptr)
     if(p == NULL && option == 0)
     {
         space_up(3);
-        space_left(31);
+        space_left(71);
         printf("No logs for today.\n");
         space_up(3);
     }
     else if(option == 0)
     {
-        space_left(35);
+        space_left(75);
         printf("LOGS FOR TODAY\n");
-        space_left(20);
+        space_left(60);
         printf("================================================\n\n");
     }
     //p!= NULL because it needs to print until the last log
@@ -1279,7 +1276,7 @@ void printLog(log * head, int option, FILE * ptr)
         }
         else
         {
-            space_left(12);
+            space_left(52);
             printf("| %s | ", timeIN);
             printf("%-10s | %-15s ", p->plateNum, p->profileID);
             //gets hour of time in
@@ -1339,7 +1336,8 @@ void currLog(log * head){
     return;
 }
 //prints profile linked list back to records.txt. Called at the end of program before freeProfile.
-void archiveProf(FILE*inrec, Profile * head){      
+void archiveProf(Profile * head){
+    FILE *inrec = fopen("records.txt", "w");
     Profile * p = head;
     
     while(p != NULL)
@@ -1347,6 +1345,7 @@ void archiveProf(FILE*inrec, Profile * head){
         fprintf(inrec, "%s %s %c\n", p->plateNum, p->profileID, p->type);
         p = p->nxtPtr;
     }
+    fclose(inrec);
     return;
 }
 //free the allocated space in linked list
@@ -1415,8 +1414,9 @@ int main(){
 
     } while (sign_in_result == 2);  
     
-    profile = create_list(inrec); //Create a profile list from records file
-        
+    profile = create_list(inrec); //Create a profile list from records file|
+    fclose(inrec);//premature closing of inrec for archive function
+    fclose(indisc);//prematuer closing of indisc for discrepancy check
     while(1){ // Main program loop, ends at 5 PM or by choice
         
         currLog(loghead);//show presently parked vehicles
@@ -1459,7 +1459,7 @@ int main(){
             
             case 1: // Park out
                 if (usePark(&loghead, profile, car, motor, 2) == 0);
-                delay(3);
+                delay(2);
                 clearTerminal();
                 break;
 
@@ -1483,6 +1483,7 @@ int main(){
                     space_up(1);
                     space_left(65);
                     printf("Registered Successfully!\n");
+                    archiveProf(profile);
                 }
                 break;
 
@@ -1512,11 +1513,7 @@ int main(){
                        
                         int delResult = 0;
                         delResult = deleteProfile(&profile, plate); //delete function
-                        fclose(inrec);
-                        inrec = fopen("records.txt", "w");
-                        archiveProf(inrec,profile);
-                        fclose(inrec);
-                        inrec = fopen("records.txt", "r+");
+                        archiveProf(profile);
                                                                  
                         if (delResult == 0){
                             while(1){
@@ -1557,7 +1554,7 @@ int main(){
                                 }
                             }
                             if(choice=='2'){
-                                break;
+                                continue;
                             }                           
                         }
                         else if(delResult == 1){
@@ -1595,13 +1592,6 @@ int main(){
             scanf(" %c", &choice);
 
             if(choice == '1'){
-                clearTerminal();
-                space_left(65);
-                printf("Printing Logs for today...\n");
-                delay(2);
-                clearTerminal();
-                printLog(loghead, 0, inlog);
-                printLog(loghead, 1, inlog);
                 break;
             }
             else if(choice == '2'){ //return to E-PARADA options
@@ -1620,16 +1610,26 @@ int main(){
         }
 
         if(option==-1||choice=='1'){//Close Program
-            printf("Exiting Program...");            
+            clearTerminal();
+            space_up(1);
+            space_left(65);
+            printf("Exiting Program...\n\n");
+            space_left(65);
+            printf("Printing Logs for today...\n");
+            delay(2);
+            clearTerminal();
+            printLog(loghead, 0, inlog);
+            printLog(loghead, 1, inlog);            
             break;
         }
     }
     //file pointers shoud be passed from main since we opened them here
     
+    archiveProf(profile);
+
     freeLog(loghead);
     freeProfile(&profile);
     
-    fclose(inrec);
     fclose(inlog);
     fclose(indisc);
 
