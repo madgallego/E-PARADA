@@ -214,7 +214,7 @@ int SignIn() {
     {
         clearTerminal();
         strcpy(title,"LOGIN FAILED");
-        header(title, 65, 87);
+        header(title, 65, 84);
         space_left(65);
         printf("Too many failed attempts. Would you like to:\n");
         space_up(2);
@@ -233,7 +233,7 @@ int SignIn() {
         } else if (choice == '2') {
             clearTerminal();
             strcpy(title,"RESET PASSWORD");
-            header(title, 65, 87);
+            header(title, 65, 84);
             space_left(65);
             printf("Enter the 8-digit security key: ");
             scanf("%s", security_key);
@@ -241,7 +241,7 @@ int SignIn() {
             if (strcmp(security_key, SECURITY_KEY) == 0) {//security passkey matches
                 clearTerminal();
                 strcpy(title,"RESET PASSWORD");
-                header(title, 65, 87);
+                header(title, 65, 80);
                 
                 reset_result = resetPasskey("passkey.txt", admin, admin_count);
                 if (reset_result == 0) {
@@ -314,7 +314,7 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
 
     clearTerminal();
     char title[MAX]={"E-PARADA"};
-    header(title, 65, 87);
+    header(title, 65, 80);
     space_left(65);
     printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
     space_left(65);
@@ -468,7 +468,7 @@ int Administrator(Profile *head){
     
         clearTerminal();
         strcpy(title,"E-PARADA");
-        header(title, 65, 85);
+        header(title, 65, 80);
         space_left(65);
         printf("1. PMS             \t4. Delete Profile\n");
         space_left(65);
@@ -560,7 +560,7 @@ int Administrator(Profile *head){
             while(1){ //End of list, plateNo not found
                 clearTerminal();
                 strcpy(title,"SEARCH PROFILE");
-                header(title, 65, 87);
+                header(title, 65, 80);
                 space_left(65);
                 printf("Plate number not found.\n");
                 space_left(65);
@@ -623,7 +623,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
             clearTerminal();
             char title[MAX]={"PARK IN"};
 
-            header(title, 65, 87);
+            header(title, 65, 80);
 
             //check for capacity
             for(int i = 0; i<20; i++)
@@ -796,7 +796,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         while (1) {
             clearTerminal();
             char title[MAX]={"PARK OUT"};
-            header(title, 65, 87);
+            header(title, 65, 80);
             space_left(65);
             printf("Plate No: ");
             scanf("%s", tempNo);
@@ -1469,7 +1469,7 @@ int main(){
             case 3: //Register a new profile
                 clearTerminal();
                 strcpy(title,"REGISTER PROFILE");
-                header(title, 65, 87);
+                header(title, 65, 80);
                 space_left(65);
                 printf("Enter Plate Number: ");
                 scanf("%s", plate);
