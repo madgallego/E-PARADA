@@ -82,7 +82,7 @@ void convert_to_uppercase(char *str) {
         str++; // Move to the next character
     }
 }
-//header function 
+// Function to display a header with a given array, spacing, and line length
 void header(char array[], int sline, int arrspace){
         space_up(3);
         space_left(sline);
@@ -302,10 +302,10 @@ Profile *create_list(FILE *inrec) {
 }//creating profile linked list function
 //creates new struct for new profile (records.txt file appended)
 int rgstr(Profile ** head, const char plate[], const char id[]){
-    Profile * new, * p;
+    Profile * new;
+    Profile *p=*head;
     char type;
-
-    p = *head;
+    
     new = (Profile*)malloc(sizeof(Profile));
 
     while(p->nxtPtr != NULL){
