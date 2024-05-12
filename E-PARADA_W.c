@@ -1619,7 +1619,6 @@ int main(){
     freeProfile(&profile);
     
     fclose(inlog);
-    fclose(indisc);
 
     delay(2);
     clearTerminal();
