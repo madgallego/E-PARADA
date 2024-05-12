@@ -316,7 +316,7 @@ int rgstr(Profile ** head, const char plate[], const char id[]){
     char title[MAX]={"E-PARADA"};
     header(title, 65, 80);
     space_left(65);
-    printf("Please indicate vehicle type (A=car, B=motorcycle)\n");
+    printf("Please indicate vehicle type (A=MOTORCYCLE, B=CAR)\n");
     space_left(65);
     printf("Vehicle Type: ");
     scanf(" %c", &type);
@@ -340,9 +340,9 @@ int traverseProfile(Profile * head, const char plate[]){
     while (p != NULL) {
         if (strcmp(p->plateNum, plate) == 0) {
             if (p->type == 'A') {
-                return 2;  // Car
+                return 3;  // Car
             } else if (p->type == 'B') {
-                return 3;  // Motorcycle
+                return 2;  // Motorcycle
             } else {
                 fprintf(stderr, "Error: Unknown vehicle type for profile %s.\n", plate);
             }
