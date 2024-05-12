@@ -339,9 +339,9 @@ int traverseProfile(Profile * head, const char plate[]){
     
     while (p != NULL) {
         if (strcmp(p->plateNum, plate) == 0) {
-            if (p->type == 'A') {
+            if (p->type == 'B') {
                 return 3;  // Car
-            } else if (p->type == 'B') {
+            } else if (p->type == 'A') {
                 return 2;  // Motorcycle
             } else {
                 fprintf(stderr, "Error: Unknown vehicle type for profile %s.\n", plate);
