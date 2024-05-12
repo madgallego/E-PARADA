@@ -708,7 +708,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         }while(parking_status == 1);
 
         //check if there is still space
-        if((parking_status == 2 && carCap == 0) || (parking_status == 3 && motorCap == 0))
+        if((parking_status == 3 && carCap == 0) || (parking_status == 2 && motorCap == 0))
         {
             space_up(1);
             space_left(85);
@@ -752,7 +752,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         new_log->next = NULL;
 
         // Assign parking spot based on vehicle type
-        if (parking_status == 2) {  // Car
+        if (parking_status == 3) {  // Car
             for (int i = 0; i < 20; i++) {
                 if (car[i] == 0) {  // Free spot found
                     new_log->status = i + 1;
@@ -760,7 +760,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
                     break;
                 }
             }
-        } else if (parking_status == 3) {  // Motorcycle
+        } else if (parking_status == 2) {  // Motorcycle
             for (int i = 0; i < 20; i++) {
                 if (motor[i] == 0) {  // Free spot found
                     new_log->status = i + 21;
