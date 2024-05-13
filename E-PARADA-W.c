@@ -1533,9 +1533,12 @@ int main(){
                                     clearTerminal();
                                 }
                             }
-                            if(choice=='2'){
+                            if(choice=='1'){
+                                break;
+                            }
+                            else if(choice=='1'){
                                 continue;
-                            }                           
+                            }                                          
                         }
                         else if(delResult == 1){
                             space_up(2);

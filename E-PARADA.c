@@ -1342,7 +1342,7 @@ void freeProfile(Profile ** head){
 //frees log linked list to prevent memory leak
 void freeLog(log ** head){
     log * p, * tmp;
-    p = head;
+    p = *head;
     
     while(p != NULL){
         tmp = p;
@@ -1533,7 +1533,10 @@ int main(){
                                     clearTerminal();
                                 }
                             }
-                            if(choice=='2'){
+                            if(choice=='1'){
+                                break;
+                            }
+                            else if(choice=='1'){
                                 continue;
                             }                           
                         }
