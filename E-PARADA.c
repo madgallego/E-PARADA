@@ -705,7 +705,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
         if((parking_status == 3 && carCap == 0) || (parking_status == 2 && motorCap == 0))
         {
             space_up(1);
-            space_left(85);
+            space_left(65);
             printf("No Parking Spots Available. Exiting Transaction\n");
             delay(1);
             return 0;
