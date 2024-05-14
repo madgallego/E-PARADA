@@ -1416,6 +1416,7 @@ int main(){
                     int spot;
                     // Try to park in, check for errors
                     spot = usePark(&loghead, profile, car, motor, 1);
+                    archiveProf(profile); //archive profile records in case user registered a new vehicle
                     if (spot == 0) { // Error encountered
                         space_up(1);
                         space_left(65);
