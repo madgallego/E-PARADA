@@ -49,7 +49,7 @@ typedef struct log {
 /*-------TERMINAL LAYOUT FUNCTIONS---------*/
 //Clears Terminal using REGEX string
 void clearTerminal() {
-    system("cls");
+    printf("\e[1;1H\e[2J\e[3J");
 }
 //Adds new lines
 void space_up(int lines) {
@@ -600,8 +600,8 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
     log *p = *loghead;
     log *new_log;
     int rgsterd = 0;
-    int carCap = 20;
-    int motorCap = 20;
+    int carCap;
+    int motorCap;
     char tempNo[MAX];
     char tempID[MAX];
     char choice;
@@ -612,6 +612,8 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
 
     if(option == 1){ //park in
         do{
+            carCap = 20;
+            motorCap = 20;
             clearTerminal();
             char title[MAX]={"PARK IN"};
             header(title, 65, 85);
@@ -826,7 +828,7 @@ int usePark(log **loghead, Profile * profiles, int * car, int * motor, int optio
                         if(p->status <= 20) //checks if it is car
                             car[p->status - 1] = 0; //reset parking spot to 0 (empty)
                         else//motor
-                            motor[p->status - 1] = 0;
+                            motor[p->status - 21] = 0;
                         p->status = 0;  // Mark as parked out
 
                         // Calculate parking fee (sample rate)
@@ -1342,7 +1344,7 @@ void freeProfile(Profile ** head){
 //frees log linked list to prevent memory leak
 void freeLog(log ** head){
     log * p, * tmp;
-    p = head;
+    p = *head;
     
     while(p != NULL){
         tmp = p;
@@ -1365,7 +1367,7 @@ int main(){
     //VARIABLE DECLARATIONS AND INITIALIZATIONS
     Profile *profile;
     log *loghead = NULL;
-    int car[20] = {0};//set car parking space to empty
+    int car[20] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};//set car parking space to empty
     int motor[20] = {0};//set motor parking space to empty
     int sign_in_result;
     int option;
@@ -1539,7 +1541,7 @@ int main(){
                             }
                             else if(choice=='1'){
                                 continue;
-                            }                                          
+                            }                           
                         }
                         else if(delResult == 1){
                             space_up(2);
